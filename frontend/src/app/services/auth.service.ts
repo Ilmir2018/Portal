@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 import { User } from '../interfaces';
+import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 @Injectable({
@@ -9,7 +9,7 @@ import { tap } from 'rxjs/operators';
 })
 export class AuthService {
 
-  private token = null
+  private token = null;
 
   constructor(private http: HttpClient) { }
 
@@ -26,7 +26,7 @@ export class AuthService {
   }
 
   register(user: User): Observable<User> {
-    return this.http.post<User>('/api/auth/register', user)
+    return this.http.post<User>('/api/auth/register' ,user)
   }
 
   setToken(token: string) {

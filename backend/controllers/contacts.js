@@ -4,8 +4,20 @@ const errorHandler = require('../utils/errorHandler')
 
 module.exports.get = async function(req, res) {
    try {
+       const query = {
+           user: req.user.id
+       }
+
+       if(req.query.filter) {
+           query.filter = +req.query.filter
+       }
        //Вывод контактов которые создал определённый юзер
-       const contacts = await Contact.find({user: req.user.id})
+       const contacts = await Contact
+       .find({user: req.user.id})
+       .sort({date: -1})
+       .skip(+req.query.offset)
+       .limit(+req.query.limit)
+
        res.status(200).json(contacts)
    } catch(e) {
        errorHandler(res, e)
@@ -19,9 +31,11 @@ module.exports.create = async function(req, res) {
         position: req.body.position ? req.body.position : '',
         division: req.body.division ? req.body.division : '',
         city: req.body.city ? req.body.city : '',
+        firm: req.body.firm,
         email: req.body.email,
         phone: req.body.phone ? req.body.phone : '',
-        status: req.body.status
+        status: req.body.status,
+        user: req.user.id
     })
     try {
         await contact.save()

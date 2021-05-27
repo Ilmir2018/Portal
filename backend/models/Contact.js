@@ -2,14 +2,14 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const contactSchema = new Schema({
+    name: {
+        type: String,
+        required: true,
+    },
     tab_num: {
         type: Number,
         required: true,
         unique: true
-    },
-    name: {
-        type: String,
-        required: true,
     },
     position: {
         type: String,
@@ -19,6 +19,10 @@ const contactSchema = new Schema({
     },
     city: {
         type: String,
+    },
+    firm: {
+        type: String,
+        required: true
     },
     email: {
         type: String,
@@ -31,6 +35,10 @@ const contactSchema = new Schema({
     status: {
         type: Boolean,
         required: true
+    },
+    user: {
+        ref: 'users',
+        type: Schema.Types.ObjectId
     }
 })
 

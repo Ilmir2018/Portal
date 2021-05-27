@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { MaterialService } from 'src/app/classes/material.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -16,7 +16,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   form: FormGroup;
   aSub: Subscription
 
-  constructor(private auth: AuthService, private route: ActivatedRoute) { }
+  constructor(private auth: AuthService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
     this.form = new FormGroup({
@@ -42,6 +42,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
     this.aSub = this.auth.login(this.form.value).subscribe(
       () => {
         console.log('login success')
+        this.router.navigate(['/contacts'])
       },
       (e) => {
         MaterialService.toast(e.error.message)

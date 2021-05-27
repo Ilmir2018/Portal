@@ -1,8 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './classes/auth.guard';
+
+import { ContactsPageComponent } from './components/contacts-page/contacts-page.component';
+import { NewContactComponent } from './components/contacts-page/new-contact/new-contact.component';
 import { LoginPageComponent } from './components/login-page/login-page.component';
+import { ProfilePageComponent } from './components/profile-page/profile-page.component';
 import { RegisterPageComponent } from './components/register-page/register-page.component';
+import { SettingsPageComponent } from './components/settings-page/settings-page.component';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 import { SiteLayoutComponent } from './layouts/site-layout/site-layout.component';
 
@@ -14,9 +19,14 @@ const routes: Routes = [
       {path: 'register', component: RegisterPageComponent}
     ]
   },
-  {path: '', component: SiteLayoutComponent, canActivate: [AuthGuard], children: [
-    
-  ]}
+  {
+    path: '', component: SiteLayoutComponent, canActivate: [AuthGuard], children: [
+      {path: 'contacts', component: ContactsPageComponent},
+      {path: 'settings', component: SettingsPageComponent},
+      {path: 'profile', component: ProfilePageComponent},
+      {path: 'contacts/new', component: NewContactComponent},
+    ]
+  },
 ];
 
 @NgModule({

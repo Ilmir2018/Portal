@@ -1,4 +1,4 @@
 module.exports = {
-    MONGO_UTI: 'mongodb://localhost:27017/portal',
+    MONGO_URI: 'mongodb://localhost:27017/portal',
     jwt: 'dev-jwt'
 }
