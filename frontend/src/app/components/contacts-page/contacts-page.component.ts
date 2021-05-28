@@ -1,6 +1,6 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Contact, Filter } from 'src/app/interfaces';
+import { Contact } from 'src/app/interfaces';
 import { ContactsService } from 'src/app/services/contacts.service';
 import { FilterService } from 'src/app/services/filter.service';
 
@@ -14,7 +14,7 @@ export class ContactsPageComponent implements OnInit, OnDestroy {
   contacts: Contact[] = []
   filter: string
   offset = 0
-  limit = 4
+  limit = 2
   oSub: Subscription
   loading: boolean = false
   reloading: boolean = false
