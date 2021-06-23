@@ -1,17 +1,18 @@
 const JwtStrategy = require('passport-jwt').Strategy
 const ExtractJwt = require('passport-jwt').ExtractJwt
-const keys = require('../config/keys')
 const mongoose = require('mongoose')
 const User = mongoose.model('users')
+const keys = require('../config/keys')
+// require('dotenv').config();
 
-const options = {
-    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: keys.jwt
-}
+
+const opts = {};
+opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+opts.secretOrKey = keys.jwt;
 
 module.exports = passport => {
     passport.use(
-        new JwtStrategy(options, async (payload, done) => {
+        new JwtStrategy(opts, async (payload, done) => {
 
             try {
                 const user = await User.findById(payload.userId).select('email id')

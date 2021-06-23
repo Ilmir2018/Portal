@@ -6,10 +6,10 @@ import { Pipe, PipeTransform } from "@angular/core";
 
 export class SearchPipe implements PipeTransform {
 
-    transform(value: any, input: string) {
-
+    transform(value: any, tab_num: number, name: string, firm: string) {
         return value.filter((element) => {
-            return element.firm.includes(input)
+            return element.tab_num.toString().includes(tab_num)
+            || element.name.includes(name) || element.firm.includes(firm)
         })
         
     }

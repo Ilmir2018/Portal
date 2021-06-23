@@ -18,6 +18,7 @@ import { LoaderComponent } from './components/loader/loader.component';
 import { NewContactComponent } from './components/contacts-page/new-contact/new-contact.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SearchPipe } from './classes/search.pipe';
+import { ContactsFilterComponent } from './components/contacts-page/contacts-filter/contacts-filter.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { SearchPipe } from './classes/search.pipe';
     ProfilePageComponent,
     LoaderComponent,
     NewContactComponent,
-    SearchPipe
+    SearchPipe,
+    ContactsFilterComponent
   ],
   imports: [
     BrowserModule,

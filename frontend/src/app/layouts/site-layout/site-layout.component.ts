@@ -3,6 +3,13 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { FilterService } from 'src/app/services/filter.service';
 
+
+export enum array {
+  one,
+  two,
+  three
+}
+
 @Component({
   selector: 'app-site-layout',
   templateUrl: './site-layout.component.html',

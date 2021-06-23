@@ -10,9 +10,13 @@ const contactsRoutes = require('./routes/contacts')
 const keys = require('./config/keys')
 const app = express()
 
-mongoose.connect(keys.MONGO_URI, {useUnifiedTopology: true, useNewUrlParser: true})
+mongoose.connect('mongodb://localhost:27017', {useUnifiedTopology: true, useNewUrlParser: true})
 .then(() => {console.log('MongoDb connected')})
 .catch(error => console.log(error))
+
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
 
 app.use(passport.initialize())
 require('./middleware/passport')(passport)
@@ -28,12 +32,12 @@ app.use('/api/auth', authRoutes)
 app.use('/api/contacts', contactsRoutes)
 
 if(process.env.NODE_ENV === 'production') {
-    app.use(express.static('../frontend/dist/frontend'))
+    app.use(express.static('client'))
 
     app.get('*', (req, res) => {
         res.sendFile(
             path.resolve(
-                __dirname, 'frontend', 'dist', 'frontend', 'index.html'
+                __dirname, 'client', 'index.html'
             )
         )
     })
