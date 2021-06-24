@@ -7,9 +7,10 @@
         <a *ngIf="link.menu" [routerLink]="[link.url]" class="waves-effect waves-orange" mat-button
             [matMenuTriggerFor]="aboveMenu">{{link.name}}</a>
         <mat-menu #aboveMenu="matMenu" yPosition="above">
-            <button *ngFor="let item of link.menu" mat-menu-item (click)="submitFilter(item)">
+            <a *ngFor="let item of link.menu" mat-menu-item [routerLink]="[item.url]" 
+            class="waves-effect waves-orange">
                 {{item.value}}
-            </button>
+            </a>
         </mat-menu>
     </li>
     <li class="bold last">

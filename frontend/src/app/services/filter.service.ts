@@ -6,7 +6,6 @@ import { Injectable } from '@angular/core';
 export class FilterService {
 
   filter: string = '';
-  tab_num: number
 
   constructor() { 
   }

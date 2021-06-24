@@ -19,15 +19,10 @@ export class SiteLayoutComponent implements OnInit {
 
   links = [
     {
-      url: "/contacts", name: "Контакты", menu: [
-        {value: 'Все сотрудники', key: ''},
-        {value: 'КЭР', key: 'КЭР'},
-        {value: 'УЭС', key: 'УЭС'},
-        {value: 'КАРНО', key: 'КАРНО'},
-        {value: 'АЙВИС', key: 'АЙВИС'}
+      url: "/settings", name: "Настройки", menu: [
+        {value: 'Пользователи', key: '', url: "/contacts"},
       ]
     },
-    { url: "/settings", name: "Настройки" },
     { url: "/profile", name: "Профиль" }
   ]
 

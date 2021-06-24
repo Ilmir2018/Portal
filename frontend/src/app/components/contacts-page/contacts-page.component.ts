@@ -13,8 +13,8 @@ export class ContactsPageComponent implements OnInit, OnDestroy {
 
   contacts: Contact[] = []
   filter: string
-  tab_num: number
-  name: string
+  tab_num: number; name: string; firm: string; position: string; 
+  division: string; city: string; email: string; phone: string
   offset = 0
   limit = 2
   oSub: Subscription

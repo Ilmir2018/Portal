@@ -20,37 +20,37 @@
         </div>
         <div class="col order">
             <div class="input-field inline order-position-input">
-                <input type="text" id="position">
+                <input type="text" id="position" [(ngModel)]="position">
                 <label for="position">Должность</label>
             </div>
         </div>
         <div class="col order">
             <div class="input-field inline order-position-input">
-                <input type="text" id="division">
+                <input type="text" id="division" [(ngModel)]="division">
                 <label for="division">Подразделение</label>
             </div>
         </div>
         <div class="col order">
             <div class="input-field inline order-position-input">
-                <input type="text" id="city">
+                <input type="text" id="city" [(ngModel)]="city">
                 <label for="city">Город</label>
             </div>
         </div>
         <div class="col order">
             <div class="input-field inline order-position-input">
-                <input type="text" id="firm">
+                <input type="text" id="firm" [(ngModel)]="firm">
                 <label for="firm">Фирма</label>
             </div>
         </div>
         <div class="col order">
             <div class="input-field inline order-position-input">
-                <input type="text" id="email">
+                <input type="text" id="email" [(ngModel)]="email">
                 <label for="email">Почта</label>
             </div>
         </div>
         <div class="col order">
             <div class="input-field inline order-position-input">
-                <input type="tel" id="phone">
+                <input type="tel" id="phone" [(ngModel)]="phone">
                 <label for="phone">Телефон</label>
             </div>
         </div>
@@ -73,7 +73,7 @@
     </thead>
 
     <tbody >
-        <tr *ngFor="let contact of contacts | search: tab_num:name">
+        <tr *ngFor="let contact of contacts | search: tab_num:name:firm:position:division:city:email:phone">
             <td>{{contact.tab_num }}</td>
             <td>{{contact.name}}</td>
             <td>{{contact.position}}</td>
