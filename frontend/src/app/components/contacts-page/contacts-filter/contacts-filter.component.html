@@ -2,51 +2,31 @@
     <div class="fr">
         <div class="col order">
             <div class="input-field inline order-position-input">
-                <input type="number" id="tab_num" min="1" [(ngModel)]="tab_num">
-                <label for="tab_num">Таб. номер</label>
-            </div>
-        </div>
-        <div class="col order">
-            <div class="input-field inline order-position-input">
                 <input type="text" id="name" [(ngModel)]="name">
                 <label for="name">ФИО</label>
             </div>
         </div>
         <div class="col order">
             <div class="input-field inline order-position-input">
-                <input type="text" id="position">
-                <label for="position">Должность</label>
-            </div>
-        </div>
-        <div class="col order">
-            <div class="input-field inline order-position-input">
-                <input type="text" id="division">
-                <label for="division">Подразделение</label>
-            </div>
-        </div>
-        <div class="col order">
-            <div class="input-field inline order-position-input">
-                <input type="text" id="city">
-                <label for="city">Город</label>
-            </div>
-        </div>
-        <div class="col order">
-            <div class="input-field inline order-position-input">
-                <input type="text" id="firm">
+                <input type="text" id="firm" [(ngModel)]="firm">
                 <label for="firm">Фирма</label>
             </div>
         </div>
         <div class="col order">
             <div class="input-field inline order-position-input">
-                <input type="text" id="email">
+                <input type="text" id="email" [(ngModel)]="email">
                 <label for="email">Почта</label>
             </div>
         </div>
         <div class="col order">
             <div class="input-field inline order-position-input">
-                <input type="tel" id="phone">
+                <input type="tel" id="phone" [(ngModel)]="phone">
                 <label for="phone">Телефон</label>
             </div>
         </div>
     </div>
+    <button
+    (click)="filterChange()" 
+    class="btn waves-effect wavers-light btn-small"
+    >Применить фильтр</button>
 </div>

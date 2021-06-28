@@ -10,7 +10,7 @@ const contactsRoutes = require('./routes/contacts')
 const keys = require('./config/keys')
 const app = express()
 
-mongoose.connect('mongodb://localhost:27017', {useUnifiedTopology: true, useNewUrlParser: true})
+mongoose.connect(keys.MONGO_URI, {useUnifiedTopology: true, useNewUrlParser: true})
 .then(() => {console.log('MongoDb connected')})
 .catch(error => console.log(error))
 

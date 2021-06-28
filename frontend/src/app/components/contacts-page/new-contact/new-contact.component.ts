@@ -21,14 +21,9 @@ export class NewContactComponent implements OnInit {
   ngOnInit(): void {
     this.form = new FormGroup({
       name: new FormControl(null, Validators.required),
-      tab_num: new FormControl(null, Validators.required),
-      position: new FormControl(null, Validators.minLength(6)),
-      division: new FormControl(null, Validators.minLength(6)),
-      city: new FormControl(null),
       firm: new FormControl(null, Validators.required),
       email: new FormControl(null,[ Validators.required, Validators.email]),
       phone: new FormControl(null),
-      status: new FormControl(null, Validators.required),
     })
   }
 

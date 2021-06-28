@@ -5,14 +5,9 @@ export interface User {
 
 export interface Contact {
     name: string
-    tab_num: number
-    position?: string
-    division?: string
-    city?: string
     firm: string
     email: string
     phone?: string
-    status: boolean,
     user?: string,
     _id?: string
 }
@@ -28,11 +23,7 @@ export interface Submenu {
 }
 
 export interface Filter {
-    tab_num?: number
     name?: string
-    position?: string
-    division?: string
-    city?: string
     firm?: string
     email?: string
     phone?: string

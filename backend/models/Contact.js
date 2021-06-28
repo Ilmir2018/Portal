@@ -6,20 +6,6 @@ const contactSchema = new Schema({
         type: String,
         required: true,
     },
-    tab_num: {
-        type: Number,
-        required: true,
-        unique: true
-    },
-    position: {
-        type: String,
-    },
-    division: {
-        type: String,
-    },
-    city: {
-        type: String,
-    },
     firm: {
         type: String,
         required: true
@@ -31,10 +17,6 @@ const contactSchema = new Schema({
     },
     phone: {
         type: String,
-    },
-    status: {
-        type: Boolean,
-        required: true
     },
     user: {
         ref: 'users',

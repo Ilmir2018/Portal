@@ -1,4 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Filter } from 'src/app/interfaces';
 
 @Component({
   selector: 'app-contacts-filter',
@@ -7,14 +8,41 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class ContactsFilterComponent implements OnInit {
 
-  @Input() tab_num: number
-  @Input() name: string
+  @Output() onFilter = new EventEmitter<Filter>()
+
+  name: string
+  firm: string
+  email: string
+  phone: string
+
   isValid = true
   
   constructor() { }
 
   ngOnInit(): void {
     
+  }
+
+  filterChange() {
+    const filter: Filter = {}
+
+    if(this.name) {
+      filter.name = this.name
+    }
+    
+    if(this.firm) {
+      filter.firm = this.firm
+    }
+
+    if(this.email) {
+      filter.email = this.email
+    }
+
+    if(this.phone) {
+      filter.phone = this.phone
+    }
+
+    this.onFilter.emit(filter)
   }
 
 }

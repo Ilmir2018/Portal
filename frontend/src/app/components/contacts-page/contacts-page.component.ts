@@ -1,22 +1,24 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Contact } from 'src/app/interfaces';
+import { Contact, Filter } from 'src/app/interfaces';
 import { ContactsService } from 'src/app/services/contacts.service';
 import { FilterService } from 'src/app/services/filter.service';
+
+const STEP = 2
 
 @Component({
   selector: 'app-contacts-page',
   templateUrl: './contacts-page.component.html',
   styleUrls: ['./contacts-page.component.scss']
 })
+
+
 export class ContactsPageComponent implements OnInit, OnDestroy {
 
   contacts: Contact[] = []
-  filter: string
-  tab_num: number; name: string; firm: string; position: string; 
-  division: string; city: string; email: string; phone: string
+  filter: Filter = {}
   offset = 0
-  limit = 2
+  limit = STEP
   oSub: Subscription
   loading: boolean = false
   reloading: boolean = false
@@ -26,7 +28,6 @@ export class ContactsPageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.reloading = true
-    this.filter = this.filterService.filter
     this.fetch()
   }
 
@@ -38,7 +39,7 @@ export class ContactsPageComponent implements OnInit, OnDestroy {
 
     this.oSub = this.service.getContacts(params).subscribe(contacts => {
       this.contacts = this.contacts.concat(contacts)
-      this.noMoreContacts = contacts.length < this.limit
+      this.noMoreContacts = contacts.length < STEP
       this.reloading = false
       this.loading = false
     })
@@ -49,8 +50,16 @@ export class ContactsPageComponent implements OnInit, OnDestroy {
   }
 
   loadMore() {
-    this.offset += this.limit
+    this.offset += STEP
     this.loading = true
+    this.fetch()
+  }
+
+  applyFilter(filter: Filter) {
+    this.contacts = []
+    this.offset = 0
+    this.loading = true
+    this.filter = filter
     this.fetch()
   }
 

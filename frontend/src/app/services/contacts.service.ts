@@ -11,6 +11,18 @@ export class ContactsService {
   constructor(private http: HttpClient) { }
 
   getContacts(params: any = {}): Observable<Contact[]> {
+    // if(params.firm != undefined) {
+    //   params.firm = params.firm
+    // }
+    // if(params.email != undefined) {
+    //   params.email = params.email
+    // }
+    // if(params.phone != undefined) {
+    //   params.phone = params.phone
+    // }
+    // if(params.name != undefined) {
+    //   params.name = params.name
+    // }
     return this.http.get<Contact[]>('/api/contacts', {
       params: new HttpParams({
         fromObject: params

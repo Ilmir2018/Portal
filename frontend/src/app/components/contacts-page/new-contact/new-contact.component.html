@@ -1,16 +1,6 @@
 <div class="row">
     <form [formGroup]="form" class="col s12 16" (ngSubmit)="onSubmit()">
         <div class="input-field">
-            <input id="name" type="text" formControlName="tab_num"
-                [ngClass]="{'invalid': form.get('tab_num').invalid && form.get('tab_num').touched}">
-            <label for="name">Табельный номер</label>
-            <span *ngIf="form.get('tab_num').invalid && form.get('tab_num').touched">
-                <span class="helper-text red-text" *ngIf="form.get('tab_num').errors['required']">
-                    Табельный номер не может быть пустым.
-                </span>
-            </span>
-        </div>
-        <div class="input-field">
             <input id="name" type="text" formControlName="name"
                 [ngClass]="{'invalid': form.get('name').invalid && form.get('name').touched}">
             <label for="name">Ф.И.О</label>
@@ -19,34 +9,6 @@
                     Имя контакта не может быть пустым.
                 </span>
             </span>
-        </div>
-        <div class="input-field">
-            <input id="name" type="text" formControlName="position"
-                [ngClass]="{'invalid': form.get('position').invalid && form.get('position').touched}">
-            <label for="name">Должность</label>
-            <span *ngIf="form.get('position').invalid && form.get('position').touched" class="helper-text red-text">
-                <span *ngIf="form.get('position').errors.minlength &&
-                form.get('position').errors.minlength.requiredLength">
-                    Длинна поля должна быть больше {{form.get('position').errors.minlength.requiredLength}} символов.
-                    Сейчас {{form.get('position').errors.minlength.actualLength}}
-                </span>
-            </span>
-        </div>
-        <div class="input-field">
-            <input id="division" type="text" formControlName="division"
-                [ngClass]="{'invalid': form.get('division').invalid && form.get('division').touched}">
-            <label for="division">Подразделение</label>
-            <span *ngIf="form.get('division').invalid && form.get('division').touched" class="helper-text red-text">
-                <span *ngIf="form.get('division').errors.minlength &&
-                form.get('division').errors.minlength.requiredLength">
-                    Длинна поля должна быть больше {{form.get('division').errors.minlength.requiredLength}} символов.
-                    Сейчас {{form.get('division').errors.minlength.actualLength}}
-                </span>
-            </span>
-        </div>
-        <div class="input-field">
-            <input id="city" type="text" formControlName="city">
-            <label for="city">Город</label>
         </div>
         <div class="input-field">
             <input id="firm" type="text" formControlName="firm"
@@ -69,12 +31,6 @@
             <input id="phone" type="tel" formControlName="phone">
             <label for="phone">Телефон</label>
         </div>
-        <p>
-            <label>
-                <input id="status" type="checkbox" formControlName="status" />
-                <span>Статус</span>
-            </label>
-        </p>
         <div>
             <button type="submit" [disabled]="form.invalid || form.disabled" class="waves-effect waves-light btn">
                 Сохранить

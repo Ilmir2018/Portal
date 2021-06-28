@@ -19,6 +19,7 @@ import { NewContactComponent } from './components/contacts-page/new-contact/new-
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SearchPipe } from './classes/search.pipe';
 import { ContactsFilterComponent } from './components/contacts-page/contacts-filter/contacts-filter.component';
+import { ContactsComponent } from './components/contacts-page/contacts/contacts.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { ContactsFilterComponent } from './components/contacts-page/contacts-fil
     LoaderComponent,
     NewContactComponent,
     SearchPipe,
-    ContactsFilterComponent
+    ContactsFilterComponent,
+    ContactsComponent
   ],
   imports: [
     BrowserModule,
@@ -48,7 +50,7 @@ import { ContactsFilterComponent } from './components/contacts-page/contacts-fil
     {
       provide: HTTP_INTERCEPTORS,
       multi: true,
-      useClass: TokenInterceptor
+      useClass: TokenInterceptor,
     }
   ],
   bootstrap: [AppComponent]

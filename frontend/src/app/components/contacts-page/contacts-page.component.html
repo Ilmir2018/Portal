@@ -4,68 +4,13 @@
     </button>
 </div>
 
-<div class="filter">
-    <div class="fr">
-        <div class="col order">
-            <div class="input-field inline order-position-input">
-                <input type="number" id="tab_num" min="1" [(ngModel)]="tab_num">
-                <label for="tab_num">Таб. номер</label>
-            </div>
-        </div>
-        <div class="col order">
-            <div class="input-field inline order-position-input">
-                <input type="text" id="name" [(ngModel)]="name">
-                <label for="name">ФИО</label>
-            </div>
-        </div>
-        <div class="col order">
-            <div class="input-field inline order-position-input">
-                <input type="text" id="position" [(ngModel)]="position">
-                <label for="position">Должность</label>
-            </div>
-        </div>
-        <div class="col order">
-            <div class="input-field inline order-position-input">
-                <input type="text" id="division" [(ngModel)]="division">
-                <label for="division">Подразделение</label>
-            </div>
-        </div>
-        <div class="col order">
-            <div class="input-field inline order-position-input">
-                <input type="text" id="city" [(ngModel)]="city">
-                <label for="city">Город</label>
-            </div>
-        </div>
-        <div class="col order">
-            <div class="input-field inline order-position-input">
-                <input type="text" id="firm" [(ngModel)]="firm">
-                <label for="firm">Фирма</label>
-            </div>
-        </div>
-        <div class="col order">
-            <div class="input-field inline order-position-input">
-                <input type="text" id="email" [(ngModel)]="email">
-                <label for="email">Почта</label>
-            </div>
-        </div>
-        <div class="col order">
-            <div class="input-field inline order-position-input">
-                <input type="tel" id="phone" [(ngModel)]="phone">
-                <label for="phone">Телефон</label>
-            </div>
-        </div>
-    </div>
-</div>
+<app-contacts-filter (onFilter) = applyFilter($event)></app-contacts-filter>
 
 
 <table class="responsive-table" *ngIf="!reloading; else reloadingBlock">
     <thead>
         <tr>
-            <th>Табельный номер</th>
             <th>Ф.И.О.</th>
-            <th>Должность</th>
-            <th>Подразделение</th>
-            <th>Город</th>
             <th>Фирма</th>
             <th>Почта</th>
             <th>Телефон</th>
@@ -73,12 +18,8 @@
     </thead>
 
     <tbody >
-        <tr *ngFor="let contact of contacts | search: tab_num:name:firm:position:division:city:email:phone">
-            <td>{{contact.tab_num }}</td>
+        <tr *ngFor="let contact of contacts">
             <td>{{contact.name}}</td>
-            <td>{{contact.position}}</td>
-            <td>{{contact.division}}</td>
-            <td>{{contact.city}}</td>
             <td>{{contact.firm}}</td>
             <td>{{contact.email}}</td>
             <td>{{contact.phone}}</td>
