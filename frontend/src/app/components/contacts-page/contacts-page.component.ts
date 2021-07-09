@@ -1,10 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterContentInit, AfterViewInit, Component, ContentChild, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs';
 import { Contact, Filter } from 'src/app/interfaces';
 import { ContactsService } from 'src/app/services/contacts.service';
 import { FilterService } from 'src/app/services/filter.service';
-
-const STEP = 2
 
 @Component({
   selector: 'app-contacts-page',
@@ -13,33 +14,42 @@ const STEP = 2
 })
 
 
-export class ContactsPageComponent implements OnInit, OnDestroy {
+export class ContactsPageComponent implements OnInit, OnDestroy, AfterViewInit, AfterContentInit {
 
-  contacts: Contact[] = []
+  displayedColumns: string[] = ['name', 'firm', 'email', 'phone']
+  filters: string[] = ['name', 'firm', 'email']
   filter: Filter = {}
-  offset = 0
-  limit = STEP
   oSub: Subscription
   loading: boolean = false
   reloading: boolean = false
   noMoreContacts: boolean = false
+  dataSource: MatTableDataSource<Contact>;
 
-  constructor(private service: ContactsService, private filterService: FilterService) { }
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+
+
+  constructor(private service: ContactsService, private filterService: FilterService) {
+    this.fetch()
+   }
 
   ngOnInit(): void {
     this.reloading = true
+  }
+
+  ngAfterViewInit() {
     this.fetch()
   }
 
-  private fetch() {
-    const params = Object.assign({}, this.filter, {
-      offset: this.offset,
-      limit: this.limit
-    })
+  ngAfterContentInit() {
+  }
 
-    this.oSub = this.service.getContacts(params).subscribe(contacts => {
-      this.contacts = this.contacts.concat(contacts)
-      this.noMoreContacts = contacts.length < STEP
+
+  private fetch() {
+    this.oSub = this.service.getContacts().subscribe(contacts => {
+      this.dataSource = new MatTableDataSource(contacts)
+      this.dataSource.paginator = this.paginator
+      this.dataSource.sort = this.sort
       this.reloading = false
       this.loading = false
     })
@@ -49,18 +59,17 @@ export class ContactsPageComponent implements OnInit, OnDestroy {
     this.oSub.unsubscribe()
   }
 
-  loadMore() {
-    this.offset += STEP
-    this.loading = true
-    this.fetch()
+  setupFilter(column: string) {
+    this.dataSource.filterPredicate = (d: Contact, filter: string) => {
+      const textToSearch = d[column] && d[column].toLowerCase() || '';
+      return textToSearch.indexOf(filter) !== -1;
+    };
+  }
+  
+  
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  applyFilter(filter: Filter) {
-    this.contacts = []
-    this.offset = 0
-    this.loading = true
-    this.filter = filter
-    this.fetch()
-  }
 
 }

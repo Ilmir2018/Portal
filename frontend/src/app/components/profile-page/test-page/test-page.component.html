@@ -1,0 +1,35 @@
+<div #name class="page-title">
+    <button routerLink="/contacts/new" class="waves-effect waves-light btn grey darken-1">
+        Добавить контакт
+    </button>
+</div>
+
+<div class="filter" *ngFor="let Col of filters">
+    <div class="filter-input">
+        <label>{{Col}}</label>
+        <input matInput (keyup)="applyFilter($event.target.value)" (focus)="setupFilter(Col)">
+    </div>
+</div>
+
+<div class="grid-wrapper">
+    <mat-table matSort [dataSource]="data | splitSchedule | async" cdkDropListGroup="" [trackBy]="trackByFn">
+        <ng-container *ngFor="let column of columns; trackBy: trackByFn; let i = index" [matColumnDef]="column.field">
+            <ng-container *ngIf="!!column.show">
+                <mat-header-cell *matHeaderCellDef="" [class.resizable]="resizable">
+                    <div class="cell-header" *ngIf="column.field === 'plusAction'"></div>
+                    <div class="cell-header" *ngIf="column.field !== 'plusAction'" mat-sort-header><span>{{ column.name }}</span></div>
+                    <div class="handler" (mousedown)="onResizeColumn($event, i)" ></div>
+                </mat-header-cell>
+            </ng-container>
+            <ng-container>
+                <mat-cell *matCellDef="let row" (click)="showContact(row._id)">
+                    <ng-template *ngTemplateOutlet="cellTemplateRef; context:{row: row, column: column}" [ngIf]="cellTemplateRef"></ng-template>
+                    <ng-container *ngIf="!cellTemplateRef">{{ row[column.field] }}</ng-container>
+                </mat-cell>
+            </ng-container>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;" #MatTableRowRef ></mat-row>
+    </mat-table>
+    <mat-paginator [pageSizeOptions]="[3, 6, 9]"></mat-paginator>
+</div>

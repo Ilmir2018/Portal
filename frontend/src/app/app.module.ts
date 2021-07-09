@@ -18,8 +18,12 @@ import { LoaderComponent } from './components/loader/loader.component';
 import { NewContactComponent } from './components/contacts-page/new-contact/new-contact.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SearchPipe } from './classes/search.pipe';
-import { ContactsFilterComponent } from './components/contacts-page/contacts-filter/contacts-filter.component';
-import { ContactsComponent } from './components/contacts-page/contacts/contacts.component';
+import { MaterialModule } from './material/material.module';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { ResizableDirective } from './classes/resizable.directive';
+import { TestPageComponent } from './components/profile-page/test-page/test-page.component';
+import { SplitSchedulePipe } from './classes/split-schedule.pipe';
+import { ContactsTableComponent } from './components/contacts-page/contacts-table/contacts-table.component';
 
 @NgModule({
   declarations: [
@@ -34,8 +38,10 @@ import { ContactsComponent } from './components/contacts-page/contacts/contacts.
     LoaderComponent,
     NewContactComponent,
     SearchPipe,
-    ContactsFilterComponent,
-    ContactsComponent
+    ResizableDirective,
+    TestPageComponent,
+    SplitSchedulePipe,
+    ContactsTableComponent
   ],
   imports: [
     BrowserModule,
@@ -44,7 +50,8 @@ import { ContactsComponent } from './components/contacts-page/contacts/contacts.
     ReactiveFormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    MatMenuModule
+    MatMenuModule,
+    MaterialModule,
   ],
   providers: [
     {
@@ -53,6 +60,9 @@ import { ContactsComponent } from './components/contacts-page/contacts/contacts.
       useClass: TokenInterceptor,
     }
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  exports: [
+    MatPaginatorModule,
+  ]
 })
 export class AppModule { }

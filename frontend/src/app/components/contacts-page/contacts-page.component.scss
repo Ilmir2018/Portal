@@ -1,0 +1,59 @@
+.filter {
+    display: inline-block;
+
+    .filter-input {
+        margin-right: 1em;
+    }
+}
+
+.mat-elevation-z8 {
+    box-shadow: none;
+
+    table {
+        width      : 95%;
+        margin-left: 2.5%;
+
+        td,
+        th {
+            border       : 1px solid #F0F0F1;
+            border-radius: 5px;
+            font-size    : 12px;
+        }
+
+        .class_1 {
+            padding-left: 20px;
+            color       : #9CBAFF;
+        }
+
+        .class_2 {
+            padding-left: 20px;
+        }
+
+        .class_3 {
+            padding-left: 110px;
+        }
+    }
+
+
+    .saving {
+        display    : flex;
+        margin-left: 4vh;
+        margin-top : 2vh;
+        position   : absolute;
+
+        p {
+            font-size: 2vh;
+        }
+
+        button {
+            margin-top: -2vh;
+            color       : #9CBAFF;
+            font-size: 2vh;
+        }
+    }
+
+    .mat-form-field {
+        font-size: 1.5vh;
+        width    : 100%;
+    }
+}

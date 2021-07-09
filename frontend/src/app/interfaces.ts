@@ -28,3 +28,13 @@ export interface Filter {
     email?: string
     phone?: string
 }
+
+export interface GridColumnDefinition {
+    field: string;
+    width: number;
+    actualWidth?: number;
+    name?: string;
+    index?: number;
+    show: boolean;
+    order: number;
+  }

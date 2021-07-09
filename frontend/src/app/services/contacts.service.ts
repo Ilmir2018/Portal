@@ -1,33 +1,24 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Contact } from '../interfaces';
+import { Contact, GridColumnDefinition } from '../interfaces';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ContactsService {
 
-  constructor(private http: HttpClient) { }
+  changedColumns: GridColumnDefinition[] = []
+  width1: number
+  width2: number
+  width3: number
+  width4: number
 
-  getContacts(params: any = {}): Observable<Contact[]> {
-    // if(params.firm != undefined) {
-    //   params.firm = params.firm
-    // }
-    // if(params.email != undefined) {
-    //   params.email = params.email
-    // }
-    // if(params.phone != undefined) {
-    //   params.phone = params.phone
-    // }
-    // if(params.name != undefined) {
-    //   params.name = params.name
-    // }
-    return this.http.get<Contact[]>('/api/contacts', {
-      params: new HttpParams({
-        fromObject: params
-      })
-    })
+  constructor(private http: HttpClient) {
+  }
+
+  getContacts(): Observable<Contact[]> {
+    return this.http.get<Contact[]>('/api/contacts')
   }
 
   create(data: Contact): Observable<Contact> {

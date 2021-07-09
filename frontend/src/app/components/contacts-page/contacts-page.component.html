@@ -1,45 +1,47 @@
-<div class="page-title">
+<div #name class="page-title">
     <button routerLink="/contacts/new" class="waves-effect waves-light btn grey darken-1">
         Добавить контакт
     </button>
 </div>
 
-<app-contacts-filter (onFilter) = applyFilter($event)></app-contacts-filter>
+<div class="filter" *ngFor="let Col of filters">
+    <div class="filter-input">
+        <label>{{Col}}</label>
+        <input matInput (keyup)="applyFilter($event.target.value)" (focus)="setupFilter(Col)">
+    </div>
+</div>
 
+<div class="mat-elevation-z8" *ngIf="!reloading; else reloadingBlock">
 
-<table class="responsive-table" *ngIf="!reloading; else reloadingBlock">
-    <thead>
-        <tr>
-            <th>Ф.И.О.</th>
-            <th>Фирма</th>
-            <th>Почта</th>
-            <th>Телефон</th>
+    <table id="sample" mat-table [dataSource]="dataSource" matSort>
+
+        <ng-container matColumnDef="name" >
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="class_2" resizable>Ф.И.О</th>
+            <td mat-cell *matCellDef="let row" class="class_1">{{row.name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="firm">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="class_2">Фирма</th>
+            <td mat-cell *matCellDef="let row" class="class_2">{{row.firm}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="class_2">Почта</th>
+            <td mat-cell *matCellDef="let row" class="class_3"> {{row.email}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="phone">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="class_2">Телефон</th>
+            <td mat-cell *matCellDef="let row" class="class_2">{{row.phone}}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
         </tr>
-    </thead>
-
-    <tbody >
-        <tr *ngFor="let contact of contacts">
-            <td>{{contact.name}}</td>
-            <td>{{contact.firm}}</td>
-            <td>{{contact.email}}</td>
-            <td>{{contact.phone}}</td>
-        </tr>
-    </tbody>
-</table>
+    </table>
+    <mat-paginator [pageSizeOptions]="[3, 6, 9]"></mat-paginator>
+</div>
 
 <ng-template #reloadingBlock>
     <app-loader></app-loader>
 </ng-template>
-
-<div *ngIf="!noMoreContacts" class="center mb2">
-    <button *ngIf="!loading; else loader" class="btn waves-effect grey darken-1 btn-small"
-    (click)="loadMore()"
-    >
-        Загрузить еще
-    </button>
-    <ng-template #loader>
-        <app-loader></app-loader>
-    </ng-template>
-</div>
-
-
