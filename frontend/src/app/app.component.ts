@@ -13,6 +13,5 @@ export class AppComponent implements OnInit {
     if(potentialToken != null) {
       this.auth.setToken(potentialToken)
     }
-    console.log('asfasfsa')
   }
 }

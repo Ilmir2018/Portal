@@ -21,8 +21,8 @@ mat-header-cell {
 }
 
 .grid-wrapper {
-  width        : 100%;
-  padding-right: 8px;
+  width     : 100%;
+  box-shadow: none;
 
   .mat-table {
     max-height: 550px;
@@ -34,23 +34,25 @@ mat-header-cell {
     .mat-header-row {
       background-color: var(--background-color-header);
       z-index         : 5 !important;
+      border          : 1px solid #F0F0F1;
+      font-size       : 12px;
     }
 
     .mat-row,
     .mat-header-row {
       border-bottom-width: 0px;
+      border             : 1px solid #F0F0F1;
+      font-size          : 12px;
     }
 
     .mat-row {
-      cursor: pointer;
+      cursor   : pointer;
+      border   : 1px solid #F0F0F1;
+      font-size: 12px;
 
       &:hover {
         background-color: #dcdcdc;
       }
-    }
-
-    .mat-row:focus {
-      background-color: red;
     }
 
     .mat-header-cell {
@@ -61,8 +63,7 @@ mat-header-cell {
 
     .mat-cell {
       margin-left: 4px;
-      box-sizing : border-box;
-     
+
 
       &:last-child {
         padding-right: 0px;
@@ -102,7 +103,7 @@ mat-header-cell {
       }
 
       .handler {
-        width : 10px;
+        width : 5px;
         height: 50px;
       }
     }

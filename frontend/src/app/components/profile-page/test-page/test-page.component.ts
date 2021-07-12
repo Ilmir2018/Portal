@@ -29,6 +29,7 @@ export class TestPageComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;
   filters: string[] = ['name', 'firm', 'email']
   oSub: Subscription
+  reloading: boolean = false
 
   currentPage = 1;
   displayedColumns: string[] = [];
@@ -50,14 +51,16 @@ export class TestPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.reloading = true
     this.oSub = this.service.getContacts().subscribe(contacts => {
       this.dataSource = new MatTableDataSource<any>(contacts)
+      this.reloading = false
       this.columnsDef = [...this.columns];
       this.setDataSource(this.dataSource);
       this.dataSource.paginator = this.paginator
       this.dataSource.sort = this.sort
+      
     })
-
   }
 
   setDataSource(dataSource: MatTableDataSource<Contact>): void {
@@ -95,6 +98,7 @@ export class TestPageComponent implements OnInit, OnDestroy {
       column.index = index;
       this.displayedColumns[index] = column.field;
     });
+    console.log('sdfdsfd')
     this.setTableResize(this.matTableRef.nativeElement.clientWidth);
   }
 
@@ -115,7 +119,7 @@ export class TestPageComponent implements OnInit, OnDestroy {
 
 
   private checkResizing(event: MouseEvent, index: number): void {
-    //Данные которые есть изначально
+    //Данные которые есть изначально`
     const cellData = this.getCellData(index);
     // console.log(cellData)
     if ((index === 0) || (Math.abs(event.pageX - cellData.right) < cellData.width / 2 && index !== this.columns.length - 1)) {
@@ -205,6 +209,7 @@ export class TestPageComponent implements OnInit, OnDestroy {
   //Событие вызываемое при изменении ширины экрана
   @HostListener('window:resize', ['$event'])
   onResize(): void {
+    this.reloading = false
     //Функция вызываемая для придания ширины экрана
     this.setTableResize(this.matTableRef.nativeElement.clientWidth);
   }

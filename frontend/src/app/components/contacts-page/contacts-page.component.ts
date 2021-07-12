@@ -1,11 +1,7 @@
-import { AfterContentInit, AfterViewInit, Component, ContentChild, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { Component } from '@angular/core';
+import { GridColumnDefinition } from '../../interfaces';
 import { MatTableDataSource } from '@angular/material/table';
-import { Subscription } from 'rxjs';
-import { Contact, Filter } from 'src/app/interfaces';
 import { ContactsService } from 'src/app/services/contacts.service';
-import { FilterService } from 'src/app/services/filter.service';
 
 @Component({
   selector: 'app-contacts-page',
@@ -14,61 +10,25 @@ import { FilterService } from 'src/app/services/filter.service';
 })
 
 
-export class ContactsPageComponent implements OnInit, OnDestroy, AfterViewInit, AfterContentInit {
+export class ContactsPageComponent {
 
-  displayedColumns: string[] = ['name', 'firm', 'email', 'phone']
-  filters: string[] = ['name', 'firm', 'email']
-  filter: Filter = {}
-  oSub: Subscription
-  loading: boolean = false
-  reloading: boolean = false
-  noMoreContacts: boolean = false
-  dataSource: MatTableDataSource<Contact>;
+  columns: GridColumnDefinition[] = [
+    { field: 'name', width: 40, name: 'name', show: true, order: 1 },
+    { field: 'firm', width: 80, name: 'firm', show: true, order: 2 },
+    { field: 'email', width: 50, name: 'email', show: true, order: 3 },
+    { field: 'phone', width: 40, name: 'phone', show: true, order: 4 },
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
-
-
-  constructor(private service: ContactsService, private filterService: FilterService) {
-    this.fetch()
-   }
-
-  ngOnInit(): void {
-    this.reloading = true
-  }
-
-  ngAfterViewInit() {
-    this.fetch()
-  }
-
-  ngAfterContentInit() {
-  }
-
-
-  private fetch() {
-    this.oSub = this.service.getContacts().subscribe(contacts => {
-      this.dataSource = new MatTableDataSource(contacts)
-      this.dataSource.paginator = this.paginator
-      this.dataSource.sort = this.sort
-      this.reloading = false
-      this.loading = false
-    })
-  }
-
-  ngOnDestroy() {
-    this.oSub.unsubscribe()
-  }
-
-  setupFilter(column: string) {
-    this.dataSource.filterPredicate = (d: Contact, filter: string) => {
-      const textToSearch = d[column] && d[column].toLowerCase() || '';
-      return textToSearch.indexOf(filter) !== -1;
-    };
-  }
+  ];
   
-  
-  applyFilter(filterValue: string) {
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  dataSource: MatTableDataSource<any>;
+
+  constructor(private service: ContactsService) {
+
+    this.service.changedColumns = this.columns
+    //Из кэша получаем сохранённые настройки по ширине столбцов
+    if(localStorage.getItem('widthChange') !== undefined) {
+      this.columns = JSON.parse(localStorage.getItem('widthChange'))
+    }
   }
 
 

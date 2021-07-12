@@ -24,6 +24,7 @@ import { ResizableDirective } from './classes/resizable.directive';
 import { TestPageComponent } from './components/profile-page/test-page/test-page.component';
 import { SplitSchedulePipe } from './classes/split-schedule.pipe';
 import { ContactsTableComponent } from './components/contacts-page/contacts-table/contacts-table.component';
+import { ContactPageComponent } from './components/contacts-page/contact-page/contact-page.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { ContactsTableComponent } from './components/contacts-page/contacts-tabl
     ResizableDirective,
     TestPageComponent,
     SplitSchedulePipe,
-    ContactsTableComponent
+    ContactsTableComponent,
+    ContactPageComponent
   ],
   imports: [
     BrowserModule,

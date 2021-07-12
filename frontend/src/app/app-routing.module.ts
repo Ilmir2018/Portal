@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './classes/auth.guard';
+import { ContactPageComponent } from './components/contacts-page/contact-page/contact-page.component';
 
 import { ContactsPageComponent } from './components/contacts-page/contacts-page.component';
 import { NewContactComponent } from './components/contacts-page/new-contact/new-contact.component';
@@ -21,10 +22,11 @@ const routes: Routes = [
   },
   {
     path: '', component: SiteLayoutComponent, canActivate: [AuthGuard], children: [
-      {path: 'contacts', component: ContactsPageComponent},
       {path: 'settings', component: SettingsPageComponent},
+      {path: 'contacts', component: ContactsPageComponent},
       {path: 'profile', component: ProfilePageComponent},
       {path: 'contacts/new', component: NewContactComponent},
+      {path: 'contacts/:id', component: ContactPageComponent},
     ]
   },
 ];
