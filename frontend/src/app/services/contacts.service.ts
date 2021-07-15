@@ -14,6 +14,14 @@ export class ContactsService {
   width3: number
   width4: number
 
+  columns: GridColumnDefinition[] = [
+    { field: 'name', width: 40, name: 'name', show: true, order: 1 },
+    { field: 'firm', width: 80, name: 'firm', show: true, order: 2 },
+    { field: 'email', width: 50, name: 'email', show: true, order: 3 },
+    { field: 'phone', width: 40, name: 'phone', show: true, order: 4 },
+
+  ];
+
   constructor(private http: HttpClient) {
   }
 
@@ -21,8 +29,21 @@ export class ContactsService {
     return this.http.get<Contact[]>('/api/contacts')
   }
 
+
+  getById(id: string): Observable<Contact> {
+    return this.http.get<Contact>(`/api/contacts/${id}`)
+  }
+
   create(data: Contact): Observable<Contact> {
     return this.http.post<Contact>('/api/contacts', data)
+  }
+
+  update(id: string, name: string, firm: string,
+     email: string, phone: string): Observable<Contact> {
+
+    let data = {name, firm, email, phone};
+
+    return this.http.patch<Contact>(`/api/contacts/${id}`, data)
   }
 
 }

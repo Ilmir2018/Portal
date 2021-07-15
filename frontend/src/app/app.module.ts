@@ -21,7 +21,6 @@ import { SearchPipe } from './classes/search.pipe';
 import { MaterialModule } from './material/material.module';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { ResizableDirective } from './classes/resizable.directive';
-import { TestPageComponent } from './components/profile-page/test-page/test-page.component';
 import { SplitSchedulePipe } from './classes/split-schedule.pipe';
 import { ContactsTableComponent } from './components/contacts-page/contacts-table/contacts-table.component';
 import { ContactPageComponent } from './components/contacts-page/contact-page/contact-page.component';
@@ -40,7 +39,6 @@ import { ContactPageComponent } from './components/contacts-page/contact-page/co
     NewContactComponent,
     SearchPipe,
     ResizableDirective,
-    TestPageComponent,
     SplitSchedulePipe,
     ContactsTableComponent,
     ContactPageComponent

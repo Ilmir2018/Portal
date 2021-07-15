@@ -1,4 +1,4 @@
-<app-contacts-table [dataSource]="dataSource" [columns]="columns" [cellTemplateRef]="columnTemplateRef"
+<app-contacts-table [dataSource]="dataSource" [cellTemplateRef]="columnTemplateRef"
     [addRemoveColumn]="true">
     <ng-template #columnTemplateRef let-row="row" let-column="column">
         <!-- <ng-container *ngIf="column.field === 'test'">{{ row[column.field]?.time | date:'medium' }}</ng-container> -->

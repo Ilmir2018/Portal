@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const User = require('../models/User')
+const Contact = require('../models/Contact')
 const keys = require('../config/keys')
 const errorHandler = require('../utils/errorHandler')
 
@@ -48,13 +49,23 @@ module.exports.register = async function(req, res) {
         //Создать пользователя
         const salt = bcrypt.genSaltSync(10)
         const password = req.body.password
+
         const user = new User({
             email: req.body.email,
             password: bcrypt.hashSync(password, salt)
         })
 
+        const contact = new Contact({
+            name: req.body.name = "Введите данные",
+            firm: req.body.firm = "Введите данные",
+            email: req.body.email,
+            phone: req.body.phone = "Введите данные",
+            user: user.id
+        })
+
         try {
             await user.save()
+            await contact.save()
             res.status(201).json(user)
         } catch(e) {
             //Обработать ошибку

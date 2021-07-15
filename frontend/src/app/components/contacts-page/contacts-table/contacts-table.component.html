@@ -22,12 +22,13 @@
                 </mat-header-cell>
             </ng-container>
             <ng-container>
-                <mat-cell *matCellDef="let row" (click)="showContact(row._id)">
+                <mat-cell [routerLink]="['/contacts', row._id]" *matCellDef="let row">
                     <ng-template *ngTemplateOutlet="cellTemplateRef; context:{row: row, column: column}" [ngIf]="cellTemplateRef"></ng-template>
                     <ng-container *ngIf="!cellTemplateRef">{{ row[column.field] }}</ng-container>
                 </mat-cell>
             </ng-container>
         </ng-container>
+        
         <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;" #MatTableRowRef ></mat-row>
     </mat-table>

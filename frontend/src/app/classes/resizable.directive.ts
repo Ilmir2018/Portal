@@ -7,6 +7,7 @@ import { fromEvent } from 'rxjs';
   selector: '[resizable]',
 })
 export class ResizableDirective {
+
   @Output()
   readonly resizable = fromEvent<MouseEvent>(
     this.elementRef.nativeElement,
@@ -30,5 +31,6 @@ export class ResizableDirective {
     @Inject(DOCUMENT) private readonly documentRef: Document,
     @Inject(ElementRef)
     private readonly elementRef: ElementRef<HTMLElement>
-  ) {}
+  ) {
+  }
 }

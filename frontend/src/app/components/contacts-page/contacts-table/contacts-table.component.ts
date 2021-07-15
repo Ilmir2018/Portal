@@ -17,7 +17,7 @@ export class ContactsTableComponent implements OnInit {
   @ViewChild(MatTable, { read: ElementRef, static: true }) private matTableRef: ElementRef;
   @ViewChildren('MatTableRowRef') matTableRow: QueryList<any>;
   @Input() dataSource: MatTableDataSource<Contact>;
-  @Input() columns: GridColumnDefinition[] = [];
+  columns: GridColumnDefinition[] = [];
   @Input() cellTemplateRef: TemplateRef<any>;
   @Input() addRemoveColumn = true;
   @Input() infiniteScroll: boolean;
@@ -44,7 +44,17 @@ export class ContactsTableComponent implements OnInit {
   removedColumns: GridColumnDefinition[] = [];
   data: MatTableDataSource<any>;
 
-  constructor(private renderer: Renderer2, private service: ContactsService) {}
+  constructor(private renderer: Renderer2, private service: ContactsService) {
+    this.columns = this.service.columns
+    this.service.changedColumns = this.columns
+    //Из кэша получаем сохранённые настройки по ширине столбцов
+    if(JSON.parse(localStorage.getItem('widthChange'))) {
+      if(JSON.parse(localStorage.getItem('widthChange')).length !== 0) {
+        this.columns = JSON.parse(localStorage.getItem('widthChange'))
+      }
+      
+    }
+  }
 
   ngOnInit(): void {
     this.reloading = true
@@ -89,6 +99,7 @@ export class ContactsTableComponent implements OnInit {
 
   setDisplayedColumns(): void {
     this.displayedColumns = [];
+    console.log(this.columns)
     this.columns.forEach((column: GridColumnDefinition, index: number) => {
       column.index = index;
       this.displayedColumns[index] = column.field;

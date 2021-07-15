@@ -6,7 +6,8 @@ const iconv = require('iconv-lite')
 module.exports.get = async function (req, res) {
     try {
         const query = {
-            user: req.user.id
+            //Закоментировано чтобы выводились контакты для любых пользователей пока
+            // user: req.user.id
         }
 
         if (req.query.phone) {
@@ -37,6 +38,15 @@ module.exports.get = async function (req, res) {
     }
 }
 
+module.exports.getById = async function (req, res) {
+    try {
+        const contact = await Contact.findById(req.params.id)
+        res.status(200).json(contact)
+    } catch (e) {
+        errorHandler(res, e)
+    }
+}
+
 module.exports.create = async function (req, res) {
     const contact = new Contact({
         name: req.body.name,
@@ -57,15 +67,13 @@ module.exports.update = async function (req, res) {
     const updated = {
         name: req.body.name,
         email: req.body.email,
-    }
-
-    if (req.body.firm) {
-        updated.city = req.body.firm
+        firm: req.body.firm
     }
 
     if (req.body.phone) {
         updated.phone = req.body.phone
     }
+    
     try {
         const contact = await Contact.findOneAndUpdate(
             { _id: req.params.id },
