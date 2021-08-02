@@ -15,10 +15,10 @@ export class ContactsService {
   width4: number
 
   columns: GridColumnDefinition[] = [
-    { field: 'name', width: 40, name: 'name', show: true, order: 1 },
-    { field: 'firm', width: 80, name: 'firm', show: true, order: 2 },
-    { field: 'email', width: 50, name: 'email', show: true, order: 3 },
-    { field: 'phone', width: 40, name: 'phone', show: true, order: 4 },
+    { field: 'name', width: 60, name: 'name', show: true, order: 1 },
+    { field: 'firm', width: 10, name: 'firm', show: true, order: 2 },
+    { field: 'email', width: 40, name: 'email', show: true, order: 3 },
+    { field: 'phone', width: 55, name: 'phone', show: true, order: 4 },
 
   ];
 

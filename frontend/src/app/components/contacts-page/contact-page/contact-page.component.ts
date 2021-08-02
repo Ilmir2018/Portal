@@ -16,6 +16,7 @@ export class ContactPageComponent implements OnInit {
 
   form: FormGroup
   contact: Contact
+  date: Date
 
   constructor(private route: ActivatedRoute, private service: ContactsService,
     private router: Router) { }
@@ -26,7 +27,8 @@ export class ContactPageComponent implements OnInit {
       name: new FormControl(null, Validators.required),
       firm: new FormControl(null, Validators.required),
       email: new FormControl(null, [Validators.required, Validators.email]),
-      phone: new FormControl(null)
+      phone: new FormControl(null),
+      date: new FormControl(null),
     })
 
     this.form.disable()
@@ -45,8 +47,10 @@ export class ContactPageComponent implements OnInit {
           name: contact.name,
           firm: contact.firm,
           email: contact.email,
-          phone: contact.phone
+          phone: contact.phone,
+          date: contact.date
         })
+        this.date = contact.date
         MaterialService.updateTextInputs()
       }
       this.form.enable()

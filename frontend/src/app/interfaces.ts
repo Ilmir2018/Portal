@@ -1,6 +1,7 @@
 export interface User {
     email: string
     password: string
+    date?: Date
 }
 
 export interface Contact {
@@ -9,7 +10,8 @@ export interface Contact {
     email: string
     phone?: string
     user?: string,
-    _id?: string
+    _id?: string,
+    date?: Date
 }
 
 export interface Menu {

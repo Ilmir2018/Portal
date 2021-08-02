@@ -26,6 +26,10 @@ module.exports.get = async function (req, res) {
             query.email = req.query.email
         }
 
+        // if (req.query.date) {
+        //     query.date = req.query.date
+        // }
+
         //Вывод контактов которые создал определённый юзер
         const contacts = await Contact
             .find(query)

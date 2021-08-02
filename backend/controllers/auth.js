@@ -9,6 +9,12 @@ const errorHandler = require('../utils/errorHandler')
 module.exports.login = async function(req, res) {
     const candidate = await User.findOne({email: req.body.email})
 
+    const time = new Date()
+    
+    const updated = {
+        date: time
+    }
+
     if(candidate) {
         //Проверка пароля, пользователь есть.
         const passwordResult = bcrypt.compareSync(req.body.password, candidate.password)
@@ -18,6 +24,12 @@ module.exports.login = async function(req, res) {
                 email: candidate.email,
                 userId: candidate._id
             }, keys.jwt, {expiresIn: 3600})
+
+            const contact = await Contact.findOneAndUpdate(
+                { user: candidate._id },
+                { $set: updated },
+                { new: true }
+            )
 
             res.status(200).json({
                 token: `Bearer ${token}`
@@ -60,7 +72,7 @@ module.exports.register = async function(req, res) {
             firm: req.body.firm = "Введите данные",
             email: req.body.email,
             phone: req.body.phone = "Введите данные",
-            user: user.id
+            user: user.id,
         })
 
         try {

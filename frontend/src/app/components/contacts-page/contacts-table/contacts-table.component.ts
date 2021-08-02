@@ -29,6 +29,7 @@ export class ContactsTableComponent implements OnInit {
   filters: string[] = ['name', 'firm', 'email']
   oSub: Subscription
   reloading: boolean = false
+  phone = 'phone'
 
   currentPage = 1;
   displayedColumns: string[] = [];

@@ -33,6 +33,11 @@
             <input id="phone" type="text" formControlName="phone">
             <label for="phone">Телефон</label>
         </div>
+        <div class="input-field">
+            <p>Дата последнего входа</p>
+            <p>{{date | date:'dd.MM.yyyy H:mm'}}</p>
+            
+        </div>
 
         <div>
             <button type="submit"
