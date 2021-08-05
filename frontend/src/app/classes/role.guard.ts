@@ -8,7 +8,7 @@ import { AuthService } from "../services/auth.service";
     providedIn: 'root'
 })
 
-export class AuthGuard implements CanActivate, CanActivateChild {
+export class RoleGuard implements CanActivate {
 
     constructor(private auth: AuthService, private router: Router){}
 
@@ -17,12 +17,12 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-        if(this.auth.isAuthenticated) {
+        if(localStorage.getItem('role') === "ADMIN") {
             return of (true)
         } else {
-            this.router.navigate(['/login'], {
+            this.router.navigate(['/contacts'], {
                 queryParams: {
-                    accessDenied: true
+                    roleDenied: true
                 }
             })
             return of(false)

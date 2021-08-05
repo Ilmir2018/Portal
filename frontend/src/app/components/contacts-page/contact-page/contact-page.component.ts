@@ -48,7 +48,6 @@ export class ContactPageComponent implements OnInit {
           firm: contact.firm,
           email: contact.email,
           phone: contact.phone,
-          date: contact.date
         })
         this.date = contact.date
         MaterialService.updateTextInputs()
@@ -63,8 +62,7 @@ export class ContactPageComponent implements OnInit {
     let obs$
     this.form.disable()
     obs$ = this.service.update(this.contact._id, this.form.value.name,
-       this.form.value.firm, this.form.value.email, this.form.value.phone)
-
+       this.form.value.firm, this.form.value.email, this.form.value.phone, this.contact.roles)
        obs$.subscribe(
          contact => {
            this.contact = contact

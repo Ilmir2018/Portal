@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute, Params } from '@angular/router';
+import { MaterialService } from 'src/app/classes/material.service';
 
 @Component({
   selector: 'app-contacts-page',
@@ -8,11 +10,20 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 
 
-export class ContactsPageComponent {
-  
+export class ContactsPageComponent implements OnInit {
+
   dataSource: MatTableDataSource<any>;
 
-  constructor() {
+  constructor(private route: ActivatedRoute) {
+
+  }
+
+  ngOnInit() {
+    this.route.queryParams.subscribe((params: Params) => {
+      if (params['roleDenied']) {
+        MaterialService.toast('У вас нет прав доступа на эту операцию')
+      }
+    })
   }
 
 

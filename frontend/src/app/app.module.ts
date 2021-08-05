@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import {MatMenuModule} from '@angular/material/menu';
+import { AgGridModule } from 'ag-grid-angular';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -52,6 +53,7 @@ import { ContactPageComponent } from './components/contacts-page/contact-page/co
     BrowserAnimationsModule,
     MatMenuModule,
     MaterialModule,
+    AgGridModule.withComponents([])
   ],
   providers: [
     {

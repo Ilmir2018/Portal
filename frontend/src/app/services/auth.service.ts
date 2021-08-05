@@ -4,6 +4,10 @@ import { User } from '../interfaces';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
+interface role {
+  item: string
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -13,12 +17,15 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  login(user: User):Observable<{token: string}> {
-    return this.http.post<{token: string}>('/api/auth/login', user)
+  login(user: User):Observable<{token: string, role: role}> {
+    return this.http.post<{token: string, role: role}>('/api/auth/login', user)
     .pipe(
       tap(
-        ({token}) => {
+        ({token, role}) => {
+          let item = role[0]
+          //Сохраняем в локальном хранилище токен и роль пользователя
           localStorage.setItem('auth-token', token)
+          localStorage.setItem('role', item)
           this.setToken(token)
         }
       )

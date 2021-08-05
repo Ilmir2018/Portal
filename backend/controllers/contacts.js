@@ -1,4 +1,6 @@
 const Contact = require('../models/Contact')
+const User = require('../models/User')
+const Role = require('../models/Role')
 const errorHandler = require('../utils/errorHandler')
 const iconv = require('iconv-lite')
 
@@ -25,10 +27,6 @@ module.exports.get = async function (req, res) {
         if (req.query.email) {
             query.email = req.query.email
         }
-
-        // if (req.query.date) {
-        //     query.date = req.query.date
-        // }
 
         //Вывод контактов которые создал определённый юзер
         const contacts = await Contact
@@ -71,19 +69,21 @@ module.exports.update = async function (req, res) {
     const updated = {
         name: req.body.name,
         email: req.body.email,
-        firm: req.body.firm
+        firm: req.body.firm,
     }
 
     if (req.body.phone) {
         updated.phone = req.body.phone
     }
-    
+
+
     try {
         const contact = await Contact.findOneAndUpdate(
             { _id: req.params.id },
             { $set: updated },
             { new: true }
         )
+
         res.status(200).json(contact)
     } catch (e) {
         errorHandler(res, e)

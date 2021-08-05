@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './classes/auth.guard';
+import { RoleGuard } from './classes/role.guard';
 import { ContactPageComponent } from './components/contacts-page/contact-page/contact-page.component';
 
 import { ContactsPageComponent } from './components/contacts-page/contacts-page.component';
@@ -25,8 +26,8 @@ const routes: Routes = [
       {path: 'settings', component: SettingsPageComponent},
       {path: 'contacts', component: ContactsPageComponent},
       {path: 'profile', component: ProfilePageComponent},
-      {path: 'contacts/new', component: NewContactComponent},
-      {path: 'contacts/:id', component: ContactPageComponent},
+      {path: 'contacts/new', component: NewContactComponent, canActivate: [RoleGuard]},
+      {path: 'contacts/:id', component: ContactPageComponent, canActivate: [RoleGuard]},
     ]
   },
 ];

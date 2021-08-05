@@ -25,7 +25,8 @@ const contactSchema = new Schema({
     date: {
         type: Date,
         default: Date.now
-    }
+    },
+    roles: [{type: String, ref: 'Role'}]
 })
 
 module.exports = mongoose.model('contacts', contactSchema)

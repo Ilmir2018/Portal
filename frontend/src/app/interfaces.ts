@@ -11,7 +11,8 @@ export interface Contact {
     phone?: string
     user?: string,
     _id?: string,
-    date?: Date
+    date?: Date,
+    roles?: []
 }
 
 export interface Menu {

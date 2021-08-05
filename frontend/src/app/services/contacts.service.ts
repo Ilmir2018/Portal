@@ -29,7 +29,6 @@ export class ContactsService {
     return this.http.get<Contact[]>('/api/contacts')
   }
 
-
   getById(id: string): Observable<Contact> {
     return this.http.get<Contact>(`/api/contacts/${id}`)
   }
@@ -39,9 +38,9 @@ export class ContactsService {
   }
 
   update(id: string, name: string, firm: string,
-     email: string, phone: string): Observable<Contact> {
+     email: string, phone: string, roles: []): Observable<Contact> {
 
-    let data = {name, firm, email, phone};
+    let data = {name, firm, email, phone, roles};
 
     return this.http.patch<Contact>(`/api/contacts/${id}`, data)
   }
