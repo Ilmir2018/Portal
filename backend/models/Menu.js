@@ -7,9 +7,13 @@ const menuSchema = new Schema({
         type: String,
         required: true,
     },
+    url:{   
+        type: String,
+        required: true
+    },
     subtitle: {
-        type: Submenu,
-    }
+        type: Object
+    } 
 })
 
 module.exports = mongoose.model('menus', menuSchema)

@@ -7,6 +7,8 @@ import { ContactPageComponent } from './components/contacts-page/contact-page/co
 import { ContactsPageComponent } from './components/contacts-page/contacts-page.component';
 import { NewContactComponent } from './components/contacts-page/new-contact/new-contact.component';
 import { LoginPageComponent } from './components/login-page/login-page.component';
+import { MenuTemplateComponent } from './components/menu-template/menu-template.component';
+import { MenuTemplate2Component } from './components/menu-template2/menu-template2.component';
 import { ProfilePageComponent } from './components/profile-page/profile-page.component';
 import { RegisterPageComponent } from './components/register-page/register-page.component';
 import { SettingsPageComponent } from './components/settings-page/settings-page.component';
@@ -24,13 +26,19 @@ const routes: Routes = [
   {
     path: '', component: SiteLayoutComponent, canActivate: [AuthGuard], children: [
       {path: 'settings', component: SettingsPageComponent},
-      {path: 'contacts', component: ContactsPageComponent},
+      {path: 'menu', component: MenuTemplate2Component},
       {path: 'profile', component: ProfilePageComponent},
+      {path: 'contacts', component: ContactsPageComponent},
       {path: 'contacts/new', component: NewContactComponent, canActivate: [RoleGuard]},
       {path: 'contacts/:id', component: ContactPageComponent, canActivate: [RoleGuard]},
     ]
   },
 ];
+
+// routes.forEach((item, idx) => {
+//   item.children[2].path = "sdgdsgsdgdsg"
+//   console.log(item)
+// })
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

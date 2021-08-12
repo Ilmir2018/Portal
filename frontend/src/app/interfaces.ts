@@ -4,6 +4,13 @@ export interface User {
     date?: Date
 }
 
+
+
+export interface ContactResponse {
+    contacts: Contact[],
+    menu: Menu
+}
+
 export interface Contact {
     name: string
     firm: string
@@ -40,4 +47,10 @@ export interface GridColumnDefinition {
     index?: number;
     show: boolean;
     order: number;
+  }
+
+  export interface NavItem {
+    title: string;
+    url: string;
+    subtitle?: NavItem[];
   }

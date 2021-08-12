@@ -4,6 +4,7 @@ const router = express.Router()
 const passport = require('passport')
 const admin = require('../middleware/adminMiddleware')
 
+
 router.get('/', passport.authenticate('jwt', {session: false}), controller.get)
 router.get('/:id', passport.authenticate('jwt', {session: false}), admin(["ADMIN"]), controller.getById)
 router.post('/', passport.authenticate('jwt', {session: false}), admin(["ADMIN"]), controller.create)

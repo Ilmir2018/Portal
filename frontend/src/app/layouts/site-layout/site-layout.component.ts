@@ -20,10 +20,11 @@ export class SiteLayoutComponent implements OnInit {
   links = [
     {
       url: "/settings", name: "Настройки", menu: [
-        {value: 'Пользователи', key: '', url: "/contacts"},
+        { value: 'Пользователи', key: '', url: "/contacts" },
       ]
     },
-    { url: "/profile", name: "Профиль" }
+    { url: "/profile", name: "Профиль" },
+    { url: "/menu", name: "Mеню" }
   ]
 
   constructor(private auth: AuthService, private router: Router, private filter: FilterService) { }

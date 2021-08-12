@@ -59,13 +59,12 @@ export class ContactsTableComponent implements OnInit {
 
   ngOnInit(): void {
     this.reloading = true
-    this.oSub = this.service.getContacts().subscribe(contacts => {
-      this.dataSource = new MatTableDataSource<Contact>(contacts)
+    this.oSub = this.service.getContacts().subscribe(contactResp => {
+      this.dataSource = new MatTableDataSource<Contact>(contactResp.contacts)
       this.reloading = false
       this.setDataSource(this.dataSource);
       this.dataSource.paginator = this.paginator
       this.dataSource.sort = this.sort
-      
     })
   }
 

@@ -7,8 +7,12 @@ const submenuSchema = new Schema({
         type: String,
         required: true,
     },
+    url:{
+        type: String,
+        required: true
+    },
     subtitle: {
-        type: Menu,
+        type: Object,
     }
 })
 

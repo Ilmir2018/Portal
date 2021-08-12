@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Contact, GridColumnDefinition } from '../interfaces';
+import { Contact, ContactResponse, GridColumnDefinition } from '../interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -25,8 +25,8 @@ export class ContactsService {
   constructor(private http: HttpClient) {
   }
 
-  getContacts(): Observable<Contact[]> {
-    return this.http.get<Contact[]>('/api/contacts')
+  getContacts(): Observable<ContactResponse> {
+    return this.http.get<ContactResponse>('/api/contacts')
   }
 
   getById(id: string): Observable<Contact> {

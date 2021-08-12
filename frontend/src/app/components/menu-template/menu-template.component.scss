@@ -1,0 +1,42 @@
+.spoiler-wrap > .spoiler__btn
+{
+  cursor: pointer;
+}
+
+.spoiler-wrap > .spoiler__btn::after
+{
+//   content: "(Закрыто)";
+  margin-left: 10px;
+}
+
+.spoiler-wrap.spoiler--open > .spoiler__btn::after
+{
+//   content: "(Открыто)";
+  margin-left: 10px;
+}
+
+.spoiler-wrap.spoiler--open > .spoiler-content
+{
+  display: block;
+  margin-left: 10px;
+}
+
+.spoiler-content
+{
+  display: none;
+  animation: fadeIn 1s ease;
+}
+
+
+@keyframes fadeIn
+{
+  from
+  {
+    opacity: 0;
+  }
+
+  to
+  {
+    opacity: 1;
+  }
+}
