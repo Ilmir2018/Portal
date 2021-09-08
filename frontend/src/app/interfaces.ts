@@ -24,12 +24,8 @@ export interface Contact {
 
 export interface Menu {
     title: string
-    subtitle?: Submenu []
-}
-
-export interface Submenu {
-    title: string
-    subtitle?: Menu[]
+    url: string
+    subtitle?: []
 }
 
 export interface Filter {

@@ -3,17 +3,26 @@ const Submenu = require('./Submenu')
 const Schema = mongoose.Schema
 
 const menuSchema = new Schema({
+    _id: {
+        type: Number,
+        unique: true
+    },
+    parentId: {
+        type: Number,
+    },
     title: {
         type: String,
         required: true,
+        unique: true
     },
-    url:{   
+    url: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     subtitle: {
         type: Object
-    } 
+    }
 })
 
 module.exports = mongoose.model('menus', menuSchema)

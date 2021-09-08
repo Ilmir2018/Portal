@@ -66,7 +66,15 @@ module.exports.register = async function (req, res) {
         const salt = bcrypt.genSaltSync(10)
         const password = req.body.password
 
-        const userRole = await Role.findOne({ value: "ADMIN" })
+
+        // const role = new Role({
+        //     value: "ADMIN"
+        // })
+
+        // await role.save()
+
+        const userRole = await Role.findOne({ value: "USER" })
+
         const user = new User({
             email: req.body.email,
             password: bcrypt.hashSync(password, salt),

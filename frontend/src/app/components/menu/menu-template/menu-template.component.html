@@ -1,0 +1,14 @@
+<!-- <ul>
+    <li class="spoiler-wrap" *ngFor="let item of navItems">
+        <p *ngIf="item.subtitle.length !== 0" class="spoiler__btn">sdgfsdg</p>
+        <a [routerLink]=[item.url]>{{ item.title }}</a>
+        <app-menu-template class="spoiler-content" *ngIf="item.subtitle" [navItems]="item.subtitle"></app-menu-template>
+    </li>
+</ul> -->
+
+<ul id="main_nav">
+    <li *ngFor="let item of navItems">
+        <a [routerLink]=[item.url]>{{ item.title }}</a>
+        <app-menu-template class="spoiler-content" *ngIf="item.subtitle" [navItems]="item.subtitle"></app-menu-template>
+    </li>  
+</ul>

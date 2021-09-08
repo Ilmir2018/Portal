@@ -47,22 +47,70 @@ module.exports.get = async function (req, res) {
             query2.subtitle = req.query.subtitle
         }
 
+        const menuItem = new Menu(
+            {
+                _id: 1,
+                parentId: 0,
+                title: 'Настройки2',
+                url: '/settings',
+                subtitle: [
+                    new Menu({
+                        _id: 2,
+                        parentId: 1,
+                        title: "Пользователи",
+                        url: '/contacts',
+                        subtitle: []
+                    }),
+                    new Menu({
+                        _id: 3,
+                        parentId: 1,
+                        title: "Пользователи",
+                        url: '/contacts',
+                        subtitle: []
+                    })
+                ]
+            })
+
         // const menuItem = new Menu(
         //     {
-        //         title: 'Контакты',
-        //         url: '/contacts',
+        //         title: 'Профиль',
+        //         url: '/profile',
+        //         subtitle: []
+        //     })
+
+        // const menuItem = new Menu(
+        //     {
+        //         title: 'Меню',
+        //         url: '/menu',
+        //         subtitle: []
+        //     })
+
+        // const menuItem = new Menu(
+        //     {
+        //         title: 'Test',
+        //         url: '/test',
         //         subtitle: [
         //             {
         //                 title: "Первый уровень",
-        //                 url: '/first',
+        //                 url: '/test/first',
         //                 subtitle: [
         //                     {
         //                         title: "Второй уровень",
-        //                         url: '/second',
+        //                         url: '/test/first/second',
         //                         subtitle: [
         //                             {
-        //                                 title: "Третий уровень",
-        //                                 url: '/theed',
+        //                                 title: "Третий уровень 1",
+        //                                 url: '/test/first/second/theed1',
+        //                                 subtitle: []
+        //                             },
+        //                             {
+        //                                 title: "Третий уровень 2",
+        //                                 url: '/test/first/second/theed2',
+        //                                 subtitle: []
+        //                             },
+        //                             {
+        //                                 title: "Третий уровень 3",
+        //                                 url: '/test/first/second/theed3',
         //                                 subtitle: []
         //                             }
         //                         ]
@@ -72,7 +120,7 @@ module.exports.get = async function (req, res) {
         //         ]
         //     })
 
-        // menuItem.save()
+        menuItem.save()
 
         // const updated = {
         //     subtitle: [
@@ -110,8 +158,6 @@ module.exports.get = async function (req, res) {
 
         const menu = await Menu
             .find(query2)
-
-        // console.log(menu)
 
         res.status(200).json({
             contacts: contacts, menu: menu

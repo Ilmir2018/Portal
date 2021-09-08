@@ -1,24 +1,10 @@
 <ul class="sidenav sidenav-fixed a-sidenav">
     <h4>Portal</h4>
-    <li class="bold" *ngFor="let link of links" routerLinkActive="active">
-        <a *ngIf="!link.menu" [routerLink]="[link.url]" class="waves-effect waves-orange" mat-button>
-            {{link.name}}
-        </a>
-        <a *ngIf="link.menu" [routerLink]="[link.url]" class="waves-effect waves-orange" mat-button
-            [matMenuTriggerFor]="aboveMenu">{{link.name}}</a>
-        <mat-menu #aboveMenu="matMenu" yPosition="above">
-            <a *ngFor="let item of link.menu" mat-menu-item [routerLink]="[item.url]" 
-            class="waves-effect waves-orange">
-                {{item.value}}
-            </a>
-        </mat-menu>
-    </li>
+    <app-menu-template [navItems]="service.navItems"></app-menu-template>
     <li class="bold last">
         <a href="#" class="waves-effect waves-orange" (click)="logout($event)">Выйти</a>
     </li>
 </ul>
-
-
 
 <main class="content">
     <router-outlet></router-outlet>

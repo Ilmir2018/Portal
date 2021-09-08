@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { MaterialService } from 'src/app/classes/material.service';
+import { SettingsPageComponent } from '../settings-page/settings-page.component';
 
 @Component({
   selector: 'app-contacts-page',
@@ -15,7 +16,6 @@ export class ContactsPageComponent implements OnInit {
   dataSource: MatTableDataSource<any>;
 
   constructor(private route: ActivatedRoute) {
-
   }
 
   ngOnInit() {

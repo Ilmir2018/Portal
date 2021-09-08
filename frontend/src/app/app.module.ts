@@ -25,8 +25,9 @@ import { ResizableDirective } from './classes/resizable.directive';
 import { SplitSchedulePipe } from './classes/split-schedule.pipe';
 import { ContactsTableComponent } from './components/contacts-page/contacts-table/contacts-table.component';
 import { ContactPageComponent } from './components/contacts-page/contact-page/contact-page.component';
-import { MenuTemplateComponent } from './components/menu-template/menu-template.component';
-import { MenuTemplate2Component } from './components/menu-template2/menu-template2.component';
+import { MenuTemplateComponent } from './components/menu/menu-template/menu-template.component';
+import { MenuComponent } from './components/menu/menu.component';
+import { MenuUpdateComponent } from './components/menu/menu-update/menu-update.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { MenuTemplate2Component } from './components/menu-template2/menu-templat
     ContactsTableComponent,
     ContactPageComponent,
     MenuTemplateComponent,
-    MenuTemplate2Component
+    MenuComponent,
+    MenuUpdateComponent
   ],
   imports: [
     BrowserModule,

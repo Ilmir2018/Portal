@@ -6,6 +6,7 @@ import { Contact, ContactResponse, GridColumnDefinition } from '../interfaces';
 @Injectable({
   providedIn: 'root'
 })
+
 export class ContactsService {
 
   changedColumns: GridColumnDefinition[] = []
