@@ -7,8 +7,8 @@
 </ul> -->
 
 <ul id="main_nav">
-    <li *ngFor="let item of navItems">
+    <li *ngFor="let item of menuItems">
         <a [routerLink]=[item.url]>{{ item.title }}</a>
-        <app-menu-template class="spoiler-content" *ngIf="item.subtitle" [navItems]="item.subtitle"></app-menu-template>
+        <app-menu-template class="spoiler-content" *ngIf="item.subtitle" [menuItems]="item.subtitle"></app-menu-template>
     </li>  
 </ul>

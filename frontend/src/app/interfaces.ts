@@ -43,10 +43,18 @@ export interface GridColumnDefinition {
     index?: number;
     show: boolean;
     order: number;
-  }
+}
 
-  export interface NavItem {
+export interface NavItem {
     title: string;
     url: string;
     subtitle?: NavItem[];
-  }
+}
+
+export interface NavItemNew {
+    id: number;
+    title: string;
+    url: string;
+    subtitle?: NavItem[];
+    level: number;
+}

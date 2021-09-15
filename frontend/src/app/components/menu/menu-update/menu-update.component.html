@@ -1,46 +1,47 @@
-<div class="row" *ngFor="let item of navItems; let i = index">
-    <div *ngIf="item._id; else subtitles" class="first_step">
+<div class="row" *ngFor="let item of menuItems; let i = index">
+    <div *ngIf="item.level == null; else unset" class="first_step">
         <div class="input-field">
             <input type="text" value="{{item.title}}" (keyup)="setValue($event.target.value)">
         </div>
-        <app-menu-update class="spoiler-content" *ngIf="item.subtitle" [navItems]="item.subtitle"></app-menu-update>
+        <app-menu-update class="spoiler-content" *ngIf="item.subtitle" [menuItems]="item.subtitle"></app-menu-update>
         <div class="buttons">
-            <button (click)="save(item, item._id)" class="btn">
+            <button (click)="save(item)" class="btn">
                 Сохранить {{ item.title }}
             </button>
-            <button (click)="add(item.title)" class="btn add">
+            <button (click)="addNew()" class="btn add">
                 Добавить
             </button>
             <button (click)="remove(item.title)" class="btn remove">
                 Удалить
             </button>
         </div>
+        <div *ngIf="newItem" class="adding-block">
+            <input class="add-new" type="text" (keyup)="setValue($event.target.value)">
+            <button class="btn add">Добавить пункт</button>
+        </div>
     </div>
-    <ng-template #subtitles>
+    <ng-template #unset>
         <div class="subtitles">
             <div class="input-field">
                 <input type="text" value="{{item.title}}" (keyup)="setValue($event.target.value)">
             </div>
-            <app-menu-update class="spoiler-content" *ngIf="item.subtitle" [navItems]="item.subtitle"></app-menu-update>
+            <app-menu-update class="spoiler-content" *ngIf="item.subtitle" [menuItems]="item.subtitle">
+            </app-menu-update>
             <div class="buttons">
                 <button (click)="save(item)" class="btn">
                     Сохранить {{ item.title }}
                 </button>
-                <button (click)="add(item.title)" class="btn add">
+                <button (click)="addNew()" class="btn add">
                     Добавить
                 </button>
                 <button (click)="remove(item.title)" class="btn remove">
                     Удалить
                 </button>
             </div>
+            <div *ngIf="newItem" class="adding-block">
+                <input class="add-new" type="text" (keyup)="setValue($event.target.value)">
+                <button class="btn add">Добавить пункт</button>
+            </div>
         </div>
     </ng-template>
 </div>
-
-
-<!-- <ul id="main_nav">
-    <li *ngFor="let item of navItems">
-        <a [routerLink]=[item.url]>{{ item.title }}</a>
-        <app-menu-update class="spoiler-content" *ngIf="item.subtitle" [navItems]="item.subtitle"></app-menu-update>
-    </li>  
-</ul> -->

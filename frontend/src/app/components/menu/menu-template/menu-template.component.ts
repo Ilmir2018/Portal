@@ -9,7 +9,7 @@ import { NavItem } from 'src/app/interfaces';
 export class MenuTemplateComponent implements OnInit, OnDestroy {
 
 
-  @Input() public navItems: NavItem;
+  @Input() public menuItems: NavItem;
 
   constructor() { }
 

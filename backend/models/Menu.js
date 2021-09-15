@@ -3,13 +3,6 @@ const Submenu = require('./Submenu')
 const Schema = mongoose.Schema
 
 const menuSchema = new Schema({
-    _id: {
-        type: Number,
-        unique: true
-    },
-    parentId: {
-        type: Number,
-    },
     title: {
         type: String,
         required: true,

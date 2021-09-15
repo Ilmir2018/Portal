@@ -10,52 +10,24 @@ import { MenuService } from 'src/app/services/menu.service';
 })
 export class MenuUpdateComponent implements OnInit {
 
-  @Input() public navItems: NavItem;
   public inputValue: string
+  public postgresMenu: any
+  @Input() public menuItems: any;
+  public second_step = [];
+  public newItem = false
 
-  constructor(private service: MenuService) {
-  }
+  constructor(private service: MenuService) {}
 
-  ngOnInit(): void {
-  }
-
-  save(object: NavItem, id?: string) {
-    console.log(object)
-    // object.forEach((item) => {
-    //   if (this.inputValue !== undefined && item._id === id) {
-    //       if (title === item.title) {
-    //         item.title = this.inputValue
-    //         console.log(this.inputValue)
-    //         item.url = this.translit(item.title)
-    //          // необходимо так же обновлять конфиг AppRoutingModule, т.к. url 
-    //          //тоже обновляется вместе с названием
-    //       }
-    //       this.update(item)
-    //   } else if(item._id === id) {
-    //     //Изначально значение равно тому что приходит из базы
-    //     this.setValue(title)
-    //     this.update(item)
-    //   }
-    // })
-    this.service.navItems.forEach(() => {
-
-    })
-
-    if (this.inputValue !== undefined && this.inputValue !== object.title) {
-      object.title = this.inputValue
-      object.url = this.translit(object.title)
-      this.update(object)
-    } else {
-      this.setValue(object.title)
-    }
-  }
+  ngOnInit(): void {}
 
   /**
    * Функция обновления объекта в базе
    * @param item Обновляемый объект
    */
-  update(item) {
-    this.service.update(item._id, item).subscribe(
+  save(item) {
+    item.title = this.inputValue
+    item.url = this.translit(this.inputValue)
+    this.service.update(item).subscribe(
       menu => {
         MaterialService.toast('Изменения сохранены')
       }, error => {
@@ -74,6 +46,10 @@ export class MenuUpdateComponent implements OnInit {
 
   setValue(value: string) {
     this.inputValue = value
+  }
+
+  addNew() {
+    this.newItem = true;
   }
 
   /**

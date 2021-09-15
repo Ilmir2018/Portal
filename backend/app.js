@@ -11,6 +11,7 @@ const menuRoutes = require('./routes/menu')
 const keys = require('./config/keys')
 const app = express()
 
+//Подключение к монгодб
 mongoose.connect(keys.MONGO_URI, {useUnifiedTopology: true, useNewUrlParser: true})
 .then(() => {console.log('MongoDb connected')})
 .catch(error => console.log(error))

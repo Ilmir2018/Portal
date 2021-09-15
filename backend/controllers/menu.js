@@ -1,51 +1,29 @@
-const Menu = require('../models/Menu')
 const errorHandler = require('../utils/errorHandler')
+const db = require('../posgres')
 
 
 module.exports.get = async function (req, res) {
     try {
-        const query2 = {
-
-        }
-
-        if (req.query.title) {
-            query2.title = req.query.title
-        }
-
-        if (req.query.url) {
-            query2.url = req.query.url
-        }
-
-        if (req.query.subtitle) {
-            query2.subtitle = req.query.subtitle
-        }
-
-        //Вывод контактов которые создал определённый юзер
-
-        const menu = await Menu
-            .find(query2)
-
-        res.status(200).json(menu)
+        const menus = await db.query("SELECT * FROM menu ORDER BY id")
+        res.status(200).json(menus.rows)
     } catch (e) {
         errorHandler(res, e)
     }
 }
 
 module.exports.update = async function (req, res) {
-    const updated = {
-        title: req.body.title,
-        url: req.body.url,
-        subtitle: req.body.subtitle
-    }
     console.log(req.body)
+    const { id, title, url } = req.body
+    const menu = await db.query('UPDATE menu set title = $1, url = $2 where id = $3 RETURNING *',
+        [title, url, id])
+    res.json(menu.rows[0])
+}
+
+module.exports.create = async function (req, res) {
     try {
-        const menu = await Menu.findOneAndUpdate(
-            { _id: req.params.id },
-            { $set: updated },
-            { new: true }
-        )
-        
-        res.status(200).json(menu)
+        const { title, url, parent_id } = req.body
+        const newMenu = await db.query('INSERT INTO menu (title, url, parent_id) VALUES ($1, $2, $3) RETURNING *', [title, url, parent_id])
+        res.json(newMenu.rows[0])
     } catch (e) {
         errorHandler(res, e)
     }

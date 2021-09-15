@@ -9,10 +9,8 @@ import { MenuService } from 'src/app/services/menu.service';
 })
 export class MenuComponent implements OnInit {
 
-  constructor(public service: MenuService, private router: Router, private route: ActivatedRoute) { }
+  constructor(public service: MenuService) { }
 
-  ngOnInit(): void {
-    // this.service.getMenu()
-  }
+  ngOnInit(): void {}
 
 }

@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "concurrently": "^6.0.2",
-    "nodemon": "^2.0.7"
+    "nodemon": "^2.0.7",
+    "pg": "^8.7.1"
   }
 }

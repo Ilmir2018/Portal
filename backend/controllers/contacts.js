@@ -47,29 +47,29 @@ module.exports.get = async function (req, res) {
             query2.subtitle = req.query.subtitle
         }
 
-        const menuItem = new Menu(
-            {
-                _id: 1,
-                parentId: 0,
-                title: 'Настройки2',
-                url: '/settings',
-                subtitle: [
-                    new Menu({
-                        _id: 2,
-                        parentId: 1,
-                        title: "Пользователи",
-                        url: '/contacts',
-                        subtitle: []
-                    }),
-                    new Menu({
-                        _id: 3,
-                        parentId: 1,
-                        title: "Пользователи",
-                        url: '/contacts',
-                        subtitle: []
-                    })
-                ]
-            })
+        // const menuItem = new Menu(
+        //     {
+        //         _id: 1,
+        //         parentId: 0,
+        //         title: 'Настройки2',
+        //         url: '/settings',
+        //         subtitle: [
+        //             new Menu({
+        //                 _id: 2,
+        //                 parentId: 1,
+        //                 title: "Пользователи",
+        //                 url: '/contacts',
+        //                 subtitle: []
+        //             }),
+        //             new Menu({
+        //                 _id: 3,
+        //                 parentId: 1,
+        //                 title: "Пользователи",
+        //                 url: '/contacts',
+        //                 subtitle: []
+        //             })
+        //         ]
+        //     })
 
         // const menuItem = new Menu(
         //     {
@@ -120,7 +120,7 @@ module.exports.get = async function (req, res) {
         //         ]
         //     })
 
-        menuItem.save()
+        // menuItem.save()
 
         // const updated = {
         //     subtitle: [
