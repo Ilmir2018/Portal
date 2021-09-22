@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MaterialService } from 'src/app/classes/material.service';
-import { NavItem } from 'src/app/interfaces';
+import { NavItemNew } from 'src/app/interfaces';
 import { MenuService } from 'src/app/services/menu.service';
 
 @Component({
@@ -11,14 +11,14 @@ import { MenuService } from 'src/app/services/menu.service';
 export class MenuUpdateComponent implements OnInit {
 
   public inputValue: string
-  public postgresMenu: any
-  @Input() public menuItems: any;
-  public second_step = [];
+  @Input() public menuItems: NavItemNew;
   public newItem = false
+  data: NavItemNew
+  private deleteObjects = []
 
-  constructor(private service: MenuService) {}
+  constructor(private service: MenuService) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   /**
    * Функция обновления объекта в базе
@@ -26,7 +26,7 @@ export class MenuUpdateComponent implements OnInit {
    */
   save(item) {
     item.title = this.inputValue
-    item.url = this.translit(this.inputValue)
+    item.url = this.service.translit(this.inputValue)
     this.service.update(item).subscribe(
       menu => {
         MaterialService.toast('Изменения сохранены')
@@ -36,56 +36,86 @@ export class MenuUpdateComponent implements OnInit {
     )
   }
 
-  add(item: string) {
-    console.log('Добавление пункта меню' + item)
+  /**
+   * Функция добавления дочерних пунктов меню
+   * @param item добавляемый пункт меню
+   */
+  add(item: NavItemNew) {
+    let object = { title: this.inputValue, url: this.service.translit(this.inputValue), parent_id: item.id }
+    //Добавляем новый пункт меню
+    this.service.add(object).subscribe(
+      newItem => {
+        //Формируем на фронте с помощью функции addNewItem обновлённый массив меню
+        this.service.menuItemsOld.push(newItem)
+        this.updateMenuItems()
+        MaterialService.toast('Элемент добавлен')
+        this.newItem = false;
+      },
+      error => {
+        MaterialService.toast(error.error.message)
+      }
+    )
+    this.newItem = false;
   }
 
-  remove(item: string) {
-    console.log('Удаление пункта меню' + item)
+  /**
+   * Функция удаления пунктов меню
+   * @param item пункт меню
+   */
+
+  remove(item: NavItemNew) {
+    const decision = window.confirm(`Вы уверены что хотите удалить этот пункт меню?`)
+
+    if (decision) {
+      this.service.delete(item).subscribe(
+        responce => {
+          //Удаление элемена на фронте
+          const idx = this.service.menuItemsOld.findIndex(p => p.id === item.id)
+          this.service.menuItemsOld.splice(idx, 1)
+          this.updateMenuItems()
+          //перезагрузка экрана, т.к. пока не придумал как удалить все подмассивы,
+          //если удалаяется большой вложенный объект
+          location.reload();
+          MaterialService.toast('Удалено успешно')
+        },
+        error => MaterialService.toast(error.error.message),
+      )
+    }
   }
 
   setValue(value: string) {
     this.inputValue = value
   }
 
-  addNew() {
+  addNew(item: NavItemNew) {
+    this.data = item
     this.newItem = true;
   }
 
   /**
-   * Функция переводит русский язык в латницу, формирует url
-   * @param word входящее название title, которое можно менять
-   * @returns url
+   * Функция добавления нового элемента в общий массив меню
    */
-  translit(word) {
-    var answer = '';
-    var converter = {
-      'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd',
-      'е': 'e', 'ё': 'e', 'ж': 'zh', 'з': 'z', 'и': 'i',
-      'й': 'y', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n',
-      'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't',
-      'у': 'u', 'ф': 'f', 'х': 'h', 'ц': 'c', 'ч': 'ch',
-      'ш': 'sh', 'щ': 'sch', 'ь': '', 'ы': 'y', 'ъ': '',
-      'э': 'e', 'ю': 'yu', 'я': 'ya',
-
-      'А': 'A', 'Б': 'B', 'В': 'V', 'Г': 'G', 'Д': 'D',
-      'Е': 'E', 'Ё': 'E', 'Ж': 'Zh', 'З': 'Z', 'И': 'I',
-      'Й': 'Y', 'К': 'K', 'Л': 'L', 'М': 'M', 'Н': 'N',
-      'О': 'O', 'П': 'P', 'Р': 'R', 'С': 'S', 'Т': 'T',
-      'У': 'U', 'Ф': 'F', 'Х': 'H', 'Ц': 'C', 'Ч': 'Ch',
-      'Ш': 'Sh', 'Щ': 'Sch', 'Ь': '', 'Ы': 'Y', 'Ъ': '',
-      'Э': 'E', 'Ю': 'Yu', 'Я': 'Ya'
-    };
-
-    for (var i = 0; i < word.length; ++i) {
-      if (converter[word[i]] == undefined) {
-        answer += word[i];
-      } else {
-        answer += converter[word[i]];
+  updateMenuItems() {
+    let map = new Map()
+    //Сначала обнуляем массив, потому что создаём его заново уже с новым элементом
+    this.service.menuItems = []
+    //Первые уровни меню
+    this.service.menuItemsOld.forEach((item) => {
+      let navItem: NavItemNew = {
+        id: item.id, title: item.title, url: item.url,
+        subtitle: [], parent_id: item.parent_id
       }
-    }
-
-    return "/" + answer.toLowerCase();
+      map.set(item.id, navItem)
+      if (item.parent_id == null) {
+        this.service.menuItems.push(navItem)
+      }
+    })
+    this.service.menuItemsOld.forEach((item) => {
+      if (item.parent_id !== null) {
+        let obj = map.get(item.parent_id)
+        obj.subtitle.push(map.get(item.id))
+      }
+    })
   }
 
 }

@@ -1,0 +1,19 @@
+.adding-block {
+    display       : flex;
+    flex-direction: column;
+    align-items   : center;
+
+    .add-new {
+        width        : 300px;
+        margin       : 0 auto;
+        margin-bottom: 12px;
+        margin-top   : 10px;
+        border       : 1px solid;
+    }
+
+    .btn {
+        margin-bottom: 10px;
+        background-color: yellowgreen;
+    }
+
+}

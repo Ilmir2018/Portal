@@ -1,5 +1,5 @@
 <div class="row" *ngFor="let item of menuItems; let i = index">
-    <div *ngIf="item.level == null; else unset" class="first_step">
+    <div *ngIf="item.parent_id == null; else unset" class="first_step">
         <div class="input-field">
             <input type="text" value="{{item.title}}" (keyup)="setValue($event.target.value)">
         </div>
@@ -8,16 +8,12 @@
             <button (click)="save(item)" class="btn">
                 Сохранить {{ item.title }}
             </button>
-            <button (click)="addNew()" class="btn add">
+            <button (click)="addNew(item)" class="btn add">
                 Добавить
             </button>
-            <button (click)="remove(item.title)" class="btn remove">
+            <button (click)="remove(item)" class="btn remove">
                 Удалить
             </button>
-        </div>
-        <div *ngIf="newItem" class="adding-block">
-            <input class="add-new" type="text" (keyup)="setValue($event.target.value)">
-            <button class="btn add">Добавить пункт</button>
         </div>
     </div>
     <ng-template #unset>
@@ -31,17 +27,18 @@
                 <button (click)="save(item)" class="btn">
                     Сохранить {{ item.title }}
                 </button>
-                <button (click)="addNew()" class="btn add">
+                <button (click)="addNew(item)" class="btn add">
                     Добавить
                 </button>
-                <button (click)="remove(item.title)" class="btn remove">
+                <button (click)="remove(item)" class="btn remove">
                     Удалить
                 </button>
             </div>
-            <div *ngIf="newItem" class="adding-block">
-                <input class="add-new" type="text" (keyup)="setValue($event.target.value)">
-                <button class="btn add">Добавить пункт</button>
-            </div>
         </div>
     </ng-template>
+</div>
+
+<div *ngIf="newItem" class="adding-block">
+    <input class="add-new" type="text" (keyup)="setValue($event.target.value)">
+    <button (click)="add(this.data)" class="btn add">Добавить пункт</button>
 </div>

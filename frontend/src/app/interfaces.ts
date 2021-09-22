@@ -4,8 +4,6 @@ export interface User {
     date?: Date
 }
 
-
-
 export interface ContactResponse {
     contacts: Contact[],
     menu: Menu
@@ -37,7 +35,7 @@ export interface Filter {
 
 export interface GridColumnDefinition {
     field: string;
-    width: number;
+    width: any;
     actualWidth?: number;
     name?: string;
     index?: number;
@@ -52,9 +50,9 @@ export interface NavItem {
 }
 
 export interface NavItemNew {
-    id: number;
+    id?: number;
     title: string;
     url: string;
-    subtitle?: NavItem[];
-    level: number;
+    subtitle?: NavItemNew[];
+    parent_id: number;
 }

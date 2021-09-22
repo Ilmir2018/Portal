@@ -13,23 +13,6 @@
             margin: 0 auto;
         }
 
-        .adding-block {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            .add-new {
-                width        : 300px;
-                margin       : 0 auto;
-                margin-bottom: 12px;
-                margin-top   : 10px;
-                border       : 1px solid;
-            }
-
-            .btn {
-                margin-bottom: 10px;
-            }
-        }
-        
     }
 
     .subtitles {
@@ -37,21 +20,6 @@
 
         .buttons {
             margin: 0 auto;
-
-            .btn {
-                margin-left: 5px;
-                font-size  : 10px;
-                height     : 25px;
-                line-height: 25px;
-            }
-
-            .add {
-                background-color: yellowgreen;
-            }
-
-            .remove {
-                background-color: orangered;
-            }
         }
     }
 }
@@ -69,4 +37,23 @@
 
 .remove {
     background-color: orangered;
+}
+
+
+.adding-block {
+    display       : flex;
+    flex-direction: column;
+    align-items   : center;
+
+    .add-new {
+        width        : 300px;
+        margin       : 0 auto;
+        margin-bottom: 12px;
+        margin-top   : 10px;
+        border       : 1px solid;
+    }
+
+    .btn {
+        margin-bottom: 10px;
+    }
 }

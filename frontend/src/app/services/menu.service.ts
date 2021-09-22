@@ -1,9 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { ContactsPageComponent } from '../components/contacts-page/contacts-page.component';
-import { SettingsPageComponent } from '../components/settings-page/settings-page.component';
-import { NavItem, NavItemNew } from '../interfaces';
+import { Observable } from 'rxjs';
+import { NavItemNew } from '../interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +10,7 @@ import { NavItem, NavItemNew } from '../interfaces';
 export class MenuService {
 
   public menuItems = [];
-  public postgresMenu: any
+  public menuItemsOld = [];
   private routes = [];
 
   constructor(private router: Router, private http: HttpClient) {
@@ -40,14 +39,17 @@ export class MenuService {
     //   })
     // })
 
-    let map = new Map()
+    let map = new Map(), menu: any
     this.get().subscribe((data) => {
-      this.postgresMenu = data
+      menu = data
       //Первые уровни меню
-      this.postgresMenu.forEach((item) => {
+      menu.forEach((item) => {
+        //заполняем массив для добавления и удаления элементов на фронте
+        this.menuItemsOld.push(item)
+        //создаём объект для заполнения всех массивов и подмассивов
         let navItem: NavItemNew = {
           id: item.id, title: item.title, url: item.url,
-          subtitle: [], level: item.parent_id
+          subtitle: [], parent_id: item.parent_id
         }
         map.set(item.id, navItem)
         if(item.parent_id == null) {
@@ -57,7 +59,7 @@ export class MenuService {
       //Два раза перебор для того чтобы при сортировке по id
       //в map сначала заполнились пункты первого уровня меню
       //а вторым циклом мы заполняем все вложенные subtitle
-      this.postgresMenu.forEach((item) => {
+      menu.forEach((item) => {
         if(item.parent_id !== null) {
           let obj = map.get(item.parent_id)
           obj.subtitle.push(map.get(item.id))
@@ -75,11 +77,74 @@ export class MenuService {
     })
   }
 
+  /**
+   * Функция переводит русский язык в латницу, формирует url
+   * @param word входящее название title, которое можно менять
+   * @returns url
+   */
+   translit(word) {
+    var answer = '';
+    var converter = {
+      'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd',
+      'е': 'e', 'ё': 'e', 'ж': 'zh', 'з': 'z', 'и': 'i',
+      'й': 'y', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n',
+      'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't',
+      'у': 'u', 'ф': 'f', 'х': 'h', 'ц': 'c', 'ч': 'ch',
+      'ш': 'sh', 'щ': 'sch', 'ь': '', 'ы': 'y', 'ъ': '',
+      'э': 'e', 'ю': 'yu', 'я': 'ya',
+
+      'А': 'A', 'Б': 'B', 'В': 'V', 'Г': 'G', 'Д': 'D',
+      'Е': 'E', 'Ё': 'E', 'Ж': 'Zh', 'З': 'Z', 'И': 'I',
+      'Й': 'Y', 'К': 'K', 'Л': 'L', 'М': 'M', 'Н': 'N',
+      'О': 'O', 'П': 'P', 'Р': 'R', 'С': 'S', 'Т': 'T',
+      'У': 'U', 'Ф': 'F', 'Х': 'H', 'Ц': 'C', 'Ч': 'Ch',
+      'Ш': 'Sh', 'Щ': 'Sch', 'Ь': '', 'Ы': 'Y', 'Ъ': '',
+      'Э': 'E', 'Ю': 'Yu', 'Я': 'Ya'
+    };
+
+    for (var i = 0; i < word.length; ++i) {
+      if (converter[word[i]] == undefined) {
+        answer += word[i];
+      } else {
+        answer += converter[word[i]];
+      }
+    }
+
+    return "/" + answer.toLowerCase();
+  }
+
+  /**
+   * загрузка пунктов меню с сервера
+   */
+
+  get() {
+    return this.http.get<NavItemNew>('/api/menu')
+  }
+
+  /**
+   * Обновление пункта меню на сервере
+   * @param data обновляемый объект
+   */
+
   update(data: any) {
       return this.http.patch(`/api/menu/${data.id}`, data)
   }
 
-  get() {
-    return this.http.get<NavItemNew>('/api/menu')
+  /**
+   * Добавление нового пункта меню на сервер
+   * @param data новый пунтт меню
+   */
+
+  add(data: NavItemNew): Observable<NavItemNew> {
+    return this.http.post<NavItemNew>('/api/menu', data)
+  }
+
+  /**
+   * Удаление пунта меню
+   * @param menuItem удаляемый элемент
+   */
+
+  delete(menuItem: NavItemNew):Observable<NavItemNew> {
+    return this.http.delete<NavItemNew>(`/api/menu/${menuItem.id}`)
   }
 }
