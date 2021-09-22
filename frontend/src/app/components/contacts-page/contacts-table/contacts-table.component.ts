@@ -47,14 +47,6 @@ export class ContactsTableComponent implements OnInit {
 
   constructor(private renderer: Renderer2, private service: ContactsService) {
     this.columns = this.service.columns
-    this.service.changedColumns = this.columns
-    //Из кэша получаем сохранённые настройки по ширине столбцов
-    if(JSON.parse(localStorage.getItem('widthChange'))) {
-      if(JSON.parse(localStorage.getItem('widthChange')).length !== 0) {
-        this.columns = JSON.parse(localStorage.getItem('widthChange'))
-      }
-      
-    }
   }
 
   ngOnInit(): void {
@@ -77,7 +69,37 @@ export class ContactsTableComponent implements OnInit {
       return element;
     }) : dataSource.data;
     this.data = dataSource;
+    //Отсюда начинается задавание ширины колонок
+    //Мы задаём изначальные ширины колонок в зависимости от ширины таблицы и экрана
+    this.columns.forEach((item, idx) => {
+      if (idx == 0) {
+        item.width = (this.matTableRef.nativeElement.clientWidth / 100) * 10
+      } else if (idx == 1) {
+        item.width = (this.matTableRef.nativeElement.clientWidth / 100) * 40
+      } else if (idx == 2) {
+        item.width = (this.matTableRef.nativeElement.clientWidth / 100) * 20
+      } else if (idx == 3) {
+        item.width = (this.matTableRef.nativeElement.clientWidth / 100) * 30
+      }
+    })
+    //Если же есть кэш, то мы меняем значения ширины в this.columns
+     //Из кэша получаем сохранённые настройки по ширине столбцов
+     if (JSON.parse(localStorage.getItem('widthChange'))) {
+      if (JSON.parse(localStorage.getItem('widthChange')).length !== 0) {
+        this.columns = JSON.parse(localStorage.getItem('widthChange'))
+      }
+    }
+    console.log(this.columns)
     this.setDisplayedColumns();
+  }
+
+  setDisplayedColumns(): void {
+    this.displayedColumns = [];
+    this.columns.forEach((column: GridColumnDefinition, index: number) => {
+      column.index = index;
+      this.displayedColumns[index] = column.field;
+    });
+    this.setTableResize(this.matTableRef.nativeElement.clientWidth);
   }
 
   //Функция задания ширины
@@ -96,15 +118,17 @@ export class ContactsTableComponent implements OnInit {
     });
   }
 
-
-  setDisplayedColumns(): void {
-    this.displayedColumns = [];
-    console.log(this.columns)
-    this.columns.forEach((column: GridColumnDefinition, index: number) => {
-      column.index = index;
-      this.displayedColumns[index] = column.field;
-    });
-    this.setTableResize(this.matTableRef.nativeElement.clientWidth);
+  setColumnWidth(column: GridColumnDefinition): void {
+    of(this.matTableRef)
+      .pipe(delay(1))
+      .subscribe(x => {
+        const columnEls = Array.from(document.getElementsByClassName('mat-column-' + column.field));
+        if (columnEls) {
+          columnEls.forEach((el: HTMLDivElement) => {
+            el.style.width = column.actualWidth + 'px';
+          });
+        }
+      });
   }
 
   //Проверка на нажатие клавиши
@@ -124,9 +148,8 @@ export class ContactsTableComponent implements OnInit {
 
 
   private checkResizing(event: MouseEvent, index: number): void {
-    //Данные которые есть изначально`
+    //Данные которые есть изначально
     const cellData = this.getCellData(index);
-    // console.log(cellData)
     if ((index === 0) || (Math.abs(event.pageX - cellData.right) < cellData.width / 2 && index !== this.columns.length - 1)) {
       this.isResizingRight = true;
     } else {
@@ -152,14 +175,10 @@ export class ContactsTableComponent implements OnInit {
       }
     });
     this.resizableMouseup = this.renderer.listen('document', 'mouseup', () => {
-      console.log('mouseup')
-      // const cellData = this.getCellData(index);
-
       if (this.pressed) {
         this.pressed = false;
         this.currentResizeIndex = -1;
         this.resizableMousemove();
-        // this.resizableMouseup();
         document.querySelectorAll('.mat-cell, mat-header-cell').forEach((el: HTMLElement) => el.style.borderRight = 'unset');
       }
     });
@@ -186,29 +205,20 @@ export class ContactsTableComponent implements OnInit {
         this.setColumnWidth(this.columns[j]);
       }
     }
-    //Меняем ширину каждого столбца
-    this.service.changedColumns.forEach((element, idx) => {
-      if (index == idx) {
-        element.width = orginalWidth
-      }
-    })
-    //Изменённые данные
-    localStorage.setItem('widthChange', JSON.stringify(this.service.changedColumns))
-    console.log(orginalWidth)
-    console.log(this.columns)
-  }
-
-  setColumnWidth(column: GridColumnDefinition): void {
-    of(this.matTableRef)
-      .pipe(delay(1))
-      .subscribe(x => {
-        const columnEls = Array.from(document.getElementsByClassName('mat-column-' + column.field));
-        if (columnEls) {
-          columnEls.forEach((el: HTMLDivElement) => {
-            el.style.width = column.actualWidth + 'px';
-          });
+    //Меняем массив this.columns в зависимости от уменьшения и увеличения столбцов
+    for (let i = 0; i < this.columns.length - 1; i++) {
+      if (index === i) {
+        if(this.columns[i].width < orginalWidth) {
+          this.columns[i + 1].width = this.columns[i + 1].width - (orginalWidth - this.columns[i].width)
+        } else {
+          this.columns[i + 1].width = this.columns[i + 1].width + (this.columns[i].width - orginalWidth)
         }
-      });
+        this.columns[i].width = orginalWidth
+      }
+    }
+    console.log(this.columns)
+    //Сохраняем изменившийся массив в локальное хранилище
+    localStorage.setItem('widthChange', JSON.stringify(this.columns))
   }
 
   setAddColumns(columns: GridColumnDefinition[]): GridColumnDefinition[] {
@@ -251,14 +261,10 @@ export class ContactsTableComponent implements OnInit {
       return textToSearch.indexOf(filter) !== -1;
     };
   }
-  
-  
+
+
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
-  }
-
-  showContact(row: string) {
-    console.log(row)
   }
 
 }

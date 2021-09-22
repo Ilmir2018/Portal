@@ -9,18 +9,17 @@ import { Contact, ContactResponse, GridColumnDefinition } from '../interfaces';
 
 export class ContactsService {
 
-  changedColumns: GridColumnDefinition[] = []
+  // changedColumns: GridColumnDefinition[] = []
   width1: number
   width2: number
   width3: number
   width4: number
 
   columns: GridColumnDefinition[] = [
-    { field: 'name', width: 60, name: 'name', show: true, order: 1 },
-    { field: 'firm', width: 10, name: 'firm', show: true, order: 2 },
-    { field: 'email', width: 40, name: 'email', show: true, order: 3 },
-    { field: 'phone', width: 55, name: 'phone', show: true, order: 4 },
-
+    { field: 'name', width: 10, name: 'name', show: true, order: 1 },
+    { field: 'firm', width: 40, name: 'firm', show: true, order: 2 },
+    { field: 'email', width: 20, name: 'email', show: true, order: 3 },
+    { field: 'phone', width: 30, name: 'phone', show: true, order: 4 },
   ];
 
   constructor(private http: HttpClient) {

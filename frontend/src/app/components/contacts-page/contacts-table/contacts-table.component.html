@@ -15,12 +15,12 @@
     <mat-table matSort [dataSource]="data | splitSchedule | async" cdkDropListGroup="" [trackBy]="trackByFn">
         <ng-container *ngFor="let column of columns; trackBy: trackByFn; let i = index" [matColumnDef]="column.field">
             <ng-container *ngIf="!!column.show">
-                <mat-header-cell *matHeaderCellDef="" [class.resizable]="resizable" [style.width]=column.width>
+                <mat-header-cell *matHeaderCellDef="" [class.resizable]="resizable" [style.width]="column.actualWidth + 'px'">
                     <div class="input-name">
                         <div class="cell-header" *ngIf="column.field === 'plusAction'"></div>
                         <div class="cell-header" *ngIf="column.field !== 'plusAction'" mat-sort-header><span>{{
                                 column.name }}</span></div>
-                        <div class="filter-input" *ngIf="column.name !== phone">
+                        <div class="filter-input">
                             <input matInput (keyup)="applyFilter($event.target.value)"
                                 (focus)="setupFilter(column.name)">
                         </div>
@@ -29,10 +29,10 @@
                 </mat-header-cell>
             </ng-container>
             <ng-container>
-                <mat-cell [routerLink]="['/contacts', row._id]" *matCellDef="let row" [style.width]=column.width>
+                <mat-cell [routerLink]="['/contacts', row._id]" *matCellDef="let row" [style.width]="column.actualWidth + 'px'">
                     <ng-template *ngTemplateOutlet="cellTemplateRef; context:{row: row, column: column}"
                         [ngIf]="cellTemplateRef"></ng-template>
-                    <ng-container *ngIf="!cellTemplateRef">{{ row[column.field] }}</ng-container>
+                    <!-- <ng-container *ngIf="!cellTemplateRef">{{ row[column.field] }}</ng-container> -->
                 </mat-cell>
             </ng-container>
         </ng-container>
