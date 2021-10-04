@@ -1,13 +1,69 @@
-<div class="cont">
-    <ag-grid-angular
-    #agGrid
-    style="width: 100%; height: 100%;"
-    id="myGrid"
-    class="ag-theme-alpine"
-    [columnDefs]="columnDefs"
-    [defaultColDef]="defaultColDef"
-    [debug]="true"
-    [rowData]="rowData"
-    (gridReady)="onGridReady($event)"
-  ></ag-grid-angular> 
+<div class="row">
+    <form [formGroup]="form" class="col s12" (ngSubmit)="onSubmit()">
+        <div class="input-field">
+            <input id="name" type="text" formControlName="name"
+            [ngClass]="{'invalid': form.get('name').invalid && form.get('name').touched}">
+            <label for="name">Имя</label>
+            <span class="helper-text red-text" *ngIf="form.get('name').invalid && form.get('name').touched">
+                <span *ngIf="form.get('name').errors['required']">
+                    Имя не должно быть пустым
+                </span>
+            </span>
+        </div>
+        <div class="input-field">
+            <input id="firm" type="text" formControlName="firm"
+            [ngClass]="{'invalid': form.get('firm').invalid && form.get('firm').touched}">
+            <label for="firm">Фирма</label>
+            <span class="helper-text red-text" *ngIf="form.get('firm').invalid && form.get('firm').touched">
+                <span *ngIf="form.get('firm').errors['required']">
+                    Поле фирмы не должно быть пустым
+                </span>
+            </span>
+        </div>
+        <div class="input-field">
+            <input id="email" type="email" formControlName="email"
+            [ngClass]="{'invalid': form.get('email').invalid && form.get('email').touched}">
+            <label for="email">Email:</label>
+            <span *ngIf="form.get('email').invalid && form.get('email').touched" class="helper-text red-text">
+                <span *ngIf="form.get('email').errors.required">Email не должен быть пустым</span>
+                <span *ngIf="form.get('email').errors.email">Email должен быть корректным</span>
+            </span>
+        </div>
+        <div class="input-field">
+            <input formControlName="password" type="text" id="password"
+            [ngClass]="{'invalid': form.get('password').invalid && form.get('password').touched}">
+            <label for="password">Пароль:</label>
+        </div>
+        <div class="input-field">
+            <input id="phone" type="text" formControlName="phone">
+            <label for="phone">Телефон</label>
+        </div>
+        <div>
+            <input 
+            type="file"
+            class="dn"
+            (change)="common.onFileUpload($event)"
+            #input
+            >
+            <button
+            (click)="common.triggerClick()"
+            [disabled]="form.disabled"
+            type="button" 
+            class="waves-effect waves-light btn orange lighten-2 mb2">
+                <i class="material-icons left">backup</i>
+                Загрузить изображение
+            </button>
+        </div>
+
+        <div>
+            <button type="submit"
+            [disabled]="form.invalid || form.disabled"
+            class="waves-effect waves-light btn">
+            Сохранить изменения
+            </button>
+        </div>
+    </form>
+    <div class="col s12 l4 center">
+        <img class="responsive-img h200" [src]="common.imagePreview" *ngIf="common.imagePreview">
+    </div>
 </div>

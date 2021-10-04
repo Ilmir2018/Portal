@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { TemplatePageComponent } from '../components/template-page/template-page.component';
 import { NavItemNew } from '../interfaces';
 
 @Injectable({
@@ -17,28 +18,6 @@ export class MenuService {
   }
 
   getMenu() {
-    // this.service.getContacts().subscribe(contacts => {
-    //   this.navItems = contacts.menu
-    //   //формируем url роутов
-    //   this.recursionRoutes(this.navItems);
-
-    //   // Загружаем с бэка все роуты
-    //   this.router.config.forEach((item) => {
-    //     if (item.canActivate) {
-    //       this.routes.forEach((route) => {
-    //         if (route !== 'first') {
-    //           item.children.push({ path: route, component: SettingsPageComponent })
-    //         } else {
-    //           item.children.push({ path: route, component: ContactsPageComponent })
-    //         }
-
-    //         // this.router.resetConfig(this.router.config);
-    //         // this.router.navigate([route], {relativeTo: this.route});
-    //       })
-    //     }
-    //   })
-    // })
-
     let map = new Map(), menu: any
     this.get().subscribe((data) => {
       menu = data
@@ -52,7 +31,7 @@ export class MenuService {
           subtitle: [], parent_id: item.parent_id
         }
         map.set(item.id, navItem)
-        if(item.parent_id == null) {
+        if (item.parent_id == null) {
           this.menuItems.push(navItem)
         }
       })
@@ -60,18 +39,37 @@ export class MenuService {
       //в map сначала заполнились пункты первого уровня меню
       //а вторым циклом мы заполняем все вложенные subtitle
       menu.forEach((item) => {
-        if(item.parent_id !== null) {
+        if (item.parent_id !== null) {
           let obj = map.get(item.parent_id)
           obj.subtitle.push(map.get(item.id))
         }
       })
     })
+
+    //Подгрузка всех роутов
+    setTimeout(() => {
+      //Убираем из добавления первые 4 изначальных пункта меню
+      let filteredArray = this.menuItemsOld.filter(myFilter);
+
+      this.router.config.forEach((item) => {
+        filteredArray.forEach((route) => {
+          if (item.canActivate) {
+            item.children.push({ path: route.url, component: TemplatePageComponent })
+          }
+        })
+      })
+    }, 1000)
+
+    function myFilter(value, index) {
+      return index > 3;
+    }
+
   }
 
   recursionRoutes(arr: any) {
     arr.forEach((item) => {
       this.routes.push(item.url)
-      if(item.subtitle.length ! == 0) {
+      if (item.subtitle.length! == 0) {
         this.recursionRoutes(item.subtitle)
       }
     })
@@ -82,7 +80,7 @@ export class MenuService {
    * @param word входящее название title, которое можно менять
    * @returns url
    */
-   translit(word) {
+  translit(word) {
     var answer = '';
     var converter = {
       'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd',
@@ -110,7 +108,7 @@ export class MenuService {
       }
     }
 
-    return "/" + answer.toLowerCase();
+    return answer.toLowerCase();
   }
 
   /**
@@ -127,7 +125,7 @@ export class MenuService {
    */
 
   update(data: any) {
-      return this.http.patch(`/api/menu/${data.id}`, data)
+    return this.http.patch(`/api/menu/${data.id}`, data)
   }
 
   /**
@@ -144,7 +142,7 @@ export class MenuService {
    * @param menuItem удаляемый элемент
    */
 
-  delete(menuItem: NavItemNew):Observable<NavItemNew> {
+  delete(menuItem: NavItemNew): Observable<NavItemNew> {
     return this.http.delete<NavItemNew>(`/api/menu/${menuItem.id}`)
   }
 }

@@ -32,7 +32,7 @@
                 <mat-cell [routerLink]="['/contacts', row._id]" *matCellDef="let row" [style.width]="column.actualWidth + 'px'">
                     <ng-template *ngTemplateOutlet="cellTemplateRef; context:{row: row, column: column}"
                         [ngIf]="cellTemplateRef"></ng-template>
-                    <!-- <ng-container *ngIf="!cellTemplateRef">{{ row[column.field] }}</ng-container> -->
+                    <ng-container *ngIf="!cellTemplateRef">{{ row[column.field] }}</ng-container>
                 </mat-cell>
             </ng-container>
         </ng-container>

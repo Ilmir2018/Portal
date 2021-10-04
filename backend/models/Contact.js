@@ -15,6 +15,10 @@ const contactSchema = new Schema({
         required: true,
         unique: true
     },
+    password: {
+        type: String,
+        required: true
+    },
     phone: {
         type: String,
     },
@@ -26,7 +30,11 @@ const contactSchema = new Schema({
         type: Date,
         default: Date.now
     },
-    roles: [{type: String, ref: 'Role'}]
+    roles: [{type: String, ref: 'Role'}],
+    imageSrc: {
+        type: String,
+        default: ''
+    }
 })
 
 module.exports = mongoose.model('contacts', contactSchema)

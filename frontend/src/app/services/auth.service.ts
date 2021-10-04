@@ -17,15 +17,16 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  login(user: User):Observable<{token: string, role: role}> {
-    return this.http.post<{token: string, role: role}>('/api/auth/login', user)
+  login(user: User):Observable<{token: string, role: role, id: string}> {
+    return this.http.post<{token: string, role: role, id: string}>('/api/auth/login', user)
     .pipe(
       tap(
-        ({token, role}) => {
+        ({token, role, id}) => {
           let item = role[0]
-          //Сохраняем в локальном хранилище токен и роль пользователя
+          //Сохраняем в локальном хранилище токен, роль и id пользователя
           localStorage.setItem('auth-token', token)
           localStorage.setItem('role', item)
+          localStorage.setItem('id-user', id)
           this.setToken(token)
         }
       )

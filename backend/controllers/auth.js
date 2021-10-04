@@ -36,7 +36,8 @@ module.exports.login = async function (req, res) {
             //Передаём в ответе на авторизацию, токен и роль пользователя
             res.status(200).json({
                 token: `Bearer ${token}`,
-                role: candidate.roles
+                role: candidate.roles,
+                id: candidate._id
             })
         } else {
             //Пароли не совпали
@@ -78,6 +79,7 @@ module.exports.register = async function (req, res) {
         const user = new User({
             email: req.body.email,
             password: bcrypt.hashSync(password, salt),
+            date: new Date(),
             roles: [userRole.value]
         })
 
@@ -86,9 +88,12 @@ module.exports.register = async function (req, res) {
             name: req.body.name = "Введите данные",
             firm: req.body.firm = "Введите данные",
             email: req.body.email,
+            password: bcrypt.hashSync(password, salt),
             phone: req.body.phone = "Введите данные",
             user: user.id,
-            roles: [userRole.value]
+            date: new Date(),
+            roles: [userRole.value],
+            imageSrc: ''
         })
 
         try {

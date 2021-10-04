@@ -13,11 +13,13 @@ export interface Contact {
     name: string
     firm: string
     email: string
+    password:string
     phone?: string
     user?: string,
     _id?: string,
     date?: Date,
-    roles?: []
+    roles?: [],
+    imageSrc?: File
 }
 
 export interface Menu {

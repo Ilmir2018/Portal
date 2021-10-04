@@ -17,19 +17,15 @@ export class ContactsTableComponent implements OnInit {
   @ViewChild(MatTable, { read: ElementRef, static: true }) private matTableRef: ElementRef;
   @ViewChildren('MatTableRowRef') matTableRow: QueryList<any>;
   @Input() dataSource: MatTableDataSource<Contact>;
-  columns: GridColumnDefinition[] = [];
+  public columns: GridColumnDefinition[] = [];
   @Input() cellTemplateRef: TemplateRef<any>;
   @Input() addRemoveColumn = true;
-  @Input() infiniteScroll: boolean;
-  @Input() totalPages = 10;
   @Input() resizable = true;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  filters: string[] = ['name', 'firm', 'email']
   oSub: Subscription
   reloading: boolean = false
-  phone = 'phone'
 
   currentPage = 1;
   displayedColumns: string[] = [];
@@ -52,6 +48,7 @@ export class ContactsTableComponent implements OnInit {
   ngOnInit(): void {
     this.reloading = true
     this.oSub = this.service.getContacts().subscribe(contactResp => {
+      console.log(contactResp)
       this.dataSource = new MatTableDataSource<Contact>(contactResp.contacts)
       this.reloading = false
       this.setDataSource(this.dataSource);
@@ -89,7 +86,6 @@ export class ContactsTableComponent implements OnInit {
         this.columns = JSON.parse(localStorage.getItem('widthChange'))
       }
     }
-    console.log(this.columns)
     this.setDisplayedColumns();
   }
 
@@ -209,14 +205,13 @@ export class ContactsTableComponent implements OnInit {
     for (let i = 0; i < this.columns.length - 1; i++) {
       if (index === i) {
         if(this.columns[i].width < orginalWidth) {
-          this.columns[i + 1].width = this.columns[i + 1].width - (orginalWidth - this.columns[i].width)
+          this.columns[i + 1].width = Math.abs(this.columns[i + 1].width - (orginalWidth - this.columns[i].width))
         } else {
-          this.columns[i + 1].width = this.columns[i + 1].width + (this.columns[i].width - orginalWidth)
+          this.columns[i + 1].width = Math.abs(this.columns[i + 1].width + (this.columns[i].width - orginalWidth))
         }
-        this.columns[i].width = orginalWidth
+        this.columns[i].width = Math.abs(orginalWidth)
       }
     }
-    console.log(this.columns)
     //Сохраняем изменившийся массив в локальное хранилище
     localStorage.setItem('widthChange', JSON.stringify(this.columns))
   }

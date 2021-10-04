@@ -9,12 +9,6 @@ import { Contact, ContactResponse, GridColumnDefinition } from '../interfaces';
 
 export class ContactsService {
 
-  // changedColumns: GridColumnDefinition[] = []
-  width1: number
-  width2: number
-  width3: number
-  width4: number
-
   columns: GridColumnDefinition[] = [
     { field: 'name', width: 10, name: 'name', show: true, order: 1 },
     { field: 'firm', width: 40, name: 'firm', show: true, order: 2 },
@@ -33,16 +27,37 @@ export class ContactsService {
     return this.http.get<Contact>(`/api/contacts/${id}`)
   }
 
-  create(data: Contact): Observable<Contact> {
-    return this.http.post<Contact>('/api/contacts', data)
+  create(data: Contact, image: File): Observable<Contact> {
+    const formData = new FormData();
+
+    if (image) {
+      formData.append('image', image, image.name)
+    }
+    formData.append('name', data.name)
+    formData.append('firm', data.firm)
+    formData.append('phone', data.phone)
+    formData.append('email', data.email)
+    formData.append('password', data.password)
+    return this.http.post<Contact>('/api/contacts', formData)
   }
 
   update(id: string, name: string, firm: string,
-     email: string, phone: string, roles: []): Observable<Contact> {
+    email: string, phone: string, roles: [], image: File, password?: string): Observable<Contact> {
+    const formData = new FormData()
 
-    let data = {name, firm, email, phone, roles};
+    if (image) {
+      formData.append('image', image, image.name)
+    }
+    formData.append('name', name)
+    formData.append('firm', firm)
+    formData.append('phone', phone)
+    formData.append('email', email)
 
-    return this.http.patch<Contact>(`/api/contacts/${id}`, data)
+    if (password) {
+      formData.append('password', password)
+    }
+    
+    return this.http.patch<Contact>(`/api/contacts/${id}`, formData)
   }
 
 }

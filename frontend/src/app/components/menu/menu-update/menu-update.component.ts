@@ -1,7 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { MaterialService } from 'src/app/classes/material.service';
 import { NavItemNew } from 'src/app/interfaces';
 import { MenuService } from 'src/app/services/menu.service';
+import { TemplatePageComponent } from '../../template-page/template-page.component';
 
 @Component({
   selector: 'app-menu-update',
@@ -16,9 +18,11 @@ export class MenuUpdateComponent implements OnInit {
   data: NavItemNew
   private deleteObjects = []
 
-  constructor(private service: MenuService) { }
+  constructor(private service: MenuService, private router: Router) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+
+   }
 
   /**
    * Функция обновления объекта в базе
@@ -42,6 +46,7 @@ export class MenuUpdateComponent implements OnInit {
    */
   add(item: NavItemNew) {
     let object = { title: this.inputValue, url: this.service.translit(this.inputValue), parent_id: item.id }
+    let url = this.service.translit(this.inputValue);
     //Добавляем новый пункт меню
     this.service.add(object).subscribe(
       newItem => {
@@ -50,12 +55,20 @@ export class MenuUpdateComponent implements OnInit {
         this.updateMenuItems()
         MaterialService.toast('Элемент добавлен')
         this.newItem = false;
+        //Добавляем новый адрес в массив роутов
+        this.router.config.forEach((item) => {
+            if (item.canActivate) {
+              item.children.push({ path: url, component: TemplatePageComponent })
+            }
+        })
+        console.log(this.router.config)
       },
       error => {
         MaterialService.toast(error.error.message)
       }
     )
     this.newItem = false;
+    console.log(this.router.config)
   }
 
   /**

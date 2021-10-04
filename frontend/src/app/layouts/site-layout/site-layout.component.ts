@@ -13,6 +13,8 @@ export class SiteLayoutComponent implements OnInit {
   constructor(private auth: AuthService, private router: Router, public service: MenuService) { }
 
   ngOnInit(): void {
+    this.service.menuItems = []
+    this.service.menuItemsOld = []
     this.service.getMenu()
   }
    

@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import {MatMenuModule} from '@angular/material/menu';
-import { AgGridModule } from 'ag-grid-angular';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -18,16 +17,15 @@ import { ProfilePageComponent } from './components/profile-page/profile-page.com
 import { LoaderComponent } from './components/loader/loader.component';
 import { NewContactComponent } from './components/contacts-page/new-contact/new-contact.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { SearchPipe } from './classes/search.pipe';
 import { MaterialModule } from './material/material.module';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { ResizableDirective } from './classes/resizable.directive';
 import { SplitSchedulePipe } from './classes/split-schedule.pipe';
 import { ContactsTableComponent } from './components/contacts-page/contacts-table/contacts-table.component';
 import { ContactPageComponent } from './components/contacts-page/contact-page/contact-page.component';
 import { MenuTemplateComponent } from './components/menu/menu-template/menu-template.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { MenuUpdateComponent } from './components/menu/menu-update/menu-update.component';
+import { TemplatePageComponent } from './components/template-page/template-page.component';
 
 @NgModule({
   declarations: [
@@ -41,14 +39,13 @@ import { MenuUpdateComponent } from './components/menu/menu-update/menu-update.c
     ProfilePageComponent,
     LoaderComponent,
     NewContactComponent,
-    SearchPipe,
-    ResizableDirective,
     SplitSchedulePipe,
     ContactsTableComponent,
     ContactPageComponent,
     MenuTemplateComponent,
     MenuComponent,
-    MenuUpdateComponent
+    MenuUpdateComponent,
+    TemplatePageComponent
   ],
   imports: [
     BrowserModule,
@@ -58,8 +55,7 @@ import { MenuUpdateComponent } from './components/menu/menu-update/menu-update.c
     HttpClientModule,
     BrowserAnimationsModule,
     MatMenuModule,
-    MaterialModule,
-    AgGridModule.withComponents([])
+    MaterialModule
   ],
   providers: [
     {
