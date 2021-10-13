@@ -16,11 +16,10 @@ module.exports = function (roles) {
 
             let hasRole = false
             
-            userRoles.forEach(role => {
-                if (roles.includes(role)) {
-                    hasRole = true
-                }
-            })
+            if (roles.includes(userRoles)) {
+                hasRole = true
+            }
+
             if (!hasRole) {
                 return res.status(403).json({ message: "У вас нет доступа" })
             }

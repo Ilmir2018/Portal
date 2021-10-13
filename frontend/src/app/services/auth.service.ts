@@ -4,10 +4,6 @@ import { User } from '../interfaces';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-interface role {
-  item: string
-}
-
 @Injectable({
   providedIn: 'root'
 })
@@ -17,12 +13,12 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  login(user: User):Observable<{token: string, role: role, id: string}> {
-    return this.http.post<{token: string, role: role, id: string}>('/api/auth/login', user)
+  login(user: User):Observable<{token: string, role: string, id: string}> {
+    return this.http.post<{token: string, role: string, id: string}>('/api/auth/login', user)
     .pipe(
       tap(
         ({token, role, id}) => {
-          let item = role[0]
+          let item = role
           //Сохраняем в локальном хранилище токен, роль и id пользователя
           localStorage.setItem('auth-token', token)
           localStorage.setItem('role', item)
