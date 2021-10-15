@@ -19,6 +19,7 @@ export class ContactPageComponent implements OnInit {
   contact: Contact
   date: Date
   idContact: number
+  paramsId: string
 
   constructor(private route: ActivatedRoute, private service: ContactsService, public common: CommonService) { }
 
@@ -38,6 +39,7 @@ export class ContactPageComponent implements OnInit {
     this.route.params.pipe(
       switchMap((params: Params) => {
         if (params['id']) {
+          this.paramsId = params['id']
           return this.service.getById(params['id'])
         }
         return of(null)
@@ -46,14 +48,15 @@ export class ContactPageComponent implements OnInit {
       if (contact) {
         this.contact = contact
         this.form.patchValue({
-          name: contact.name,
-          firm: contact.firm,
-          email: contact.email,
-          phone: contact.phone,
+          id: this.paramsId,
+          name: contact.rows[0].name,
+          firm: contact.rows[0].firm,
+          email: contact.rows[0].email,
+          phone: contact.rows[0].phone,
           password: ''
         })
-        this.date = contact.date
-        this.common.imagePreview = contact.imageSrc
+        this.date = contact.rows[0].date
+        this.common.imagePreview = contact.rows[0].imagesrc
         MaterialService.updateTextInputs()
       }
       this.form.enable()
@@ -67,7 +70,7 @@ export class ContactPageComponent implements OnInit {
   onSubmit() {
     let obs$
     this.form.disable()
-    obs$ = this.service.update(this.contact._id, this.form.value.name,
+    obs$ = this.service.update(this.paramsId, this.form.value.name,
       this.form.value.firm, this.form.value.email, this.form.value.phone, this.contact.roles, this.common.image, this.form.value.password)
     obs$.subscribe(
       contact => {

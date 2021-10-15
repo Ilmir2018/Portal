@@ -31,7 +31,7 @@ export class ProfilePageComponent implements OnInit {
     //Получаем информацию о залогинившемся контакте
     this.service.getContacts().subscribe(data => {
       data.contacts.forEach((item) => {
-        if (item.user == localStorage.getItem('id-user')) {
+        if (item.user_id == localStorage.getItem('id-user')) {
           this.profile = item
           this.form.patchValue({
             name: item.name,

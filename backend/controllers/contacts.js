@@ -1,64 +1,14 @@
-const Contact = require('../models/Contact')
-const User = require('../models/User')
-const Menu = require('../models/Menu')
-const Role = require('../models/Role')
 const errorHandler = require('../utils/errorHandler')
 
 const bcrypt = require('bcryptjs')
 
+const db = require('../posgres')
+
 
 module.exports.get = async function (req, res) {
     try {
-        const query = {
-            //Закоментировано чтобы выводились контакты для любых пользователей пока
-            // user: req.user.id
-        }
-
-        if (req.query.phone) {
-            query.phone = req.query.phone
-        }
-
-        if (req.query.name) {
-            query.name = req.query.name
-        }
-
-        if (req.query.firm) {
-            query.firm = req.query.firm
-        }
-
-        if (req.query.email) {
-            query.email = req.query.email
-        }
-
-        // const query2 = {
-
-        // }
-
-        // if (req.query.title) {
-        //     query2.title = req.query.title
-        // }
-
-        // if (req.query.url) {
-        //     query2.url = req.query.url
-        // }
-
-        // if (req.query.subtitle) {
-        //     query2.subtitle = req.query.subtitle
-        // }
-
-        //Вывод контактов которые создал определённый юзер
-        const contacts = await Contact
-            .find(query)
-            .skip(+req.query.offset)
-            .limit(+req.query.limit)
-
-        // const menu = await Menu
-        //     .find(query2)
-
-        res.status(200).json({
-            contacts: contacts
-            // , menu: menu
-        })
+        const contacts = await db.query("SELECT * FROM contacts ORDER BY id")
+        res.status(200).json({ contacts: contacts.rows })
     } catch (e) {
         errorHandler(res, e)
     }
@@ -66,7 +16,7 @@ module.exports.get = async function (req, res) {
 
 module.exports.getById = async function (req, res) {
     try {
-        const contact = await Contact.findById(req.params.id)
+        const contact = await db.query("SELECT * FROM contacts WHERE id = $1 ORDER BY id", [req.params.id])
         res.status(200).json(contact)
     } catch (e) {
         errorHandler(res, e)
@@ -74,91 +24,112 @@ module.exports.getById = async function (req, res) {
 }
 
 module.exports.create = async function (req, res) {
-    const userRole = await Role.findOne({ value: "USER" })
-
-    const salt = bcrypt.genSaltSync(10)
-    const password = req.body.password
-
-    console.log(password)
-
-    const user = new User({
-        email: req.body.email,
-        password: bcrypt.hashSync(password, salt),
-        date: new Date(),
-        roles: [userRole.value]
-    })
-
-    const contact = new Contact({
-        name: req.body.name,
-        firm: req.body.firm,
-        email: req.body.email,
-        password: bcrypt.hashSync(password, salt),
-        phone: req.body.phone ? req.body.phone : '',
-        user: user.id,
-        roles: [userRole.value],
-        imageSrc: req.file ? req.file.path : ''
-    })
-
-
     try {
-        await user.save()
-        await contact.save()
-        res.status(201).json(contact)
+        const { email, password, name, firm, phone } = req.body
+
+        const salt = bcrypt.genSaltSync(10)
+        const hashPassword = bcrypt.hashSync(password, salt)
+
+        const user = await db.query(
+            'INSERT INTO users (email, password, date, roles) VALUES ($1, $2, $3, $4) RETURNING *',
+            [email, hashPassword, new Date(), 'USER'], (err, result) => {
+                if (err) {
+                    errorHandler(result, err)
+                } else {
+                    db.query(
+                        `INSERT INTO contacts (email, password, roles, date, imagesrc, name, firm, phone, user_id)
+                            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`, [email, hashPassword, 'USER', new Date(),
+                        req.file ? req.file.path : '', name, firm, phone, result.rows[0].id], (err, result2) => {
+                            if (err) {
+                                errorHandler(result2, err)
+                            } else {
+                                res.status(200).json({ result, result2 })
+                                return;
+                            }
+                        }
+                    )
+                }
+            }
+        )
     } catch (e) {
         errorHandler(res, e)
     }
 }
 
 module.exports.update = async function (req, res) {
-    const updatedContact = {
-        name: req.body.name,
-        email: req.body.email,
-        firm: req.body.firm,
-    }
-
-    const updatedUser = {}
-
-    if (req.body.phone) {
-        updatedContact.phone = req.body.phone
-    }
-
-    
-    if (req.body.password) {
-        const salt = bcrypt.genSaltSync(10)
-        const password = req.body.password
-        console.log(password)
-        updatedUser.password = bcrypt.hashSync(password, salt)
-    }
-
-    if (req.file) {
-        updatedContact.imageSrc = req.file.path
-    }
 
     try {
-        const contact = await Contact.findOneAndUpdate(
-            { _id: req.params.id },
-            { $set: updatedContact },
-            { new: true }
+        const { email, password, name, firm, phone } = req.body
+
+        const unit = await db.query(
+            `SELECT * FROM contacts WHERE id = $1`, [req.params.id]
         )
 
-        const user = await User.findOneAndUpdate(
-            { _id: contact.user },
-            { $set: updatedUser },
-            { new: true }
-        )
+        async function updateFunc(password) {
+            const user = await db.query(`UPDATE contacts set email = $1, password = $2, name = $3, firm = $4,
+     phone = $5, imagesrc = $6 where id = $7 RETURNING *`,
+                [email, password, name, firm, req.body.phone ? phone : '', req.file ? req.file.path : '', req.params.id], (err, result) => {
+                    if (err) {
+                        errorHandler(result, err)
+                    } else {
+                        db.query(
+                            `UPDATE users set email = $1, password = $2 where id = $3 RETURNING *`,
+                            [email, password, result.rows[0].user_id], (err, result2) => {
+                                if (err) {
+                                    errorHandler(result2, err)
+                                } else {
+                                    res.status(200).json({ result, result2 })
+                                    return;
+                                }
+                            }
+                        )
+                    }
+                }
+            )
+        }
 
-        res.status(200).json({contact, user})
+        if (password !== undefined) {
+            const salt = bcrypt.genSaltSync(10)
+            const hashPassword = bcrypt.hashSync(password, salt)
+            updateFunc(hashPassword)
+        } else {
+            updateFunc(unit.rows[0].password)
+        }
+
     } catch (e) {
         errorHandler(res, e)
     }
 }
 
+
+
 module.exports.delete = async function (req, res) {
     try {
-        await Contact.remove({ _id: req.params.id })
-        res.status(200).json({
-            message: 'Контакт удалён'
+        const id = req.params.id
+
+        const menuItem = await db.query('DELETE FROM contacts where id = $1', [id], (err, result) => {
+            if (err) {
+                errorHandler(result, err)
+            } else {
+                db.query(
+                    `DELETE FROM users where id = $1`,
+                    [result.rows[0].user_id], (err, result2) => {
+                        if (err) {
+                            errorHandler(result2, err)
+                        } else {
+                            res.status(200).json({ result, result2 })
+                            return;
+                        }
+                    }
+                )
+            }
         })
+        res.status(200).json(menuItem.rows[0])
+
+        // await Contact.remove({ _id: req.params.id })
+        // res.status(200).json({
+        //     message: 'Контакт удалён'
+        // })
     } catch (e) {
         errorHandler(res, e)
     }

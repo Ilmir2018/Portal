@@ -19,7 +19,7 @@ export class ContactsService {
   constructor(private http: HttpClient) {
   }
 
-  getContacts(): Observable<ContactResponse> {
+  getContacts(): Observable<any> {
     return this.http.get<ContactResponse>('/api/contacts')
   }
 
@@ -48,6 +48,7 @@ export class ContactsService {
     if (image) {
       formData.append('image', image, image.name)
     }
+    formData.append('id', id)
     formData.append('name', name)
     formData.append('firm', firm)
     formData.append('phone', phone)

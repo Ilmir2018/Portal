@@ -48,7 +48,6 @@ export class ContactsTableComponent implements OnInit {
   ngOnInit(): void {
     this.reloading = true
     this.oSub = this.service.getContacts().subscribe(contactResp => {
-      console.log(contactResp)
       this.dataSource = new MatTableDataSource<Contact>(contactResp.contacts)
       this.reloading = false
       this.setDataSource(this.dataSource);

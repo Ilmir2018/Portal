@@ -12,11 +12,14 @@ module.exports.get = async function (req, res) {
 }
 
 module.exports.update = async function (req, res) {
-    console.log(req.body)
-    const { id, title, url } = req.body
-    const menu = await db.query('UPDATE menu set title = $1, url = $2 where id = $3 RETURNING *',
-        [title, url, id])
-    res.status(200).json(menu.rows[0])
+    try {
+        const { id, title, url } = req.body
+        const menu = await db.query('UPDATE menu set title = $1, url = $2 where id = $3 RETURNING *',
+            [title, url, id])
+        res.status(200).json(menu.rows[0])
+    } catch (e) {
+        errorHandler(res, e)
+    }
 }
 
 module.exports.create = async function (req, res) {
@@ -29,7 +32,7 @@ module.exports.create = async function (req, res) {
     }
 }
 
-module.exports.delete = async function(req, res) {
+module.exports.delete = async function (req, res) {
     try {
         const id = req.params.id
         const menuItem = await db.query('DELETE FROM menu where id = $1', [id])
