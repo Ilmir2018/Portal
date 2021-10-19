@@ -11,9 +11,9 @@
             <button (click)="addNew(item)" class="btn add">
                 Добавить
             </button>
-            <button (click)="remove(item)" class="btn remove">
+            <!-- <button (click)="remove(item)" class="btn remove">
                 Удалить
-            </button>
+            </button> -->
         </div>
     </div>
     <ng-template #unset>
@@ -30,7 +30,7 @@
                 <button (click)="addNew(item)" class="btn add">
                     Добавить
                 </button>
-                <button (click)="remove(item)" class="btn remove">
+                <button *ngIf="item.url != contacts" (click)="remove(item)" class="btn remove">
                     Удалить
                 </button>
             </div>

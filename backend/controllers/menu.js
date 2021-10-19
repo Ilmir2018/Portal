@@ -24,10 +24,11 @@ module.exports.update = async function (req, res) {
 
 module.exports.create = async function (req, res) {
     try {
-        const { title, url, parent_id } = req.body
-        const newMenu = await db.query('INSERT INTO menu (title, url, parent_id) VALUES ($1, $2, $3) RETURNING *', [title, url, parent_id])
+        const { title, url, parent_id, user_id } = req.body
+        const newMenu = await db.query('INSERT INTO menu (title, url, parent_id, user_id) VALUES ($1, $2, $3, $4) RETURNING *',
+         [title, url, parent_id, user_id])
         res.status(200).json(newMenu.rows[0])
-    } catch (e) {
+    } catch (e) {                             
         errorHandler(res, e)
     }
 }

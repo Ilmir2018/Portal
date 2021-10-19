@@ -1,7 +1,5 @@
 const errorHandler = require('../utils/errorHandler')
-
 const bcrypt = require('bcryptjs')
-
 const db = require('../posgres')
 
 
@@ -106,30 +104,24 @@ module.exports.update = async function (req, res) {
 module.exports.delete = async function (req, res) {
     try {
         const id = req.params.id
-
         const menuItem = await db.query('DELETE FROM contacts where id = $1', [id], (err, result) => {
             if (err) {
                 errorHandler(result, err)
             } else {
+                // console.log(result)
                 db.query(
                     `DELETE FROM users where id = $1`,
-                    [result.rows[0].user_id], (err, result2) => {
+                    [req.query.user_id], (err, result2) => {
                         if (err) {
                             errorHandler(result2, err)
                         } else {
-                            res.status(200).json({ result, result2 })
+                            res.status(200).json({message: 'Контакт удалён'})
                             return;
                         }
                     }
                 )
             }
         })
-        res.status(200).json(menuItem.rows[0])
-
-        // await Contact.remove({ _id: req.params.id })
-        // res.status(200).json({
-        //     message: 'Контакт удалён'
-        // })
     } catch (e) {
         errorHandler(res, e)
     }

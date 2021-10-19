@@ -40,7 +40,7 @@ export class ProfilePageComponent implements OnInit {
             password: '',
             phone: item.phone,
           })
-          this.common.imagePreview = item.imageSrc
+          this.common.imagePreview = item.imagesrc
           MaterialService.updateTextInputs()
         }
         this.form.enable()

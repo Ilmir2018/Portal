@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { MaterialService } from 'src/app/classes/material.service';
@@ -16,12 +16,13 @@ import { ContactsService } from 'src/app/services/contacts.service';
 export class ContactPageComponent implements OnInit {
 
   form: FormGroup
-  contact: Contact
+  contact: any
   date: Date
   idContact: number
   paramsId: string
 
-  constructor(private route: ActivatedRoute, private service: ContactsService, public common: CommonService) { }
+  constructor(private route: ActivatedRoute,
+    private service: ContactsService, public common: CommonService, private router: Router) { }
 
   ngOnInit(): void {
 
@@ -82,6 +83,24 @@ export class ContactPageComponent implements OnInit {
         this.form.enable()
       }
     )
+  }
+
+  deleteContact() {
+    const decision = window.confirm(`Вы уверены что вы хотите удалить контакт ${this.contact.email}`)
+    if (decision) {
+      console.log(this.contact.rows[0].id)
+      this.service.delete(this.contact.rows[0].id, this.contact.rows[0].user_id).subscribe(
+        contact => {
+          this.contact = contact
+          MaterialService.toast('Контакт удалён')
+          this.router.navigate(['/contacts'])
+        }, error => {
+          MaterialService.toast(error.error.message)
+          this.form.enable()
+        }
+      )
+    }
+
   }
 
 }

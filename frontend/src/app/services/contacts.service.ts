@@ -61,4 +61,8 @@ export class ContactsService {
     return this.http.patch<Contact>(`/api/contacts/${id}`, formData)
   }
 
+  delete(id: string, user_id: string): Observable<Contact> {
+    return this.http.delete<Contact>(`/api/contacts/${id}?user_id=${user_id}`)
+  }
+
 }

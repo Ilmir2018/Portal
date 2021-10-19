@@ -1,0 +1,12 @@
+.row {
+    display: flex;
+    flex-direction: column;
+
+    .buttons {
+        margin-bottom: 10px;
+        button {
+            margin-left: -10px;
+        }
+    }
+}
+

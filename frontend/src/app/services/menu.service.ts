@@ -18,11 +18,19 @@ export class MenuService {
   }
 
   getMenu() {
-    let map = new Map(), menu: any
+    let map = new Map(), menu: any, resultArr = []
     this.get().subscribe((data) => {
       menu = data
+
+      //Отбираем пункты меню по user_id
+      menu.forEach((items) => {
+        if(items.user_id == localStorage.getItem('id-user') || items.user_id == null) {
+          resultArr.push(items)
+        }
+      })
+
       //Первые уровни меню
-      menu.forEach((item) => {
+      resultArr.forEach((item) => {
         //заполняем массив для добавления и удаления элементов на фронте
         this.menuItemsOld.push(item)
         //создаём объект для заполнения всех массивов и подмассивов
@@ -38,7 +46,7 @@ export class MenuService {
       //Два раза перебор для того чтобы при сортировке по id
       //в map сначала заполнились пункты первого уровня меню
       //а вторым циклом мы заполняем все вложенные subtitle
-      menu.forEach((item) => {
+      resultArr.forEach((item) => {
         if (item.parent_id !== null) {
           let obj = map.get(item.parent_id)
           obj.subtitle.push(map.get(item.id))
@@ -63,7 +71,7 @@ export class MenuService {
     function myFilter(value, index) {
       return index > 3;
     }
-
+    
   }
 
   recursionRoutes(arr: any) {
@@ -116,7 +124,7 @@ export class MenuService {
    */
 
   get() {
-    return this.http.get<NavItemNew>('/api/menu')
+    return this.http.get<NavItemNew>(`/api/menu`)
   }
 
   /**

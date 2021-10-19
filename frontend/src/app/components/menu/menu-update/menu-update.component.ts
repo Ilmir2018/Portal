@@ -17,6 +17,7 @@ export class MenuUpdateComponent implements OnInit {
   public newItem = false
   data: NavItemNew
   private deleteObjects = []
+  public contacts = 'contacts'
 
   constructor(private service: MenuService, private router: Router) { }
 
@@ -45,7 +46,7 @@ export class MenuUpdateComponent implements OnInit {
    * @param item добавляемый пункт меню
    */
   add(item: NavItemNew) {
-    let object = { title: this.inputValue, url: this.service.translit(this.inputValue), parent_id: item.id }
+    let object = { title: this.inputValue, url: this.service.translit(this.inputValue), parent_id: item.id, user_id: localStorage.getItem('id-user') }
     let url = this.service.translit(this.inputValue);
     //Добавляем новый пункт меню
     this.service.add(object).subscribe(
