@@ -1,0 +1,29 @@
+<div *ngIf="service.settingsMenu">
+    <div class="shadow"></div>
+    <div class="modal-window">
+        <h2>Редактирование пункта меню</h2>
+        <div class="input-field">
+            <input type="text" value="{{service.settingsItem.title}}" (keyup)="setValue($event.target.value)">
+        </div>
+        <div class="buttons">
+            <button *ngIf="service.settingsItem.url != forbiddenItems[0] && service.settingsItem.url != forbiddenItems[1] &&
+            service.settingsItem.url != forbiddenItems[2] && service.settingsItem.url != forbiddenItems[3]" (click)="save(service.settingsItem)" class="btn change">
+                Изменить
+            </button>
+            <button (click)="addNew(service.settingsItem)" class="btn add">
+                Добавить
+            </button>
+            <button *ngIf="service.settingsItem.url != forbiddenItems[0] && service.settingsItem.url != forbiddenItems[1] &&
+            service.settingsItem.url != forbiddenItems[2] && service.settingsItem.url != forbiddenItems[3]" (click)="remove(service.settingsItem)" class="btn remove">
+                Удалить
+            </button>
+            <button class="btn close" (click)="closeModal()"></button>
+        </div>
+        <div *ngIf="newItem" class="modal-shadow"></div>
+        <div *ngIf="newItem" class="adding-block">
+            <button class="btn close" (click)="closeAddModal()"></button>
+            <input type="text" (keyup)="setValue($event.target.value)">
+            <button (click)="add(this.data)" class="btn add">Добавить пункт</button>
+        </div>
+    </div>
+</div>

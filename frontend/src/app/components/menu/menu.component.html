@@ -1,5 +1,11 @@
-<app-menu-update [menuItems]="service.menuItems"></app-menu-update>
 <div class="adding-block">
-    <input class="add-new" type="text" (keyup)="setValue($event.target.value)">
+    <div class="input-field">
+        <input class="add-new" type="text" (keyup)="setValue($event.target.value)">
+    </div>
     <button (click)="add()" class="btn add">Добавить пункт</button>
 </div>
+<div class="menu-update">
+    <app-menu-update [menuItems]="service.menuItems"></app-menu-update>
+</div>
+
+<app-modal-window></app-modal-window>

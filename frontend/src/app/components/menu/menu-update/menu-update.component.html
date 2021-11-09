@@ -1,44 +1,7 @@
-<div class="row" *ngFor="let item of menuItems; let i = index">
-    <div *ngIf="item.parent_id == null; else unset" class="first_step">
-        <div class="input-field">
-            <input type="text" value="{{item.title}}" (keyup)="setValue($event.target.value)">
-        </div>
+<ul class="menu-update">
+    <li class="menu-update_list" *ngFor="let item of menuItems">
+        <button class="par" (click)="settings(item)">*</button>
+        <a class="menu-update_link">{{ item.title }}</a>
         <app-menu-update class="spoiler-content" *ngIf="item.subtitle" [menuItems]="item.subtitle"></app-menu-update>
-        <div class="buttons">
-            <button (click)="save(item)" class="btn">
-                Сохранить {{ item.title }}
-            </button>
-            <button (click)="addNew(item)" class="btn add">
-                Добавить
-            </button>
-            <!-- <button (click)="remove(item)" class="btn remove">
-                Удалить
-            </button> -->
-        </div>
-    </div>
-    <ng-template #unset>
-        <div class="subtitles">
-            <div class="input-field">
-                <input type="text" value="{{item.title}}" (keyup)="setValue($event.target.value)">
-            </div>
-            <app-menu-update class="spoiler-content" *ngIf="item.subtitle" [menuItems]="item.subtitle">
-            </app-menu-update>
-            <div class="buttons">
-                <button (click)="save(item)" class="btn">
-                    Сохранить {{ item.title }}
-                </button>
-                <button (click)="addNew(item)" class="btn add">
-                    Добавить
-                </button>
-                <button *ngIf="item.url != contacts" (click)="remove(item)" class="btn remove">
-                    Удалить
-                </button>
-            </div>
-        </div>
-    </ng-template>
-</div>
-
-<div *ngIf="newItem" class="adding-block">
-    <input class="add-new" type="text" (keyup)="setValue($event.target.value)">
-    <button (click)="add(this.data)" class="btn add">Добавить пункт</button>
-</div>
+    </li>
+</ul>

@@ -1,14 +1,31 @@
 <!-- <ul>
-    <li class="spoiler-wrap" *ngFor="let item of navItems">
+    <li class="spoiler-wrap" *ngFor="let item of menuItems">
         <p *ngIf="item.subtitle.length !== 0" class="spoiler__btn">sdgfsdg</p>
         <a [routerLink]=[item.url]>{{ item.title }}</a>
-        <app-menu-template class="spoiler-content" *ngIf="item.subtitle" [navItems]="item.subtitle"></app-menu-template>
+        <app-menu-template class="spoiler-content" *ngIf="item.subtitle" [menuItems]="item.subtitle"></app-menu-template>
     </li>
 </ul> -->
 
-<ul id="main_nav">
-    <li *ngFor="let item of menuItems">
-        <a [routerLink]=[item.url]>{{ item.title }}</a>
+<!-- <ul id="main_nav">
+    <div
+    cdkDropList
+    [cdkDropListData]="menuItems"
+    class="example-list"
+    (cdkDropListDropped)="drop($event)"
+    >
+        <li *ngFor="let item of menuItems" cdkDrag>
+            <a [routerLink]=[item.url]>{{ item.title }}</a>
+            <app-menu-template class="spoiler-content" *ngIf="item.subtitle" [menuItems]="item.subtitle">
+            </app-menu-template>
+        </li>
+    </div>
+
+</ul> -->
+
+<ul class="menu-template">
+    <li class="menu-template_list" *ngFor="let item of menuItems">
+        <!-- <button class="par" (click)="settings(item)">*</button> -->
+        <a class="menu-template_link" [routerLink]=[item.url]>{{ item.title }}</a>
         <app-menu-template class="spoiler-content" *ngIf="item.subtitle" [menuItems]="item.subtitle"></app-menu-template>
-    </li>  
+    </li>
 </ul>

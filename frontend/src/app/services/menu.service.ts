@@ -13,6 +13,8 @@ export class MenuService {
   public menuItems = [];
   public menuItemsOld = [];
   private routes = [];
+  public settingsMenu: boolean = false
+  public settingsItem: NavItemNew
 
   constructor(private router: Router, private http: HttpClient) {
   }
@@ -52,13 +54,11 @@ export class MenuService {
           obj.subtitle.push(map.get(item.id))
         }
       })
-    })
 
-    //Подгрузка всех роутов
-    setTimeout(() => {
-      //Убираем из добавления первые 4 изначальных пункта меню
+
+      //Подгрузка всех роутов
       let filteredArray = this.menuItemsOld.filter(myFilter);
-
+      this.router.resetConfig(this.router.config)
       this.router.config.forEach((item) => {
         filteredArray.forEach((route) => {
           if (item.canActivate) {
@@ -66,7 +66,25 @@ export class MenuService {
           }
         })
       })
-    }, 1000)
+    })
+
+    //Подгрузка всех роутов
+    // setTimeout(() => {
+      //Убираем из добавления первые 4 изначальных пункта меню
+      // let filteredArray = this.menuItemsOld.filter(myFilter);
+      // this.router.resetConfig(this.router.config)
+      // this.router.config.forEach((item) => {
+      //   filteredArray.forEach((route) => {
+      //     if (item.canActivate) {
+      //       item.children.push({ path: route.url, component: TemplatePageComponent })
+      //     }
+      //   })
+      // })
+
+      // console.log(this.router.config)
+    // }, 1000)
+
+
 
     function myFilter(value, index) {
       return index > 3;

@@ -1,19 +1,28 @@
+.menu-update {
+    position: absolute;
+    top: 20%;
+    left: 45%;
+}
+
 .adding-block {
-    display       : flex;
-    flex-direction: column;
-    align-items   : center;
+    display: flex;
+    align-items: center;
+    margin: 22px 0px 0px 46px;
 
     .add-new {
-        width        : 300px;
-        margin       : 0 auto;
-        margin-bottom: 12px;
-        margin-top   : 10px;
-        border       : 1px solid;
+        width: 300px;
+        margin-right: 10px;
     }
 
     .btn {
         margin-bottom: 10px;
-        background-color: yellowgreen;
+        background-color: #443D3E;
+        width: 9em;
+        height: 3.5em;
+        font-size: 10px;
     }
 
+    .btn:hover {
+        background-color: #6E7F80;
+    }
 }

@@ -1,7 +1,18 @@
 ul {
+    background-color: #051E34;
+
+    h1 {
+        color: #FFFFFF;
+        margin: 0.8rem 3rem;
+    }
     li {
         a {
             display: inline-block;
+            color: #FFFFFF;
         }
     }
+}
+
+.content {
+    padding: 0;
 }

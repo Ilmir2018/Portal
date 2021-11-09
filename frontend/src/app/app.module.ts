@@ -26,6 +26,7 @@ import { MenuTemplateComponent } from './components/menu/menu-template/menu-temp
 import { MenuComponent } from './components/menu/menu.component';
 import { MenuUpdateComponent } from './components/menu/menu-update/menu-update.component';
 import { TemplatePageComponent } from './components/template-page/template-page.component';
+import { ModalWindowComponent } from './components/menu/modal-window/modal-window.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { TemplatePageComponent } from './components/template-page/template-page.
     MenuTemplateComponent,
     MenuComponent,
     MenuUpdateComponent,
-    TemplatePageComponent
+    TemplatePageComponent,
+    ModalWindowComponent
   ],
   imports: [
     BrowserModule,
