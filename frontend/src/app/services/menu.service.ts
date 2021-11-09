@@ -26,9 +26,9 @@ export class MenuService {
 
       //Отбираем пункты меню по user_id
       menu.forEach((items) => {
-        if(items.user_id == localStorage.getItem('id-user') || items.user_id == null) {
+        // if(items.user_id == localStorage.getItem('id-user') || items.user_id == null) {
           resultArr.push(items)
-        }
+        // }
       })
 
       //Первые уровни меню

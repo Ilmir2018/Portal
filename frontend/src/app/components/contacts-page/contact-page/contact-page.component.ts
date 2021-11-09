@@ -88,7 +88,6 @@ export class ContactPageComponent implements OnInit {
   deleteContact() {
     const decision = window.confirm(`Вы уверены что вы хотите удалить контакт ${this.contact.email}`)
     if (decision) {
-      console.log(this.contact.rows[0].id)
       this.service.delete(this.contact.rows[0].id, this.contact.rows[0].user_id).subscribe(
         contact => {
           this.contact = contact
