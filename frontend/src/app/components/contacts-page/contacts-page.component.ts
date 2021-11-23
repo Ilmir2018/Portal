@@ -19,11 +19,11 @@ export class ContactsPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.route.queryParams.subscribe((params: Params) => {
-      if (params['roleDenied']) {
-        MaterialService.toast('У вас нет прав доступа на эту операцию')
-      }
-    })
+    // this.route.queryParams.subscribe((params: Params) => {
+    //   if (params['roleDenied']) {
+    //     MaterialService.toast('У вас нет прав доступа на эту операцию')
+    //   }
+    // })
   }
 
 

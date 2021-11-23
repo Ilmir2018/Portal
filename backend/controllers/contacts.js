@@ -41,8 +41,26 @@ module.exports.create = async function (req, res) {
                             if (err) {
                                 errorHandler(result2, err)
                             } else {
-                                res.status(200).json({ result, result2 })
-                                return;
+                                const menuItems = db.query(`SELECT id FROM menu;
+                                `, (err, result3) => {
+                                    if (err) {
+                                        errorHandler(result, err)
+                                    }
+                                    //Обновление таблицы roles, добавление туда на каждую страницу возможности менять права
+                                    result3.rows.forEach((item) => {
+                                        db.query(
+                                            `INSERT INTO roles (user_id, title_id, permissions)
+                                            VALUES ($1, $2, $3) RETURNING *`, [result.rows[0].id, item.id, [true, false, false]],
+                                            (err, result4) => {
+                                                if (err) {
+                                                    errorHandler(result4, err)
+                                                }
+                                            }
+                                        )
+                                    })
+                                    res.status(200).json({ message: 'Контакт добавлен' })
+                                    return;
+                                })
                             }
                         }
                     )
@@ -76,7 +94,7 @@ module.exports.update = async function (req, res) {
                                 if (err) {
                                     errorHandler(result2, err)
                                 } else {
-                                    res.status(200).json({ result, result2 })
+                                    res.status(200).json({ message: 'Контакт обновлён' })
                                     return;
                                 }
                             }
@@ -104,19 +122,28 @@ module.exports.update = async function (req, res) {
 module.exports.delete = async function (req, res) {
     try {
         const id = req.params.id
-        const menuItem = await db.query('DELETE FROM contacts where id = $1', [id], (err, result) => {
+        const contact = await db.query('DELETE FROM contacts where id = $1', [id], (err, result) => {
             if (err) {
                 errorHandler(result, err)
             } else {
-                // console.log(result)
                 db.query(
-                    `DELETE FROM users where id = $1`,
+                    //Удаляем данные из дтаблицы ролей для контакта
+                    `DELETE FROM roles WHERE user_id = $1 RETURNING *`,
                     [req.query.user_id], (err, result2) => {
                         if (err) {
                             errorHandler(result2, err)
                         } else {
-                            res.status(200).json({message: 'Контакт удалён'})
-                            return;
+                            const roleItems = db.query(`DELETE FROM users where id = $1 
+                            `, [req.query.user_id], (err, result3) => {
+                                if (err) {
+                                    errorHandler(result3, err)
+                                }
+                                else {
+                                    res.status(200).json({ message: 'Контакт удалён' })
+                                    return;
+                                }
+                            })
+
                         }
                     }
                 )

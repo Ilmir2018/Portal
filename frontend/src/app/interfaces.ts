@@ -9,6 +9,13 @@ export interface ContactResponse {
     menu: Menu
 }
 
+export interface UserRole {
+    email: string,
+    user_id: string
+    // title_id?: number,
+    permissions: [false, false, false]
+}
+
 export interface Contact {
     name: string
     firm: string
@@ -20,6 +27,7 @@ export interface Contact {
     date?: Date,
     roles?: [],
     imageSrc?: File
+    user_id?: string
 }
 
 export interface Menu {

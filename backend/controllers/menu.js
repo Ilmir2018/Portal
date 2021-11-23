@@ -26,9 +26,37 @@ module.exports.create = async function (req, res) {
     try {
         const { title, url, parent_id } = req.body
         const newMenu = await db.query('INSERT INTO menu (title, url, parent_id) VALUES ($1, $2, $3) RETURNING *',
-         [title, url, parent_id])
-        res.status(200).json(newMenu.rows[0])
-    } catch (e) {                             
+            [title, url, parent_id], (err, result) => {
+                if (err) {
+                    errorHandler(result, err)
+                } else {
+                    const users = db.query(`SELECT id FROM users;
+                `, (err, result2) => {
+                        if (err) {
+                            errorHandler(result2, err)
+                        }
+                        else {
+                            //Обновление таблицы roles, добавление туда на каждую страницу возможности менять права
+                            result2.rows.forEach((item) => {
+                                db.query(
+                                    `INSERT INTO roles (user_id, title_id, permissions)
+                                    VALUES ($1, $2, $3) RETURNING *`, [item.id, result.rows[0].id, [true, false, false]],
+                                    (err, result3) => {
+                                        if (err) {
+                                            // console.log(result3)
+                                            errorHandler(result3, err)
+                                        } else {
+                                            console.log('Успешно')
+                                        }
+                                    }
+                                )
+                            });
+                        }
+                    })
+                    res.status(200).json(result.rows[0])
+                }
+            })
+    } catch (e) {
         errorHandler(res, e)
     }
 }
@@ -36,8 +64,47 @@ module.exports.create = async function (req, res) {
 module.exports.delete = async function (req, res) {
     try {
         const id = req.params.id
-        const menuItem = await db.query('DELETE FROM menu where id = $1', [id])
-        res.status(200).json(menuItem.rows[0])
+        //Удаляем сначала записи из таблицы ролей для контакта
+        const roleItems = await db.query('DELETE FROM roles WHERE title_id = $1 RETURNING *', [id], (err, result) => {
+            if (err) {
+                errorHandler(result, err)
+            } else {
+                const menuItem = db.query(`DELETE FROM menu WHERE id = $1 RETURNING *
+                `, [id], (err, result2) => {
+                    if (err) {
+                        errorHandler(result2, err)
+                    }
+                    else {
+                        console.log(result2.rows)
+                    }
+                })
+                res.status(200).json(result.rows[0])
+            }
+
+        })
+
+    } catch (e) {
+        errorHandler(res, e)
+    }
+}
+
+module.exports.modal = async function (req, res) {
+    try {
+        const title_id = req.body[0], contacts = req.body[1]
+
+        if (contacts != null) {
+            contacts.forEach((item) => {
+                // console.log(item)
+                const permissions = db.query('UPDATE roles set permissions = $1 WHERE title_id = $2 and user_id = $3 RETURNING *',
+                    [item.permissions, title_id, item.user_id], (err, result) => {
+                        if (err) {
+                            errorHandler(result, err)
+                        }
+                    })
+            })
+            return res.status(200).json({ message: 'Права контактов изменены!' })
+        }
+        return res.status(200).json({ message: 'Котакты не выбраны' })
     } catch (e) {
         errorHandler(res, e)
     }

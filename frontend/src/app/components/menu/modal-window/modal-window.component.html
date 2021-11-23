@@ -7,14 +7,16 @@
         </div>
         <div class="buttons">
             <button *ngIf="service.settingsItem.url != forbiddenItems[0] && service.settingsItem.url != forbiddenItems[1] &&
-            service.settingsItem.url != forbiddenItems[2] && service.settingsItem.url != forbiddenItems[3]" (click)="save(service.settingsItem)" class="btn change">
+            service.settingsItem.url != forbiddenItems[2] && service.settingsItem.url != forbiddenItems[3] && service.writePerm"
+                (click)="save(service.settingsItem)" class="btn change">
                 Изменить
             </button>
-            <button (click)="addNew(service.settingsItem)" class="btn add">
+            <button *ngIf="service.writePerm" (click)="addNew(service.settingsItem)" class="btn add">
                 Добавить
             </button>
             <button *ngIf="service.settingsItem.url != forbiddenItems[0] && service.settingsItem.url != forbiddenItems[1] &&
-            service.settingsItem.url != forbiddenItems[2] && service.settingsItem.url != forbiddenItems[3]" (click)="remove(service.settingsItem)" class="btn remove">
+            service.settingsItem.url != forbiddenItems[2] && service.settingsItem.url != forbiddenItems[3] && service.deletePerm"
+                (click)="remove(service.settingsItem)" class="btn remove">
                 Удалить
             </button>
             <button class="btn close" (click)="closeModal()"></button>
@@ -25,5 +27,31 @@
             <input type="text" (keyup)="setValue($event.target.value)">
             <button (click)="add(this.data)" class="btn add">Добавить пункт</button>
         </div>
+
+
+        <form *ngIf="role == 'ADMIN'" [formGroup]="form" (ngSubmit)="changePermissions()" novalidate>
+            <mat-form-field appearance="fill">
+                <mat-label>Список пользователей</mat-label>
+                <mat-select [formControl]="toppings" multiple>
+                    <mat-select-trigger>
+                        {{toppings.value ? toppings.value[0].email : ''}}
+                        <span *ngIf="toppings.value?.length > 1" class="example-additional-selection">
+                            (+{{toppings.value.length - 1}} {{toppings.value?.length === 2 ? 'other' : 'others'}})
+                        </span>
+                    </mat-select-trigger>
+                    <mat-option *ngFor="let contact of contacts" [value]="contact">{{contact.email}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <div>
+                <div *ngFor="let data of Data; let i=index">
+                    <label>
+                        <input type="checkbox" formControlName="{{data.name}}" />
+                        {{data.name}}
+                    </label>
+                </div>
+                <input type="submit" value="Submit">
+            </div>
+
+        </form>
     </div>
 </div>

@@ -8,4 +8,6 @@ router.post('/', passport.authenticate('jwt', {session: false}), controller.crea
 router.patch('/:id', passport.authenticate('jwt', {session: false}), controller.update)
 router.delete('/:id', passport.authenticate('jwt', {session: false}), controller.delete)
 
+router.post('/modal', passport.authenticate('jwt', {session: false}), controller.modal)
+
 module.exports = router

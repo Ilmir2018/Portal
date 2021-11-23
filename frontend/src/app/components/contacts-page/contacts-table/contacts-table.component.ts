@@ -54,6 +54,9 @@ export class ContactsTableComponent implements OnInit {
       this.dataSource.paginator = this.paginator
       this.dataSource.sort = this.sort
     })
+    //Получаем все права пользователя
+    
+    
   }
 
   setDataSource(dataSource: MatTableDataSource<Contact>): void {

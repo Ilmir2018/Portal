@@ -2,8 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { PermissionsGuard } from '../classes/permissions.guard';
 import { TemplatePageComponent } from '../components/template-page/template-page.component';
-import { NavItemNew } from '../interfaces';
+import { NavItemNew, UserRole } from '../interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,8 @@ export class MenuService {
   private routes = [];
   public settingsMenu: boolean = false
   public settingsItem: NavItemNew
+  public writePerm: boolean = false
+  public deletePerm: boolean = false
 
   constructor(private router: Router, private http: HttpClient) {
   }
@@ -56,35 +59,19 @@ export class MenuService {
       })
 
 
-      //Подгрузка всех роутов
+     
+      //Убираем из добавления первые 4 изначальных пункта меню
       let filteredArray = this.menuItemsOld.filter(myFilter);
+       //Подгрузка всех роутов
       this.router.resetConfig(this.router.config)
-      this.router.config.forEach((item) => {
+      this.router.config.forEach((item, idx) => {
         filteredArray.forEach((route) => {
           if (item.canActivate) {
-            item.children.push({ path: route.url, component: TemplatePageComponent })
+            item.children.push({ path: route.url, component: TemplatePageComponent, canActivate: [PermissionsGuard] })
           }
         })
       })
     })
-
-    //Подгрузка всех роутов
-    // setTimeout(() => {
-      //Убираем из добавления первые 4 изначальных пункта меню
-      // let filteredArray = this.menuItemsOld.filter(myFilter);
-      // this.router.resetConfig(this.router.config)
-      // this.router.config.forEach((item) => {
-      //   filteredArray.forEach((route) => {
-      //     if (item.canActivate) {
-      //       item.children.push({ path: route.url, component: TemplatePageComponent })
-      //     }
-      //   })
-      // })
-
-      // console.log(this.router.config)
-    // }, 1000)
-
-
 
     function myFilter(value, index) {
       return index > 3;
@@ -170,5 +157,15 @@ export class MenuService {
 
   delete(menuItem: NavItemNew): Observable<NavItemNew> {
     return this.http.delete<NavItemNew>(`/api/menu/${menuItem.id}`)
+  }
+
+
+  /**
+   * 
+   * @param title_id id изменяемого пункта меню
+   * @param contacts Массив контактов права которых меняются
+   */
+  modalAdd(title_id: number, contacts: UserRole[]) {
+    return this.http.post('/api/menu/modal', [title_id, contacts])
   }
 }

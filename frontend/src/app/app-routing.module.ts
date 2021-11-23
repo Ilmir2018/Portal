@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './classes/auth.guard';
+import { PermissionsGuard } from './classes/permissions.guard';
 import { RoleGuard } from './classes/role.guard';
 import { ContactPageComponent } from './components/contacts-page/contact-page/contact-page.component';
 
@@ -25,7 +26,7 @@ const routes: Routes = [
   {
     path: '', component: SiteLayoutComponent, canActivate: [AuthGuard], children: [
       { path: 'settings', component: SettingsPageComponent },
-      { path: 'menu', component: MenuComponent },
+      { path: 'menu', component: MenuComponent, canActivate: [PermissionsGuard] },
       { path: 'profile', component: ProfilePageComponent },
       { path: 'contacts', component: ContactsPageComponent },
       { path: 'contacts/new', component: NewContactComponent, canActivate: [RoleGuard] },

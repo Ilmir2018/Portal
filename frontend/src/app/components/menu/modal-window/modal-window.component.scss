@@ -92,6 +92,22 @@
     input {
         color: black;
     }
+
+    form {
+        margin-left: 30%;
+        display: flex;
+
+        mat-form-field {
+            margin-right: 4%;
+        }
+
+        label {
+            input {
+                position: relative;
+                opacity: 1;
+            }
+        }
+    }
 }
 
 .shadow {

@@ -14,11 +14,26 @@ export class MenuUpdateComponent implements OnInit {
 
   constructor(private service: MenuService) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   settings(item) {
     this.service.settingsMenu = true
     this.service.settingsItem = item
+    let permissions = JSON.parse(localStorage.getItem('permissions'))
+    let permission;
+    //Получаем массив разрешений на (чтение, запись и удаление)
+    permissions.forEach((item) => {
+      if (item.url == this.service.settingsItem.url) {
+        permission = item
+        this.service.writePerm = permission.permissions[1]
+        this.service.deletePerm = permission.permissions[2]
+      } else {
+        return
+      }
+    })
+    //Берём права на редактирование и удаление каждого открывающегося
+    // пункта меню и передаём в модальное окно через сервис
+
   }
 
 

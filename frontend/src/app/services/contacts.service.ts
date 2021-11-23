@@ -27,7 +27,7 @@ export class ContactsService {
     return this.http.get<Contact>(`/api/contacts/${id}`)
   }
 
-  create(data: Contact, image: File): Observable<Contact> {
+  create(data: Contact, image?: File): Observable<Contact> {
     const formData = new FormData();
 
     if (image) {

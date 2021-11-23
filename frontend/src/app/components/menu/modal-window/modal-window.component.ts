@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MaterialService } from 'src/app/classes/material.service';
-import { NavItemNew } from 'src/app/interfaces';
+import { Contact, NavItemNew, UserRole } from 'src/app/interfaces';
+import { ContactsService } from 'src/app/services/contacts.service';
 import { MenuService } from 'src/app/services/menu.service';
 import { TemplatePageComponent } from '../../template-page/template-page.component';
 
@@ -16,11 +18,56 @@ export class ModalWindowComponent implements OnInit {
   public inputValue: string
   data: NavItemNew
   public forbiddenItems = []
+  form: FormGroup;
+  contacts: Array<UserRole> = []
+  @Input() public settingsItem: NavItemNew;
+  role: string
 
-  constructor(public service: MenuService, private router: Router) { }
+  Data: Array<any> = [
+    { name: 'read' },
+    { name: 'write' },
+    { name: 'delete' },
+  ]
+
+  toppings = new FormControl();
+
+  constructor(public service: MenuService, private router: Router,
+    private fb: FormBuilder, public contactService: ContactsService) {
+    this.form = fb.group({
+      read: false,
+      write: false,
+      delete: false,
+    });
+    this.role = localStorage.getItem('role')
+  }
 
   ngOnInit(): void {
     this.forbiddenItems = ['contacts', 'menu', 'profile', 'settings']
+
+    //Сохраняем в переменную все контакты, для оперделения прав доступа
+    this.contactService.getContacts().subscribe((items) => {
+      items.contacts.forEach((item: Contact) => {
+        this.contacts.push({email: item.email, user_id: item.user_id, permissions: [this.form.value.read, this.form.value.write, this.form.value.delete]})
+      })
+    })
+  }
+
+  /**
+   * Функция для изменения прав пользователей
+   */
+  changePermissions() {
+    //Доабвляем в каждый объект контакта id страницы, которую редактируем
+    this.contacts.forEach((item) => {
+      item.permissions = [this.form.value.read, this.form.value.write, this.form.value.delete]
+    })
+    this.service.modalAdd(this.service.settingsItem.id, this.toppings.value).subscribe(
+      modal => {
+        MaterialService.toast('Изменения сохранены')
+      }, error => {
+        MaterialService.toast(error.error.message)
+      }
+    )
+    
   }
 
   /**
@@ -123,6 +170,16 @@ export class ModalWindowComponent implements OnInit {
   closeModal() {
     this.service.settingsMenu = false
     this.newItem = false;
+
+    //Обнуляем значения модального окна при закрытии
+    this.form = this.fb.group({
+      read: false,
+      write: false,
+      delete: false,
+    });
+
+    //Обнуляем список пользователей
+    this.toppings.reset()
   }
 
   closeAddModal() {

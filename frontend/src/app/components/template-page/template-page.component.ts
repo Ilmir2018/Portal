@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
-import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
+import { Component, OnChanges } from '@angular/core';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { Router } from '@angular/router';
+import { ContactsService } from 'src/app/services/contacts.service';
+import { MaterialService } from 'src/app/classes/material.service';
 
 
 @Component({
@@ -10,7 +12,8 @@ import { Router } from '@angular/router';
 })
 export class TemplatePageComponent {
 
-  constructor(private router: Router){}
+  constructor(private router: Router, private service: ContactsService) { }
+
 
   todo = [
     'Get to work',
@@ -32,14 +35,29 @@ export class TemplatePageComponent {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
       transferArrayItem(event.previousContainer.data,
-                        event.container.data,
-                        event.previousIndex,
-                        event.currentIndex);
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex);
     }
   }
 
-  send(){
-    this.router.navigate(['/contacts'])
+  send() {
+    // this.router.navigate(['/contacts'])
+    setTimeout(() => {
+      this.service.create({
+        name: 'string',
+        firm: 'string',
+        email: 'string@dgdg',
+        password: 'stringgfd'
+      }).subscribe(
+        contact => {
+          MaterialService.toast('Изменения сохранены')
+          this.router.navigate(['/contacts'])
+        },
+        error => {
+          MaterialService.toast(error.error.message)
+        }
+      )
+    }, 500)
   }
-
 }

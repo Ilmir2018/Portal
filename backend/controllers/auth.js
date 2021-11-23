@@ -5,16 +5,16 @@ const errorHandler = require('../utils/errorHandler')
 const db = require('../posgres')
 
 
+
 module.exports.login = async function (req, res) {
 
     const { email, password } = req.body
 
-    const candidate = db.query(
+    const candidate = await db.query(
         `SELECT * FROM users WHERE email = $1`, [email], (err, result) => {
             if (err) {
-                errorHandler(results, err)
+                errorHandler(result, err)
             }
-
 
             if (result.rows.length == 0) {
                 res.status(409).json({
@@ -22,28 +22,39 @@ module.exports.login = async function (req, res) {
                 })
             } else {
 
-                const passwordResult = bcrypt.compareSync(password, result.rows[0].password)
+                //Получаем все права пользователя на (чтение, редактирование и удаление)
+                const permissions = db.query(`SELECT menu.url, roles.permissions FROM roles JOIN 
+                menu on roles.title_id = menu.id WHERE roles.user_id = $1;
+                `, [result.rows[0].id], (err, result2) => {
+                    if (err) {
+                        errorHandler(result, err)
+                    }
 
-                if (passwordResult) {
+                    const passwordResult = bcrypt.compareSync(password, result.rows[0].password)
 
-                    const token = jwt.sign({
-                        email: result.rows[0].email,
-                        userId: result.rows[0].id,
-                        roles: result.rows[0].roles
-                    }, keys.jwt, { expiresIn: 3600 })
+                    if (passwordResult) {
 
-                    res.status(200).json({
-                        token: `Bearer ${token}`,
-                        role: result.rows[0].roles,
-                        id: result.rows[0].id
-                    })
-                }
-                else {
-                    //Пароли не совпали
-                    res.status(401).json({
-                        message: 'Пароли не совпадают. Попробуйте снова'
-                    })
-                }
+                        const token = jwt.sign({
+                            email: result.rows[0].email,
+                            userId: result.rows[0].id,
+                            roles: result.rows[0].roles
+                        }, keys.jwt, { expiresIn: 3600 })
+
+                        res.status(200).json({
+                            token: `Bearer ${token}`,
+                            role: result.rows[0].roles,
+                            id: result.rows[0].id,
+                            permissions: result2.rows
+                        })
+                    }
+                    else {
+                        //Пароли не совпали
+                        res.status(401).json({
+                            message: 'Пароли не совпадают. Попробуйте снова'
+                        })
+                    }
+                })
+
             }
             //Обновление даты в таблице users
             db.query(
@@ -85,6 +96,24 @@ module.exports.register = async function (req, res) {
                             if (err) {
                                 errorHandler(result2, err)
                             } else {
+                                const menuItems = db.query(`SELECT id FROM menu;
+                                `, (err, result3) => {
+                                    if (err) {
+                                        errorHandler(result, err)
+                                    }
+                                    //Обновление таблицы roles, добавление туда на каждую страницу возможности менять права
+                                    result3.rows.forEach((item) => {
+                                        db.query(
+                                            `INSERT INTO roles (user_id, title_id, permissions)
+                                            VALUES ($1, $2, $3) RETURNING *`, [result.rows[0].id, item.id, [true, false, false]],
+                                            (err, result4) => {
+                                                if (err) {
+                                                    errorHandler(result4, err)
+                                                }
+                                            }
+                                        )
+                                    })
+                                })
                                 res.status(201).json({
                                     message: 'Успешная регистрация'
                                 })
