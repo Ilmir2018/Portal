@@ -94,7 +94,6 @@ module.exports.modal = async function (req, res) {
 
         if (contacts != null) {
             contacts.forEach((item) => {
-                // console.log(item)
                 const permissions = db.query('UPDATE roles set permissions = $1 WHERE title_id = $2 and user_id = $3 RETURNING *',
                     [item.permissions, title_id, item.user_id], (err, result) => {
                         if (err) {

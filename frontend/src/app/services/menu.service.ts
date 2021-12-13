@@ -26,7 +26,6 @@ export class MenuService {
     let map = new Map(), menu: any, resultArr = []
     this.get().subscribe((data) => {
       menu = data
-
       //Отбираем пункты меню по user_id
       menu.forEach((items) => {
         // if(items.user_id == localStorage.getItem('id-user') || items.user_id == null) {
@@ -63,7 +62,9 @@ export class MenuService {
       //Убираем из добавления первые 4 изначальных пункта меню
       let filteredArray = this.menuItemsOld.filter(myFilter);
        //Подгрузка всех роутов
-      this.router.resetConfig(this.router.config)
+       //если ставить resetConfig то при переходе по роутам, обновляется страница site-layout, что
+       //приводит к закрыванию раскрытых пунктов меню
+      // this.router.resetConfig(this.router.config)
       this.router.config.forEach((item, idx) => {
         filteredArray.forEach((route) => {
           if (item.canActivate) {

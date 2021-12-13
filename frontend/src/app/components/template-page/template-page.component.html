@@ -1,27 +1,31 @@
-<div cdkDropListGroup>
-    <div class="example-container">
-      <h2>To do</h2>
-  
-      <div
-        cdkDropList
-        [cdkDropListData]="todo"
-        class="example-list"
-        (cdkDropListDropped)="drop($event)">
-        <div class="example-box" *ngFor="let item of todo" cdkDrag>{{item}}</div>
+<div class="grid-wrapper">
+  <mat-table [dataSource]="data" cdkDropListGroup="" [trackBy]="trackByFn" (scroll)="onTableScroll($event)">
+      <ng-container *ngFor="let column of sortColumns(columns); trackBy: trackByFn; let i = index" [matColumnDef]="column.field">
+          <ng-container *ngIf="!!column.show">
+              <mat-header-cell *matHeaderCellDef="" [class.resizable]="resizable">
+                  <div class="cell-header" *ngIf="column.field === 'plusAction'">
+                      <mat-icon [matMenuTriggerFor]="addHideColumns">add</mat-icon>
+                  </div>
+                  <div class="cell-header" *ngIf="column.field !== 'plusAction'"><span>{{ column.name }}</span></div>
+                  <div class="handler"  (mousedown)="onResizeColumn($event, i)" ></div>
+              </mat-header-cell>
+          </ng-container>
+          <ng-container>
+              <mat-cell *matCellDef="let row">
+                  <ng-template *ngTemplateOutlet="cellTemplateRef; context:{row: row, column: column}" [ngIf]="cellTemplateRef"></ng-template>
+                  <ng-container *ngIf="!cellTemplateRef">{{ row[column.field] }}</ng-container>
+              </mat-cell>
+          </ng-container>
+      </ng-container>
+      <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;" #MatTableRowRef (click)="onRowClick(row)"></mat-row>
+  </mat-table>
+</div>
+<mat-menu #addHideColumns="matMenu">
+  <ng-container *ngFor="let col of columnsDef">
+      <div class="menu-button" mat-menu-item="mat-menu-item" (click)="$event.stopPropagation();" *ngIf="col.field !== 'plusAction'">
+          <div class="menu-label">{{col.name}}</div>
+          <mat-checkbox [(ngModel)]="col.show" (click)="onAddRemoveColumn(col, $event);" name="showHideColumns"></mat-checkbox>
       </div>
-    </div>
-  
-    <div class="example-container">
-      <h2>Done</h2>
-  
-      <div
-        cdkDropList
-        [cdkDropListData]="done"
-        class="example-list"
-        (cdkDropListDropped)="drop($event)">
-        <div class="example-box" *ngFor="let item of done" cdkDrag>{{item}}</div>
-      </div>
-    </div>
-  </div>
-
-  <button (click)="send()">Отправить</button>
+  </ng-container>
+</mat-menu>

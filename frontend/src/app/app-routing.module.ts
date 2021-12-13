@@ -4,6 +4,7 @@ import { AuthGuard } from './classes/auth.guard';
 import { PermissionsGuard } from './classes/permissions.guard';
 import { RoleGuard } from './classes/role.guard';
 import { ContactPageComponent } from './components/contacts-page/contact-page/contact-page.component';
+import { ContactsEditComponent } from './components/contacts-page/contacts-edit/contacts-edit.component';
 
 import { ContactsPageComponent } from './components/contacts-page/contacts-page.component';
 import { NewContactComponent } from './components/contacts-page/new-contact/new-contact.component';
@@ -30,6 +31,7 @@ const routes: Routes = [
       { path: 'profile', component: ProfilePageComponent },
       { path: 'contacts', component: ContactsPageComponent },
       { path: 'contacts/new', component: NewContactComponent, canActivate: [RoleGuard] },
+      { path: 'contacts/edit', component: ContactsEditComponent, canActivate: [RoleGuard] },
       { path: 'contacts/:id', component: ContactPageComponent, canActivate: [RoleGuard] },
     ]
   }

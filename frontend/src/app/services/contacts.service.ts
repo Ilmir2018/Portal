@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Contact, ContactResponse, GridColumnDefinition } from '../interfaces';
+import { Contact, ContactField, ContactResponse, GridColumnDefinition } from '../interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +9,9 @@ import { Contact, ContactResponse, GridColumnDefinition } from '../interfaces';
 
 export class ContactsService {
 
+  // changeColumnsCount = []
+
+  //Сделать подгрузку с базы данных столбцы из новой созданной таблицы
   columns: GridColumnDefinition[] = [
     { field: 'name', width: 10, name: 'name', show: true, order: 1 },
     { field: 'firm', width: 40, name: 'firm', show: true, order: 2 },
@@ -21,6 +24,10 @@ export class ContactsService {
 
   getContacts(): Observable<any> {
     return this.http.get<ContactResponse>('/api/contacts')
+  }
+
+  getContactsFields(): Observable<any> {
+    return this.http.get<any>('/api/contacts/edit')
   }
 
   getById(id: string): Observable<Contact> {
@@ -57,12 +64,32 @@ export class ContactsService {
     if (password) {
       formData.append('password', password)
     }
-    
+
     return this.http.patch<Contact>(`/api/contacts/${id}`, formData)
   }
 
   delete(id: string, user_id: string): Observable<Contact> {
     return this.http.delete<Contact>(`/api/contacts/${id}?user_id=${user_id}`)
+  }
+
+  
+  /**
+   * Функция либо обновления столбцов в таблице либо 
+   * создания нового столбца взависимости от значения change
+   * @param data массив 
+   * @param change флаг
+   * @returns 
+   */
+   updateFields(change: boolean, data?: ContactField[], value?: string) {
+    return this.http.post(`/api/contacts/edit`, [change, data, value])
+  }
+
+  deleteFields(id: number, field: string) {
+    return this.http.delete(`/api/contacts/edit/${id}?field=${field}`)
+  }
+
+  updateField(id: number, oldField: string, newField: string) {
+    return this.http.patch<Contact>(`/api/contacts/edit/${id}`, [oldField, newField])
   }
 
 }

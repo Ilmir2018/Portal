@@ -1,0 +1,38 @@
+h1 {
+    margin: 10px 0 0 20px;
+}
+.edits-field {
+    display: flex;
+}
+form {
+    margin-left: 5rem;
+    display: flex;
+
+    .edit {
+
+        .edits-content {
+            display: flex;
+
+            label {
+                display: flex;
+                margin-right: 2rem;
+                input {
+                    position: relative;
+                    opacity: 1;
+                }
+            }
+
+            .del-block {
+                margin-left: 1rem;
+                background-color: red;
+            }
+
+            .edit-block {
+                margin-right: 1rem;
+                background-color: seagreen;
+            }
+        }
+    }
+
+    
+}

@@ -1,7 +1,11 @@
-<ul class="menu-update">
-    <li class="menu-update_list" *ngFor="let item of menuItems">
-        <button class="par" (click)="settings(item)">*</button>
-        <a class="menu-update_link">{{ item.title }}</a>
-        <app-menu-update class="spoiler-content" *ngIf="item.subtitle" [menuItems]="item.subtitle"></app-menu-update>
-    </li>
-</ul>
+<div cdkDropListGroup>
+    <ul cdkDropList
+    [cdkDropListData]="menuItems"
+    (cdkDropListDropped)="drop($event)"  class="menu-update">
+        <li  cdkDrag class="menu-update_list" *ngFor="let item of menuItems">
+            <button class="par" (click)="settings(item)">*</button>
+            <a class="menu-update_link">{{ item.title }}</a>
+            <app-menu-update class="spoiler-content" *ngIf="item.subtitle" [menuItems]="item.subtitle"></app-menu-update>
+        </li>
+    </ul>
+</div>

@@ -1,0 +1,26 @@
+<h1>Страница редакторования таблицы</h1>
+<div class="edits-field">
+    <form [formGroup]="formChange" (ngSubmit)="changeFielsd()" novalidate>
+        <div class="edit">
+            <h2>Отображаемые поля</h2>
+            <div class="edits-content" *ngFor="let item of contactsItem; let i=index">
+                <label>
+                    <input type="checkbox" formControlName="{{item.field}}" checked />
+                    <input type="text" value="{{item.field}}"  (keyup)="setValue($event.target.value)">
+                </label>
+                <button class="btn edit-block" (click)="edit(item.id, item.field)">Edit</button>
+                <button class="btn del-block" (click)="delete(item.id, item.field)">Delete</button>
+            </div>
+            <input type="submit" value="Обновить столбцы" class="btn">
+        </div>
+    </form>
+    <form [formGroup]="formAdd" (ngSubmit)="addField()" novalidate>
+        <div>
+            <h2>Добавление нового столбца</h2>
+            <div class="input-field">
+                <input type="text" formControlName="addField">
+            </div>
+            <input type="submit" value="Добавить столбец" class="btn">
+        </div>
+    </form>
+</div>

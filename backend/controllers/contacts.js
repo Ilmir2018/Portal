@@ -12,6 +12,15 @@ module.exports.get = async function (req, res) {
     }
 }
 
+module.exports.getFields = async function (req, res) {
+    try {
+        const fields = await db.query("SELECT * FROM contacts_fields ORDER BY id")
+        res.status(200).json({ fields: fields.rows })
+    } catch (e) {
+        errorHandler(res, e)
+    }
+}
+
 module.exports.getById = async function (req, res) {
     try {
         const contact = await db.query("SELECT * FROM contacts WHERE id = $1 ORDER BY id", [req.params.id])
@@ -117,6 +126,51 @@ module.exports.update = async function (req, res) {
     }
 }
 
+module.exports.updateFields = async function (req, res) {
+    try {
+        //Функция будет отвечать либо за обновление видимых столбцов таблице либо за добавление нового столбца
+        //в зависимости от того какое значение будет присылаться с фронта
+
+        if (req.body[0] == true) {
+            const fields = req.body[1]
+            if (fields != null) {
+                fields.forEach((item) => {
+                    const changeFields = db.query('UPDATE contacts_fields SET field = $1, filter = $2 WHERE id = $3 RETURNING *',
+                        [item.field, item.filter, item.id], (err, result) => {
+                            if (err) {
+                                errorHandler(result, err)
+                            }
+                        })
+                })
+                return res.status(200).json({ message: 'Данные обновлены!' })
+            }
+        } else {
+            let field = req.body[2]
+            if (field != null) {
+                console.log(field)
+                const addField = db.query(`ALTER TABLE contacts ADD ${field} CHARACTER VARYING(100) NULL;`, (err, result) => {
+                    if (err) {
+                        console.log(err)
+                        errorHandler(result, err)
+                        return res.status(200).json({ message: 'Что то пошло не так' })
+                    } else {
+                        db.query(`INSERT INTO contacts_fields (field, filter)
+                        VALUES ($1, $2) RETURNING *`, [field, false],
+                            (err, result2) => {
+                                if (err) {
+                                    errorHandler(result2, err)
+                                }
+                                return res.status(200).json({ message: 'Столбец добавлен!', id: result2.rows[0].id })
+                            })
+                    }
+                })
+            }
+        }
+    } catch (e) {
+        errorHandler(res, e)
+    }
+}
+
 
 
 module.exports.delete = async function (req, res) {
@@ -149,6 +203,51 @@ module.exports.delete = async function (req, res) {
                 )
             }
         })
+    } catch (e) {
+        errorHandler(res, e)
+    }
+}
+
+module.exports.deleteFields = async function (req, res) {
+    try {
+        const field = await db.query(`ALTER TABLE contacts DROP COLUMN ${req.query.field}`, (err, result) => {
+            if (err) {
+                errorHandler(result, err)
+                return res.status(200).json({ message: 'Что то пошло не так' })
+            } else {
+                db.query(`DELETE FROM contacts_fields WHERE id = $1 RETURNING *`, [req.params.id],
+                    (err, result2) => {
+                        if (err) {
+                            errorHandler(result2, err)
+                            return res.status(200).json({ message: 'Что то пошло не так' })
+                        }
+                    })
+            }
+        })
+        res.status(200).json({ message: 'Столбец удалён' })
+    } catch (e) {
+        errorHandler(res, e)
+    }
+}
+
+module.exports.updateField = async function (req, res) {
+    try {
+        const oldField = req.body[0]
+        const newField = req.body[1]
+        const field = await db.query(`ALTER TABLE contacts RENAME COLUMN ${oldField} TO ${newField}`, (err, result) => {
+            if (err) {
+                errorHandler(result, err)
+                return res.status(200).json({ message: 'Что то пошло не так' })
+            } else {
+                db.query(`UPDATE contacts_fields SET field = $1 WHERE id = $2 RETURNING *`, [newField, req.params.id], (err, result2) => {
+                    if (err) {
+                        errorHandler(result2, err)
+                        return res.status(200).json({ message: 'Что то пошло не так' })
+                    }
+                })
+            }
+        })
+        res.status(200).json({ message: 'Столбец изменён' })
     } catch (e) {
         errorHandler(res, e)
     }

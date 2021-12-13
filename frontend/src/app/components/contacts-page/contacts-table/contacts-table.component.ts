@@ -26,6 +26,8 @@ export class ContactsTableComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   oSub: Subscription
   reloading: boolean = false
+  contactsItem = []
+  changeColumnsCount = []
 
   currentPage = 1;
   displayedColumns: string[] = [];
@@ -43,6 +45,31 @@ export class ContactsTableComponent implements OnInit {
 
   constructor(private renderer: Renderer2, private service: ContactsService) {
     this.columns = this.service.columns
+
+    //Получаем с бэка колонки, у которых значение filter = true
+    this.service.getContactsFields().subscribe((fields: any) => {
+      fields.fields.forEach((item) => {
+        //Заполняем второстепенный массив значениями пришедшими с бэка
+        this.contactsItem.push({ id: item.id, field: item.field, filter: item.filter })
+      })
+
+      //Фильтруем второстепенный массив для страницы контактов
+      this.contactsItem.forEach((item) => {
+        if (item.filter == true) {
+          this.changeColumnsCount.push(item)
+        }
+      })
+
+      //Формируем окончательный массив отображаемых колонок
+      if (this.changeColumnsCount.length !== 0) {
+        this.columns = []
+        this.changeColumnsCount.forEach((item, idx) => {
+          this.columns.push({ field: item.field, width: 100 / this.changeColumnsCount.length, name: item.field, show: true, order: idx })
+        })
+      }
+
+    })
+
   }
 
   ngOnInit(): void {
@@ -55,8 +82,7 @@ export class ContactsTableComponent implements OnInit {
       this.dataSource.sort = this.sort
     })
     //Получаем все права пользователя
-    
-    
+
   }
 
   setDataSource(dataSource: MatTableDataSource<Contact>): void {
@@ -70,20 +96,14 @@ export class ContactsTableComponent implements OnInit {
     this.data = dataSource;
     //Отсюда начинается задавание ширины колонок
     //Мы задаём изначальные ширины колонок в зависимости от ширины таблицы и экрана
-    this.columns.forEach((item, idx) => {
-      if (idx == 0) {
-        item.width = (this.matTableRef.nativeElement.clientWidth / 100) * 10
-      } else if (idx == 1) {
-        item.width = (this.matTableRef.nativeElement.clientWidth / 100) * 40
-      } else if (idx == 2) {
-        item.width = (this.matTableRef.nativeElement.clientWidth / 100) * 20
-      } else if (idx == 3) {
-        item.width = (this.matTableRef.nativeElement.clientWidth / 100) * 30
-      }
+    this.columns.forEach((item) => {
+      item.width = ((this.matTableRef.nativeElement.clientWidth / 100) * 100) / this.columns.length
     })
+    //Сохраняем в хранилище ширину таблицы
+    localStorage.setItem('widthScreen', JSON.stringify(this.matTableRef.nativeElement.clientWidth))
     //Если же есть кэш, то мы меняем значения ширины в this.columns
-     //Из кэша получаем сохранённые настройки по ширине столбцов
-     if (JSON.parse(localStorage.getItem('widthChange'))) {
+    //Из кэша получаем сохранённые настройки по ширине столбцов
+    if (JSON.parse(localStorage.getItem('widthChange'))) {
       if (JSON.parse(localStorage.getItem('widthChange')).length !== 0) {
         this.columns = JSON.parse(localStorage.getItem('widthChange'))
       }
@@ -206,7 +226,7 @@ export class ContactsTableComponent implements OnInit {
     //Меняем массив this.columns в зависимости от уменьшения и увеличения столбцов
     for (let i = 0; i < this.columns.length - 1; i++) {
       if (index === i) {
-        if(this.columns[i].width < orginalWidth) {
+        if (this.columns[i].width < orginalWidth) {
           this.columns[i + 1].width = Math.abs(this.columns[i + 1].width - (orginalWidth - this.columns[i].width))
         } else {
           this.columns[i + 1].width = Math.abs(this.columns[i + 1].width + (this.columns[i].width - orginalWidth))

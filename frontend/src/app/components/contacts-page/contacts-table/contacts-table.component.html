@@ -2,6 +2,9 @@
     <button routerLink="/contacts/new" class="waves-effect waves-light btn grey darken-1">
         Добавить контакт
     </button>
+    <button routerLink="/contacts/edit" class="waves-effect waves-light btn grey darken-1">
+        Редактировать таблицу
+    </button>
 </div>
 
 <!-- <div class="filter" *ngFor="let Col of filters">
@@ -15,9 +18,12 @@
     <mat-table matSort [dataSource]="data | splitSchedule | async" cdkDropListGroup="" [trackBy]="trackByFn">
         <ng-container *ngFor="let column of columns; trackBy: trackByFn; let i = index" [matColumnDef]="column.field">
             <ng-container *ngIf="!!column.show">
-                <mat-header-cell *matHeaderCellDef="" [class.resizable]="resizable" [style.width]="column.actualWidth + 'px'">
+                <mat-header-cell *matHeaderCellDef="" [class.resizable]="resizable"
+                    [style.width]="column.actualWidth + 'px'">
+                    <div class="cell-header" *ngIf="column.field === 'plusAction'">
+                        <mat-icon [matMenuTriggerFor]="addHideColumns">add</mat-icon>
+                    </div>
                     <div class="input-name">
-                        <div class="cell-header" *ngIf="column.field === 'plusAction'"></div>
                         <div class="cell-header" *ngIf="column.field !== 'plusAction'" mat-sort-header><span>{{
                                 column.name }}</span></div>
                         <div class="filter-input">
@@ -29,7 +35,8 @@
                 </mat-header-cell>
             </ng-container>
             <ng-container>
-                <mat-cell [routerLink]="['/contacts', row.id]" *matCellDef="let row" [style.width]="column.actualWidth + 'px'">
+                <mat-cell [routerLink]="['/contacts', row.id]" *matCellDef="let row"
+                    [style.width]="column.actualWidth + 'px'">
                     <ng-template *ngTemplateOutlet="cellTemplateRef; context:{row: row, column: column}"
                         [ngIf]="cellTemplateRef"></ng-template>
                     <ng-container *ngIf="!cellTemplateRef">{{ row[column.field] }}</ng-container>
@@ -37,12 +44,13 @@
             </ng-container>
         </ng-container>
         <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;" #MatTableRowRef></mat-row>
-        
+        <mat-row *matRowDef="let row; columns: displayedColumns;" #MatTableRowRef (click)="onRowClick(row)"></mat-row>
+
     </mat-table>
-    
+
     <!-- <mat-paginator [pageSizeOptions]="[3, 6, 9]"></mat-paginator> -->
 </div>
+
 
 <ng-template #reloadingBlock>
     <app-loader></app-loader>

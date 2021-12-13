@@ -66,3 +66,9 @@ export interface NavItemNew {
     subtitle?: NavItemNew[];
     parent_id: number;
 }
+
+export interface ContactField {
+    id: number
+    field: string
+    filter: boolean
+}
