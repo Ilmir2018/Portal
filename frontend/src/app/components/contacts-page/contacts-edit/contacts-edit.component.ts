@@ -170,8 +170,8 @@ export class ContactsEditComponent implements OnInit, OnDestroy {
 
   /**
    * Функция обновления названия столбца, которая срабатывает так же по клику
-   * @param id удаляемого поля
-   * @param field название удаляемого поля
+   * @param id обновляемго поля
+   * @param field название обновляемго поля
    * переменная changeSubmit определяет какой submit отправить при отправке запроса
    */
   updateField(id: number, field: string) {

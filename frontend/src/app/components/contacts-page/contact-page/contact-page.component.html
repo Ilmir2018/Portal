@@ -1,6 +1,18 @@
 <div class="row">
     <form [formGroup]="form" class="col s12" (ngSubmit)="onSubmit()">
-        <div class="input-field">
+        <div *ngFor="let contact of contacts">
+            <div class="input-field">
+                <input id="{{contact}}" type="text" formControlName="{{contact}}"
+                    >
+                <label for="name">{{contact}}</label>
+                <!-- <span class="helper-text red-text" *ngIf="form.get('name').invalid && form.get('name').touched">
+                    <span *ngIf="form.get('name').errors['required']">
+                        Имя не должно быть пустым
+                    </span>
+                </span> -->
+            </div>
+        </div>
+        <!-- <div class="input-field">
             <input id="name" type="text" formControlName="name"
                 [ngClass]="{'invalid': form.get('name').invalid && form.get('name').touched}">
             <label for="name">Имя</label>
@@ -41,7 +53,7 @@
         <div class="input-field">
             <p>Дата последнего входа</p>
             <p>{{date | date:'dd.MM.yyyy H:mm'}}</p>
-        </div>
+        </div> -->
         <div>
             <input type="file" class="dn" (change)="common.onFileUpload($event)" #input>
             <button (click)="common.triggerClick()" [disabled]="form.disabled" type="button"
@@ -62,7 +74,7 @@
             Удалить контакт
         </button>
     </div>
-    
+
     <div class="col s12 l4 center">
         <img class="responsive-img h200" [src]="common.imagePreview" *ngIf="common.imagePreview">
     </div>
