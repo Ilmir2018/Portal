@@ -44,7 +44,7 @@
             </ng-container>
         </ng-container>
         <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;" #MatTableRowRef (click)="onRowClick(row)"></mat-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;" #MatTableRowRef></mat-row>
 
     </mat-table>
 

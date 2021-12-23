@@ -10,7 +10,7 @@ router.get('/edit', passport.authenticate('jwt', {session: false}), controller.g
 router.get('/', passport.authenticate('jwt', {session: false}), controller.get)
 router.get('/:id', passport.authenticate('jwt', {session: false}), admin(["ADMIN"]), controller.getById)
 router.post('/', passport.authenticate('jwt', {session: false}), admin(["ADMIN"]), upload.single('image'), controller.create)
-router.patch('/:id', passport.authenticate('jwt', {session: false}), upload.single('image'), controller.update)
+router.patch('/:id', passport.authenticate('jwt', {session: false}), admin(["ADMIN"]), upload.single('image'), controller.update)
 router.delete('/:id', passport.authenticate('jwt', {session: false}), controller.delete)
 
 router.post('/edit', passport.authenticate('jwt', {session: false}), controller.updateFields)

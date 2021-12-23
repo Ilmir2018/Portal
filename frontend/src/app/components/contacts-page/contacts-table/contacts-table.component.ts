@@ -67,9 +67,10 @@ export class ContactsTableComponent implements OnInit {
           this.columns.push({ field: item.field, width: 100 / this.changeColumnsCount.length, name: item.field, show: true, order: idx })
         })
       }
-
+      //Сохраняем при вхоже на страницу контактов колонки которые у нас отображаются в таблице
+      localStorage.setItem('visibleColumns', JSON.stringify(this.columns))
     })
-
+    
   }
 
   ngOnInit(): void {

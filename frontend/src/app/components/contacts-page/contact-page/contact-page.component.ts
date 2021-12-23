@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { contains } from 'jquery';
 import { of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { MaterialService } from 'src/app/classes/material.service';
-import { Contact } from 'src/app/interfaces';
 import { CommonService } from 'src/app/services/common.service';
 import { ContactsService } from 'src/app/services/contacts.service';
 
@@ -31,7 +29,7 @@ export class ContactPageComponent implements OnInit {
     this.form = new FormGroup({})
 
     //Получаем отображаемые в таблице столбцы
-    let visibleColumns = JSON.parse(localStorage.getItem('widthChange'))
+    let visibleColumns = JSON.parse(localStorage.getItem('visibleColumns'))
 
     //Заполняем FormControl, в дальнейшем на что то можно придумать валидаторы
     visibleColumns.forEach((item) => {
@@ -51,6 +49,8 @@ export class ContactPageComponent implements OnInit {
       })
     ).subscribe(contact => {
       if (contact) {
+        //Сохраняем в переменную наш контакт со всеми полями
+        this.contact = contact.rows[0]
         //В зависимотсти от того какие поля таблицы отображаются записываем значения в нашу форму
         visibleColumns.forEach((item) => {
           for (let cont in contact.rows[0]) {
@@ -76,8 +76,7 @@ export class ContactPageComponent implements OnInit {
   onSubmit() {
     let obs$
     this.form.disable()
-    obs$ = this.service.update(this.paramsId, this.form.value.name,
-      this.form.value.firm, this.form.value.email, this.form.value.phone, this.contact.roles, this.common.image, this.form.value.password)
+    obs$ = this.service.update(this.paramsId, this.common.image, this.form.value)
     obs$.subscribe(
       contact => {
         this.contact = contact
@@ -93,7 +92,7 @@ export class ContactPageComponent implements OnInit {
   deleteContact() {
     const decision = window.confirm(`Вы уверены что вы хотите удалить контакт ${this.contact.email}`)
     if (decision) {
-      this.service.delete(this.contact.rows[0].id, this.contact.rows[0].user_id).subscribe(
+      this.service.delete(this.contact.id, this.contact.user_id).subscribe(
         contact => {
           this.contact = contact
           MaterialService.toast('Контакт удалён')

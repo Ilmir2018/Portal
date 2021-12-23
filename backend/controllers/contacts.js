@@ -43,6 +43,7 @@ module.exports.create = async function (req, res) {
                 if (err) {
                     errorHandler(result, err)
                 } else {
+                    console.log(req.file)
                     db.query(
                         `INSERT INTO contacts (email, password, roles, date, imagesrc, name, firm, phone, user_id)
                             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`, [email, hashPassword, 'USER', new Date(),
@@ -84,43 +85,54 @@ module.exports.create = async function (req, res) {
 module.exports.update = async function (req, res) {
 
     try {
-        const { email, password, name, firm, phone } = req.body
+        const data = req.body
 
-        const unit = await db.query(
-            `SELECT * FROM contacts WHERE id = $1`, [req.params.id]
-        )
-
-        async function updateFunc(password) {
-            const user = await db.query(`UPDATE contacts set email = $1, password = $2, name = $3, firm = $4,
-     phone = $5, imagesrc = $6 where id = $7 RETURNING *`,
-                [email, password, name, firm, req.body.phone ? phone : '', req.file ? req.file.path : '', req.params.id], (err, result) => {
-                    if (err) {
-                        errorHandler(result, err)
-                    } else {
-                        db.query(
-                            `UPDATE users set email = $1, password = $2 where id = $3 RETURNING *`,
-                            [email, password, result.rows[0].user_id], (err, result2) => {
-                                if (err) {
-                                    errorHandler(result2, err)
-                                } else {
-                                    res.status(200).json({ message: 'Контакт обновлён' })
-                                    return;
+        for (let cont in data) {
+            if (cont != 'imagesrc') {
+                if (cont == 'password') {
+                    const salt = bcrypt.genSaltSync(10)
+                    const hashPassword = bcrypt.hashSync(data[cont], salt)
+                    const user = await db.query(`UPDATE contacts set ${cont} = $1 where id = ${req.params.id} RETURNING *`, [hashPassword],
+                        (err, result) => {
+                            if (err) {
+                                errorHandler(result, err)
+                            } else {
+                                db.query(
+                                    `UPDATE users set ${cont} = $1 where id = ${result.rows[0].user_id} RETURNING *`, [hashPassword],
+                                    (err, result2) => {
+                                        if (err) {
+                                            errorHandler(result2, err)
+                                        }
+                                    }
+                                )
+                            }
+                        })
+                } else {
+                    const user = await db.query(`UPDATE contacts set ${cont} = $1 where id = ${req.params.id} RETURNING *`, [data[cont]],
+                        (err, result) => {
+                            if (err) {
+                                errorHandler(result, err)
+                            } else {
+                                if (cont == 'email' || cont == 'role') {
+                                    db.query(
+                                        `UPDATE users set ${cont} = $1 where id = ${result.rows[0].user_id} RETURNING *`, [data[cont]],
+                                        (err, result2) => {
+                                            if (err) {
+                                                errorHandler(result2, err)
+                                            }
+                                        }
+                                    )
                                 }
                             }
-                        )
-                    }
+                        })
                 }
-            )
+            }
         }
-
-        if (password !== undefined) {
-            const salt = bcrypt.genSaltSync(10)
-            const hashPassword = bcrypt.hashSync(password, salt)
-            updateFunc(hashPassword)
-        } else {
-            updateFunc(unit.rows[0].password)
+        //Загружаем другое изображение если оно меняется
+        if (req.file) {
+            const user = await db.query(`UPDATE contacts set imagesrc = $1 where id = ${req.params.id} RETURNING *`, [req.file ? req.file.path : ''])
         }
-
+        res.status(200).json({ message: 'Контакт обновлён' })
     } catch (e) {
         errorHandler(res, e)
     }

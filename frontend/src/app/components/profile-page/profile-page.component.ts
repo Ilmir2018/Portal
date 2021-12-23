@@ -53,20 +53,20 @@ export class ProfilePageComponent implements OnInit {
   }
 
   onSubmit() {
-    let obs$
-    this.form.disable()
-    obs$ = this.service.update(this.profile._id, this.form.value.name,
-      this.form.value.firm, this.form.value.email, this.form.value.phone, this.profile.roles, this.common.image,  this.form.value.password)
-    obs$.subscribe(
-      contact => {
-        this.profile = contact
-        MaterialService.toast('Изменения сохранены')
-        this.form.enable()
-      }, error => {
-        MaterialService.toast(error.error.message)
-        this.form.enable()
-      }
-    )
+    // let obs$
+    // this.form.disable()
+    // obs$ = this.service.update(this.profile._id, this.form.value.name,
+    //   this.form.value.firm, this.form.value.email, this.form.value.phone, this.profile.roles, this.common.image,  this.form.value.password)
+    // obs$.subscribe(
+    //   contact => {
+    //     this.profile = contact
+    //     MaterialService.toast('Изменения сохранены')
+    //     this.form.enable()
+    //   }, error => {
+    //     MaterialService.toast(error.error.message)
+    //     this.form.enable()
+    //   }
+    // )
   }
 
 }

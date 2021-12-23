@@ -38,14 +38,17 @@ export class ContactsEditComponent implements OnInit, OnDestroy {
     this.oSub = this.service.getContactsFields().subscribe((fields: any) => {
       //выводим все поля таблицы которые можно редактировать
       fields.fields.forEach((item) => {
-        //В зависимости от того что нам приходит с бэка, распределяем по состоянию фильтра
-        if (item.filter) {
-          this.formChange.addControl(item.field, new FormControl(true))
-        } else {
-          this.formChange.addControl(item.field, new FormControl(false))
+        //Некоторые системные поля которые не нужно отображать в таблице мы скрываем
+        if (item.field != 'id' && item.field != 'user_id' && item.field != 'password' && item.field != 'imagesrc') {
+          //В зависимости от того что нам приходит с бэка, распределяем по состоянию фильтра
+          if (item.filter) {
+            this.formChange.addControl(item.field, new FormControl(true))
+          } else {
+            this.formChange.addControl(item.field, new FormControl(false))
+          }
+          //Заполняем изначальный массив значениями пришедшими с бэка
+          this.contactsItem.push({ id: item.id, field: item.field, filter: this.formChange.value[item.field] })
         }
-        //Заполняем изначальный массив значениями пришедшими с бэка
-        this.contactsItem.push({ id: item.id, field: item.field, filter: this.formChange.value[item.field] })
       })
     })
   }
@@ -86,6 +89,9 @@ export class ContactsEditComponent implements OnInit, OnDestroy {
 
       //Пересохраняем локальное хранилище отображаемых столбцов
       localStorage.setItem('widthChange', JSON.stringify(this.columnsChange))
+      //Пересохраняем отображаемые колонки для страницы вывода одного контакта
+      localStorage.setItem('visibleColumns', JSON.stringify(this.columnsChange))
+
 
       //Записываем в базу данных обновлённые данные
       this.cSub = this.service.updateFields(true, this.sendContacts, null).subscribe(
@@ -98,7 +104,7 @@ export class ContactsEditComponent implements OnInit, OnDestroy {
     } else if (this.changeSubmit == "delete") {
       this.deleteField(this.fieldId, field)
     } else if (this.changeSubmit == "edit") {
-      this.updateField(this.fieldId, field)      
+      this.updateField(this.fieldId, field)
     }
 
   }
@@ -111,7 +117,7 @@ export class ContactsEditComponent implements OnInit, OnDestroy {
     this.service.updateFields(false, null, value).subscribe(
       (modal: any) => {
         this.formChange.addControl(value, new FormControl(false))
-        this.contactsItem.push({id: modal.id, field: value, filter: false })
+        this.contactsItem.push({ id: modal.id, field: value, filter: false })
         this.formAdd.reset()
         MaterialService.toast('Столбец добавлен')
       }, error => {
@@ -145,12 +151,12 @@ export class ContactsEditComponent implements OnInit, OnDestroy {
     this.changeSubmit = "edit"
   }
 
-   /**
-   * Функция удаления которая срабатывает по клику
-   * @param id удаляемого поля
-   * @param field название удаляемого поля
-   * переменная changeSubmit определяет какой submit отправить при отправке запроса
-   */
+  /**
+  * Функция удаления которая срабатывает по клику
+  * @param id удаляемого поля
+  * @param field название удаляемого поля
+  * переменная changeSubmit определяет какой submit отправить при отправке запроса
+  */
 
   deleteField(id: number, field: string) {
     const decision = window.confirm(`Вы уверены что хотите удалить столбец?`)
@@ -176,7 +182,7 @@ export class ContactsEditComponent implements OnInit, OnDestroy {
    */
   updateField(id: number, field: string) {
     this.changeSubmit = 'change'
-    if(localStorage.getItem('oldField')) {
+    if (localStorage.getItem('oldField')) {
       this.oldField = localStorage.getItem('oldField')
     } else {
       this.oldField = field

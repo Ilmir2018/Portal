@@ -48,23 +48,14 @@ export class ContactsService {
     return this.http.post<Contact>('/api/contacts', formData)
   }
 
-  update(id: string, name: string, firm: string,
-    email: string, phone: string, roles: [], image: File, password?: string): Observable<Contact> {
+  update(id: string, image?: File, data?: Array<any>): Observable<Contact> {
     const formData = new FormData()
-
+    for (let cont in data) {
+      formData.append(cont, data[cont])
+    }
     if (image) {
       formData.append('image', image, image.name)
     }
-    formData.append('id', id)
-    formData.append('name', name)
-    formData.append('firm', firm)
-    formData.append('phone', phone)
-    formData.append('email', email)
-
-    if (password) {
-      formData.append('password', password)
-    }
-
     return this.http.patch<Contact>(`/api/contacts/${id}`, formData)
   }
 
@@ -72,7 +63,7 @@ export class ContactsService {
     return this.http.delete<Contact>(`/api/contacts/${id}?user_id=${user_id}`)
   }
 
-  
+
   /**
    * Функция либо обновления столбцов в таблице либо 
    * создания нового столбца взависимости от значения change
@@ -80,7 +71,7 @@ export class ContactsService {
    * @param change флаг
    * @returns 
    */
-   updateFields(change: boolean, data?: ContactField[], value?: string) {
+  updateFields(change: boolean, data?: ContactField[], value?: string) {
     return this.http.post(`/api/contacts/edit`, [change, data, value])
   }
 
