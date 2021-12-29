@@ -9,30 +9,31 @@ form {
     display: flex;
 
     .edit {
-
         .edits-content {
             display: flex;
 
-            label {
+            .edits-cont {
                 display: flex;
-                margin-right: 2rem;
-                input {
-                    position: relative;
-                    opacity: 1;
+                
+                label {
+                    display: flex;
+                    margin-right: 2rem;
+                    input {
+                        position: relative;
+                        opacity: 1;
+                    }
                 }
-            }
 
-            .del-block {
-                margin-left: 1rem;
-                background-color: red;
-            }
+                .del-block {
+                    margin-left: 1rem;
+                    background-color: red;
+                }
 
-            .edit-block {
-                margin-right: 1rem;
-                background-color: seagreen;
+                .edit-block {
+                    margin-right: 1rem;
+                    background-color: seagreen;
+                }
             }
         }
     }
-
-    
 }

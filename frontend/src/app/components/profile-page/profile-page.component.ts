@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MaterialService } from 'src/app/classes/material.service';
 import { Contact } from 'src/app/interfaces';
 import { CommonService } from 'src/app/services/common.service';
@@ -14,17 +14,21 @@ export class ProfilePageComponent implements OnInit {
 
   profile: Contact
   form: FormGroup
+  contacts = []
+  paramsId: string
 
   constructor(private service: ContactsService, public common: CommonService) { }
 
   ngOnInit() {
-    this.form = new FormGroup({
-      name: new FormControl(null, Validators.required),
-      firm: new FormControl(null, Validators.required),
-      email: new FormControl(null, [Validators.required, Validators.email]),
-      password: new FormControl(null),
-      phone: new FormControl(null),
-      date: new FormControl(null),
+    this.form = new FormGroup({})
+
+    //Получаем отображаемые в таблице столбцы
+    let visibleColumns = JSON.parse(localStorage.getItem('visibleColumns'))
+
+    //Заполняем FormControl, в дальнейшем на что то можно придумать валидаторы
+    visibleColumns.forEach((item) => {
+      this.form.addControl(item.field, new FormControl(true))
+      this.contacts.push(item.field)
     })
 
     this.form.disable()
@@ -33,12 +37,15 @@ export class ProfilePageComponent implements OnInit {
       data.contacts.forEach((item) => {
         if (item.user_id == localStorage.getItem('id-user')) {
           this.profile = item
-          this.form.patchValue({
-            name: item.name,
-            firm: item.firm,
-            email: item.email,
-            password: '',
-            phone: item.phone,
+          this.paramsId = item.id
+          visibleColumns.forEach((item) => {
+            for (let cont in this.profile) {
+              if (cont == item.field) {
+                this.form.patchValue({
+                  [`${item.field}`]: this.profile[cont]
+                })
+              }
+            }
           })
           this.common.imagePreview = item.imagesrc
           MaterialService.updateTextInputs()
@@ -53,20 +60,19 @@ export class ProfilePageComponent implements OnInit {
   }
 
   onSubmit() {
-    // let obs$
-    // this.form.disable()
-    // obs$ = this.service.update(this.profile._id, this.form.value.name,
-    //   this.form.value.firm, this.form.value.email, this.form.value.phone, this.profile.roles, this.common.image,  this.form.value.password)
-    // obs$.subscribe(
-    //   contact => {
-    //     this.profile = contact
-    //     MaterialService.toast('Изменения сохранены')
-    //     this.form.enable()
-    //   }, error => {
-    //     MaterialService.toast(error.error.message)
-    //     this.form.enable()
-    //   }
-    // )
+    let obs$
+    this.form.disable()
+    obs$ = this.service.update(this.profile.id, this.common.image, this.form.value)
+    obs$.subscribe(
+      contact => {
+        this.profile = contact
+        MaterialService.toast('Изменения сохранены')
+        this.form.enable()
+      }, error => {
+        MaterialService.toast(error.error.message)
+        this.form.enable()
+      }
+    )
   }
 
 }

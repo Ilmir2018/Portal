@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { MaterialService } from 'src/app/classes/material.service';
@@ -30,7 +30,7 @@ export class ContactsEditComponent implements OnInit, OnDestroy {
   constructor(private service: ContactsService, private router: Router) {
     this.formChange = new FormGroup({})
     this.formAdd = new FormGroup({
-      addField: new FormControl(null)
+      addField: new FormControl(null, Validators.pattern(/^[a-zA-Z0-9А-Яа-я_-]+$/))
     })
   }
 
@@ -38,17 +38,14 @@ export class ContactsEditComponent implements OnInit, OnDestroy {
     this.oSub = this.service.getContactsFields().subscribe((fields: any) => {
       //выводим все поля таблицы которые можно редактировать
       fields.fields.forEach((item) => {
-        //Некоторые системные поля которые не нужно отображать в таблице мы скрываем
-        if (item.field != 'id' && item.field != 'user_id' && item.field != 'password' && item.field != 'imagesrc') {
-          //В зависимости от того что нам приходит с бэка, распределяем по состоянию фильтра
-          if (item.filter) {
-            this.formChange.addControl(item.field, new FormControl(true))
-          } else {
-            this.formChange.addControl(item.field, new FormControl(false))
-          }
-          //Заполняем изначальный массив значениями пришедшими с бэка
-          this.contactsItem.push({ id: item.id, field: item.field, filter: this.formChange.value[item.field] })
+        //В зависимости от того что нам приходит с бэка, распределяем по состоянию фильтра
+        if (item.filter) {
+          this.formChange.addControl(item.field, new FormControl(true))
+        } else {
+          this.formChange.addControl(item.field, new FormControl(false))
         }
+        //Заполняем изначальный массив значениями пришедшими с бэка
+        this.contactsItem.push({ id: item.id, field: item.field, filter: this.formChange.value[item.field], obligatoriness: item.obligatoriness })
       })
     })
   }
@@ -113,7 +110,9 @@ export class ContactsEditComponent implements OnInit, OnDestroy {
    * Функция добавления нового столбца в таблицу контактов
    */
   addField() {
-    let value = this.formAdd.controls.addField.value
+    //Удаляем пробелы из строки
+    let value = this.formAdd.controls.addField.value.split(' ').join('')
+    console.log(value)
     this.service.updateFields(false, null, value).subscribe(
       (modal: any) => {
         this.formChange.addControl(value, new FormControl(false))

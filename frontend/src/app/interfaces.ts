@@ -23,7 +23,7 @@ export interface Contact {
     password:string
     phone?: string
     user?: string,
-    _id?: string,
+    id?: string,
     date?: Date,
     roles?: [],
     imageSrc?: File

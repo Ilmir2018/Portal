@@ -53,16 +53,16 @@ export class ContactPageComponent implements OnInit {
         this.contact = contact.rows[0]
         //В зависимотсти от того какие поля таблицы отображаются записываем значения в нашу форму
         visibleColumns.forEach((item) => {
-          for (let cont in contact.rows[0]) {
+          for (let cont in this.contact) {
             if (cont == item.field) {
               this.form.patchValue({
-                [`${item.field}`]: contact.rows[0][cont]
+                [`${item.field}`]: this.contact[cont]
               })
             }
           }
         })
         this.date = contact.rows[0].date
-        this.common.imagePreview = contact.rows[0].imagesrc
+        this.common.imagePreview = this.contact.imagesrc
         MaterialService.updateTextInputs()
       }
       this.form.enable()
