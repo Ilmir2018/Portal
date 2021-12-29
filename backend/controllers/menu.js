@@ -63,26 +63,30 @@ module.exports.create = async function (req, res) {
 
 module.exports.delete = async function (req, res) {
     try {
-        const id = req.params.id
-        //Удаляем сначала записи из таблицы ролей для контакта
-        const roleItems = await db.query('DELETE FROM roles WHERE title_id = $1 RETURNING *', [id], (err, result) => {
-            if (err) {
-                errorHandler(result, err)
-            } else {
-                const menuItem = db.query(`DELETE FROM menu WHERE id = $1 RETURNING *
-                `, [id], (err, result2) => {
-                    if (err) {
-                        errorHandler(result2, err)
-                    }
-                    else {
-                        console.log(result2.rows)
-                    }
-                })
-                res.status(200).json(result.rows[0])
-            }
-
+        //Получаем строку
+        let mystr = req.query.arrayItems
+        //Превращаем её в масси в с разделителем в виде запятой
+        let arr = mystr.split(',');
+        arr.forEach((item) => {
+            //Удаляем сначала записи из таблицы ролей для контакта
+            const roleItems = db.query('DELETE FROM roles WHERE title_id = $1 RETURNING *', [item], (err, result) => {
+                if (err) {
+                    errorHandler(result, err)
+                } else {
+                    //Затем удаляем сами пункты меню
+                    const menuItem = db.query(`DELETE FROM menu WHERE id = $1 RETURNING *
+                `, [item], (err, result2) => {
+                        if (err) {
+                            errorHandler(result2, err)
+                        }
+                        else {
+                            console.log(result2.rows)
+                        }
+                    })
+                }
+            })
         })
-
+        res.status(200).json('Удаление успешно!')
     } catch (e) {
         errorHandler(res, e)
     }

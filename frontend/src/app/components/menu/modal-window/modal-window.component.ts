@@ -22,6 +22,7 @@ export class ModalWindowComponent implements OnInit {
   contacts: Array<UserRole> = []
   @Input() public settingsItem: NavItemNew;
   role: string
+  arr = []
 
   Data: Array<any> = [
     { name: 'read' },
@@ -47,7 +48,7 @@ export class ModalWindowComponent implements OnInit {
     //Сохраняем в переменную все контакты, для оперделения прав доступа
     this.contactService.getContacts().subscribe((items) => {
       items.contacts.forEach((item: Contact) => {
-        this.contacts.push({email: item.email, user_id: item.user_id, permissions: [this.form.value.read, this.form.value.write, this.form.value.delete]})
+        this.contacts.push({ email: item.email, user_id: item.user_id, permissions: [this.form.value.read, this.form.value.write, this.form.value.delete] })
       })
     })
   }
@@ -67,7 +68,7 @@ export class ModalWindowComponent implements OnInit {
         MaterialService.toast(error.error.message)
       }
     )
-    
+
   }
 
   /**
@@ -117,22 +118,40 @@ export class ModalWindowComponent implements OnInit {
 
   remove(item: NavItemNew) {
     const decision = window.confirm(`Вы уверены что хотите удалить этот пункт меню?`)
-
     if (decision) {
-      this.service.delete(item).subscribe(
+      //Удаление элемена на фронте
+      this.recursionFunc(item)
+      this.arr.push(item)
+      this.arr.forEach((removeItem) => {
+        const idx = this.service.menuItemsOld.findIndex(p => p.id === removeItem.id)
+        this.service.menuItemsOld.splice(idx, 1)
+      })
+      this.updateMenuItems()
+      //Образуем массив id которые удаляем
+      let idItems = []
+      this.arr.forEach((itemSend) => {
+        idItems.push(itemSend.id)
+      })
+      this.service.delete(item, idItems).subscribe(
         responce => {
-          //Удаление элемена на фронте
-          const idx = this.service.menuItemsOld.findIndex(p => p.id === item.id)
-          this.service.menuItemsOld.splice(idx, 1)
-          this.updateMenuItems()
-          //перезагрузка экрана, т.к. пока не придумал как удалить все подмассивы,
-          //если удалаяется большой вложенный объект
-          location.reload();
+          //Закрытие окна настройки пункта меню
+          this.service.settingsMenu = false
+          //Обнуляем массив для следующего удаления
+          this.arr = []
           MaterialService.toast('Удалено успешно')
         },
         error => MaterialService.toast(error.error.message),
       )
     }
+  }
+
+  private recursionFunc(item: NavItemNew) {
+    this.service.menuItemsOld.forEach((item2) => {
+      if (item2.parent_id == item.id) {
+        this.arr.push(item2)
+        this.recursionFunc(item2)
+      }
+    })
   }
 
   /**

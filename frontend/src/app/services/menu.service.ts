@@ -156,8 +156,8 @@ export class MenuService {
    * @param menuItem удаляемый элемент
    */
 
-  delete(menuItem: NavItemNew): Observable<NavItemNew> {
-    return this.http.delete<NavItemNew>(`/api/menu/${menuItem.id}`)
+  delete(menuItem: NavItemNew, arrayItems: NavItemNew[]): Observable<NavItemNew> {
+    return this.http.delete<NavItemNew>(`/api/menu/${menuItem.id}?arrayItems=${arrayItems}`)
   }
 
 

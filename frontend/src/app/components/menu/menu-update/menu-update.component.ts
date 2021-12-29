@@ -21,6 +21,7 @@ export class MenuUpdateComponent implements OnInit {
     this.service.settingsMenu = true
     this.service.settingsItem = item
     let permissions = JSON.parse(localStorage.getItem('permissions'))
+    // console.log(permissions)
     let permission;
     //Получаем массив разрешений на (чтение, запись и удаление)
     permissions.forEach((item) => {
