@@ -60,6 +60,10 @@ module.exports.login = async function (req, res) {
             db.query(
                 `UPDATE users set date = $1 where id = $2 RETURNING *`, [new Date(), result.rows[0].id]
             )
+             //Обновление даты в таблице contacts
+             db.query(
+                `UPDATE contacts set date = $1 where user_id = $2 RETURNING *`, [new Date(), result.rows[0].id]
+            )
         }
     )
 }
