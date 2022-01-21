@@ -1,10 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { PermissionsGuard } from '../classes/permissions.guard';
 import { TemplatePageComponent } from '../components/template-page/template-page.component';
 import { NavItemNew, UserRole } from '../interfaces';
+import { ContactsService } from './contacts.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,10 +18,52 @@ export class MenuService {
   private routes = [];
   public settingsMenu: boolean = false
   public settingsItem: NavItemNew
+  public readPerm: boolean = false
   public writePerm: boolean = false
-  public deletePerm: boolean = false
+  contacts: Array<UserRole> = []
+  permissionForm: FormGroup;
+  form: FormGroup;
 
-  constructor(private router: Router, private http: HttpClient) {
+  permissions: Array<any> = [
+    { name: 'Нет прав', value: 'none' },
+    { name: 'Читатель', value: 'read' },
+    { name: 'Редактор', value: 'write' },
+  ]
+
+  addPermissions: Array<any> = [
+    { name: 'Читатель', value: 'read' },
+    { name: 'Редактор', value: 'write' },
+  ]
+
+
+  constructor(private router: Router, private http: HttpClient, private service: ContactsService, private fb: FormBuilder) {
+    this.form = fb.group({
+      read: false,
+      write: false,
+      delete: false,
+    });
+    this.permissionForm = new FormGroup({})
+  }
+
+  /**
+   * Метод вызываемый при открытии окна редактирования пункта меню
+   * в котором мы получаем список контактов для управления доступом к странице
+   * @param menuItem пункт меню который мы открываем
+   */
+  getContacts(menuItem) {
+    this.getPermissions(menuItem.id).subscribe((items) => {
+      items.forEach((item: any) => {
+        this.contacts.push({ name: item.name, email: item.email, user_id: item.user_id, permissions: [item.permissions[0], item.permissions[1], item.permissions[2]] })
+        if (item.permissions[0] == true) {
+          this.permissionForm.addControl(item.name, new FormControl('none'))
+        } if (item.permissions[1] == true) {
+          this.permissionForm.addControl(item.name, new FormControl('read'))
+        } if (item.permissions[2] == true) {
+          this.permissionForm.addControl(item.name, new FormControl('write'))
+        }
+      })
+      localStorage.setItem('permission', JSON.stringify(this.permissionForm.value))
+    })
   }
 
   getMenu() {
@@ -29,10 +73,9 @@ export class MenuService {
       //Отбираем пункты меню по user_id
       menu.forEach((items) => {
         // if(items.user_id == localStorage.getItem('id-user') || items.user_id == null) {
-          resultArr.push(items)
+        resultArr.push(items)
         // }
       })
-
       //Первые уровни меню
       resultArr.forEach((item) => {
         //заполняем массив для добавления и удаления элементов на фронте
@@ -56,14 +99,11 @@ export class MenuService {
           obj.subtitle.push(map.get(item.id))
         }
       })
-
-
-     
       //Убираем из добавления первые 4 изначальных пункта меню
       let filteredArray = this.menuItemsOld.filter(myFilter);
-       //Подгрузка всех роутов
-       //если ставить resetConfig то при переходе по роутам, обновляется страница site-layout, что
-       //приводит к закрыванию раскрытых пунктов меню
+      //Подгрузка всех роутов
+      //если ставить resetConfig то при переходе по роутам, обновляется страница site-layout, что
+      //приводит к закрыванию раскрытых пунктов меню
       // this.router.resetConfig(this.router.config)
       this.router.config.forEach((item, idx) => {
         filteredArray.forEach((route) => {
@@ -77,7 +117,7 @@ export class MenuService {
     function myFilter(value, index) {
       return index > 3;
     }
-    
+
   }
 
   recursionRoutes(arr: any) {
@@ -166,7 +206,15 @@ export class MenuService {
    * @param title_id id изменяемого пункта меню
    * @param contacts Массив контактов права которых меняются
    */
-  modalAdd(title_id: number, contacts: UserRole[]) {
+  modalAdd(title_id: string, contacts: UserRole[]) {
     return this.http.post('/api/menu/modal', [title_id, contacts])
+  }
+
+  /**
+   * тестовый гет запрос
+   * @returns 
+   */
+  getPermissions(id: string) {
+    return this.http.get<Array<any>>(`/api/menu/modal/?itemId=${id}`)
   }
 }

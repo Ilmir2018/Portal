@@ -28,6 +28,7 @@ import { MenuUpdateComponent } from './components/menu/menu-update/menu-update.c
 import { TemplatePageComponent } from './components/template-page/template-page.component';
 import { ModalWindowComponent } from './components/menu/modal-window/modal-window.component';
 import { ContactsEditComponent } from './components/contacts-page/contacts-edit/contacts-edit.component';
+import { SearchPipe } from './classes/search.pipe';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { ContactsEditComponent } from './components/contacts-page/contacts-edit/
     MenuUpdateComponent,
     TemplatePageComponent,
     ModalWindowComponent,
-    ContactsEditComponent
+    ContactsEditComponent,
+    SearchPipe
   ],
   imports: [
     BrowserModule,

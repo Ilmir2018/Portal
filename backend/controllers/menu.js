@@ -11,6 +11,13 @@ module.exports.get = async function (req, res) {
     }
 }
 
+module.exports.getPermissions = async function (req, res) {
+    const permissions = await db.query(`SELECT contacts.user_id, contacts.email, contacts.name, contacts.firm,
+     roles.permissions from contacts JOIN roles ON contacts.user_id = roles.user_id AND roles.title_id = ${req.query.itemId};`)
+    res.status(200).json(permissions.rows)
+
+}
+
 module.exports.update = async function (req, res) {
     try {
         const { id, title, url } = req.body
@@ -95,7 +102,6 @@ module.exports.delete = async function (req, res) {
 module.exports.modal = async function (req, res) {
     try {
         const title_id = req.body[0], contacts = req.body[1]
-
         if (contacts != null) {
             contacts.forEach((item) => {
                 const permissions = db.query('UPDATE roles set permissions = $1 WHERE title_id = $2 and user_id = $3 RETURNING *',

@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot, UrlTree } from "@angular/router";
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from "@angular/router";
 import { Observable, of } from "rxjs";
 import { AuthService } from "../services/auth.service";
 
@@ -27,7 +27,7 @@ export class PermissionsGuard implements CanActivate {
         })
         // console.log(permissions)
         //Проверяем право на чтение, нужно затра создать защитника, для чтения страниц
-        if(permission.permissions[0] === true) {
+        if(permission.permissions[0] !== true) {
             return of (true)
         } else {
             this.router.navigate([], {

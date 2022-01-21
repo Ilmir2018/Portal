@@ -10,10 +10,11 @@ export interface ContactResponse {
 }
 
 export interface UserRole {
+    name: string
     email: string,
     user_id: string
     // title_id?: number,
-    permissions: [false, false, false]
+    permissions: [boolean, boolean, boolean]
 }
 
 export interface Contact {
@@ -60,11 +61,11 @@ export interface NavItem {
 }
 
 export interface NavItemNew {
-    id?: number;
+    id?: string;
     title: string;
     url: string;
     subtitle?: NavItemNew[];
-    parent_id: number;
+    parent_id: string;
 }
 
 export interface ContactField {

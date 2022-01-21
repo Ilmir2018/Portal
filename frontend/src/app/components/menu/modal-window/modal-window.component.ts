@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MaterialService } from 'src/app/classes/material.service';
-import { Contact, NavItemNew, UserRole } from 'src/app/interfaces';
+import { NavItemNew, UserRole } from 'src/app/interfaces';
 import { ContactsService } from 'src/app/services/contacts.service';
 import { MenuService } from 'src/app/services/menu.service';
 import { TemplatePageComponent } from '../../template-page/template-page.component';
@@ -21,47 +21,71 @@ export class ModalWindowComponent implements OnInit {
   form: FormGroup;
   contacts: Array<UserRole> = []
   @Input() public settingsItem: NavItemNew;
+  //Переменная для сохранения роли пользователя
   role: string
-  arr = []
+  //Промежуточный массив для поиска промежуточных пунктов меню, если они есть
+  removingArr = []
+  //Флаг который регулирует список появляющийся при нажатии на инпут (должен иметь фильтрацию списка)
+  public selectBlock = false
+  //Флаг который регулирует кнопку "Сохранить изменения"
+  public permissionChange = false;
+  //Флаг который скрывает и открывает нужные окна
+  public selectUser = false;
+  //Переменная хранит имя добавляемого в список пользователя (читатель, редактор)
+  private userName = ''
+  //Один изменяемый контакт
+  private contact: UserRole
+  searchStr = ''
 
-  Data: Array<any> = [
-    { name: 'read' },
-    { name: 'write' },
-    { name: 'delete' },
-  ]
-
-  toppings = new FormControl();
+  selectName = new FormControl(this.service.addPermissions[0].value);
 
   constructor(public service: MenuService, private router: Router,
     private fb: FormBuilder, public contactService: ContactsService) {
     this.form = fb.group({
       read: false,
       write: false,
-      delete: false,
+      delete: false
     });
     this.role = localStorage.getItem('role')
   }
 
+
   ngOnInit(): void {
     this.forbiddenItems = ['contacts', 'menu', 'profile', 'settings']
-
-    //Сохраняем в переменную все контакты, для оперделения прав доступа
-    this.contactService.getContacts().subscribe((items) => {
-      items.contacts.forEach((item: Contact) => {
-        this.contacts.push({ email: item.email, user_id: item.user_id, permissions: [this.form.value.read, this.form.value.write, this.form.value.delete] })
-      })
-    })
   }
 
   /**
    * Функция для изменения прав пользователей
    */
   changePermissions() {
-    //Доабвляем в каждый объект контакта id страницы, которую редактируем
-    this.contacts.forEach((item) => {
-      item.permissions = [this.form.value.read, this.form.value.write, this.form.value.delete]
+    //Массив для заполнения
+    let permissionsArr = []
+    //Сохраняем в переменную объект с правами, полученный из формы
+    let permissions = this.service.permissionForm.value
+    //Заполняем массив для перезаписи прав в контактах
+    for (var key in permissions) {
+      if (permissions[key] == 'none') {
+        permissionsArr.push([true, false, false])
+      } else if (permissions[key] == 'read') {
+        permissionsArr.push([false, true, false])
+      } else if (permissions[key] == 'write') {
+        permissionsArr.push([false, false, true])
+      }
+    }
+    let changePermission = []
+
+    //Исключаем из отправки контакты в которых нет доступа
+    this.service.contacts.forEach((item) => {
+        changePermission.push(item)
     })
-    this.service.modalAdd(this.service.settingsItem.id, this.toppings.value).subscribe(
+
+    //Перезаписываем изменённые права которые берём из формы
+    changePermission.forEach((item, index) => {
+      item.permissions = permissionsArr[index]
+    })
+
+    //Отправка изменённых данных на сервер
+    this.service.modalAdd(this.service.settingsItem.id, changePermission).subscribe(
       modal => {
         MaterialService.toast('Изменения сохранены')
       }, error => {
@@ -116,20 +140,24 @@ export class ModalWindowComponent implements OnInit {
     this.newItem = false;
   }
 
+  /**
+   * Функция удаления дочерних пунктов меню
+   * @param item удаляемый пункт
+   */
   remove(item: NavItemNew) {
     const decision = window.confirm(`Вы уверены что хотите удалить этот пункт меню?`)
     if (decision) {
       //Удаление элемена на фронте
       this.recursionFunc(item)
-      this.arr.push(item)
-      this.arr.forEach((removeItem) => {
+      this.removingArr.push(item)
+      this.removingArr.forEach((removeItem) => {
         const idx = this.service.menuItemsOld.findIndex(p => p.id === removeItem.id)
         this.service.menuItemsOld.splice(idx, 1)
       })
       this.updateMenuItems()
       //Образуем массив id которые удаляем
       let idItems = []
-      this.arr.forEach((itemSend) => {
+      this.removingArr.forEach((itemSend) => {
         idItems.push(itemSend.id)
       })
       this.service.delete(item, idItems).subscribe(
@@ -137,7 +165,7 @@ export class ModalWindowComponent implements OnInit {
           //Закрытие окна настройки пункта меню
           this.service.settingsMenu = false
           //Обнуляем массив для следующего удаления
-          this.arr = []
+          this.removingArr = []
           MaterialService.toast('Удалено успешно')
         },
         error => MaterialService.toast(error.error.message),
@@ -145,17 +173,22 @@ export class ModalWindowComponent implements OnInit {
     }
   }
 
+  /**
+   * Рекурсивная функция для удаления всех подпунктов меню
+   * если таковые имеются
+   * @param item пунтк или подпункт меню
+   */
   private recursionFunc(item: NavItemNew) {
     this.service.menuItemsOld.forEach((item2) => {
       if (item2.parent_id == item.id) {
-        this.arr.push(item2)
+        this.removingArr.push(item2)
         this.recursionFunc(item2)
       }
     })
   }
 
   /**
-  * Функция обновления массива меню на фронте ()используется при каждом удалении или давлении нового пункта меню
+  * Функция обновления массива меню на фронте (используется при каждом удалении или давлении нового пункта меню)
   */
   updateMenuItems() {
     let map = new Map()
@@ -186,9 +219,19 @@ export class ModalWindowComponent implements OnInit {
     this.newItem = true;
   }
 
+  /**
+   * Функция закрытия модального окна, в котором
+   * обнуляются многие используемые флаги
+   */
   closeModal() {
+    //Очищаем массив контактов
+    this.service.contacts = []
+    //Обновляю контролы формы
+    this.service.permissionForm.controls = {}
     this.service.settingsMenu = false
     this.newItem = false;
+    this.selectUser = false
+    this.selectBlock = false
 
     //Обнуляем значения модального окна при закрытии
     this.form = this.fb.group({
@@ -198,7 +241,7 @@ export class ModalWindowComponent implements OnInit {
     });
 
     //Обнуляем список пользователей
-    this.toppings.reset()
+    // this.permissionControl.reset()
   }
 
   closeAddModal() {
@@ -208,5 +251,75 @@ export class ModalWindowComponent implements OnInit {
   setValue(value: string) {
     this.inputValue = value
   }
+
+  /**
+   * Функция для открытия/закрытия списка контактов
+   * @param event событие клика мыши
+   */
+  loadList(event: MouseEvent) {
+    if (event.target['className'] == 'select-input') {
+      this.selectBlock = true
+    } else {
+      this.selectBlock = false
+    }
+  }
+
+  /**
+   * Функция выбора одного контакта для добавления в список
+   * @param contact выбираемый контакт
+   */
+  checkContact(contact: UserRole) {
+    this.contact = contact
+    this.selectUser = true
+    this.userName = contact.name
+  }
+
+  //Функция добавления юзера с правами (читатель, редактор) в общий список
+  addUser() {
+    if (this.selectName.value == 'read') {
+      this.contact.permissions = [false, true, false]
+    } else {
+      this.contact.permissions = [false, false, true]
+    }
+    // Отправка изменённых данных на сервер
+    this.service.modalAdd(this.service.settingsItem.id, [this.contact]).subscribe(
+      modal => {
+        MaterialService.toast('Изменения сохранены')
+      }, error => {
+        MaterialService.toast(error.error.message)
+      }
+    )
+    this.selectUser = false
+  }
+
+  /**
+   * Закрытие окно добавления нового контакта в список
+   */
+  cancel() {
+    this.selectUser = false
+  }
+
+  /**
+   * В этой функции будут сравниваться 2 объекта
+   * первый - это объект который есть при открытии окна редактирования изначально
+   * и второй - тот который будет получаться в результате изменений
+   */
+  changePermission() {
+    if (JSON.stringify(this.service.permissionForm.value) != localStorage.getItem('permission')) {
+      this.permissionChange = true;
+    } else {
+      this.permissionChange = false;
+    }
+  }
+
+  /**
+   * Метод фильтрации списка контактов 
+   * (мы применяем пайп фильтрации и пайп ограничения элементов в списке)
+   * @param filterValue значение которое мы получаем из инпута
+   */
+  applyFilter(filterValue: string) {
+    this.searchStr = filterValue
+  }
+
 
 }

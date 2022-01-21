@@ -1,16 +1,22 @@
 .modal-window {
     background-color: #f4f6f8;
     color: #fff;
-    width: 600px;
-    height: 300px;
+    width: 60%;
+    height: 65%;
     position: absolute;
     top: 25%;
-    left: 40%;
+    left: 30%;
     opacity: 0.9;
+    padding: 1rem;
+
+    .modal-heading {
+        color: black;
+    }
 
     .buttons {
         display: flex;
-        margin-left: 10px;
+        margin-left: 1vh;
+        margin-bottom: 2 vh;
 
         .btn {
             width: 9em;
@@ -93,18 +99,127 @@
         color: black;
     }
 
-    form {
-        margin-left: 30%;
-        display: flex;
+    .permission-block {
+        form {
+            // margin-left: 30%;
+            display: flex;
+            flex-direction: column;
 
-        mat-form-field {
-            margin-right: 4%;
+            mat-form-field {
+                margin-right: 4%;
+            }
+
+            label {
+                input {
+                    position: relative;
+                    opacity: 1;
+                }
+            }
+
+            .select-block {
+                position: absolute;
+                top: 28vh;
+                width: 95.5%;
+                background-color: white;
+                color: black;
+                z-index: 1;
+                overflow: scroll;
+                height: 32vh;
+
+                .select-block_list {
+                    margin-bottom: 1.5vh;
+                    cursor: pointer;
+                    .name {
+                        margin: 0;
+                    }
+                }
+
+                .select-block_list:hover {
+                    background-color: #f1f3f4;
+                }
+            }
+
+            .check-contact {
+                display: flex;
+                color: black;
+                width: 74vh;
+                margin-top: -7.5vh;
+                margin-left: -1vh;
+
+                .check-contact_info {
+                    background-color: white;
+                    border-radius: 4vh;
+                    width: 64vh;
+                    display: flex;
+                    justify-content: space-between;
+                    height: 5vh;
+                    margin-top: 1vh;
+                    margin-right: 2vh;
+
+                    .name {
+                        margin: 1vh 0 0 2vh;
+                    }
+
+                    button {
+                        margin-right: 2vh;
+                    }
+                }
+
+                .check-contact_select {
+                    margin-right: -5vh;
+                    margin-top: -1vh;
+                }
+            }
+
+            .select-block_btn {
+                margin: 3vh 0 0 56vh;
+                .add {
+                    margin-right: 1vh;
+                }
+
+                .cancel {
+                    background-color: brown;
+                }
+            }
         }
 
-        label {
-            input {
-                position: relative;
-                opacity: 1;
+        .update-form {
+            .list {
+                background-color: white;
+                height: 27vh;
+                overflow: scroll;
+                .list__point {
+                    color: black;
+                    display: flex;
+                    justify-content: space-between;
+                    width: 100%;
+                    .list__point-info {
+                        display: flex;
+                        flex-direction: column;
+                        padding: 2.5vh 0 0 2vh;
+                        .name {
+                            margin: 0;
+                            padding: 0;
+                        }
+                        .email {
+                            margin: 0;
+                            padding: 0;
+                        }
+                    }
+                    .list__point-permissions {
+                        margin-right: 2vh;
+                        margin-top: 1.5vh;
+                    }
+                }
+
+                .list__point:hover {
+                    background-color: #f1f3f4;
+                    border-radius: 4vh;
+                }
+            }
+            .form-submit {
+                margin: 0 auto;
+                margin-top: 1.5vh;
             }
         }
     }
