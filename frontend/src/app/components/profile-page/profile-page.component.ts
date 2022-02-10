@@ -21,14 +21,21 @@ export class ProfilePageComponent implements OnInit {
 
   ngOnInit() {
     this.form = new FormGroup({})
+    let role = localStorage.getItem('role')
 
     //Получаем отображаемые в таблице столбцы
     let visibleColumns = JSON.parse(localStorage.getItem('visibleColumns'))
 
     //Заполняем FormControl, в дальнейшем на что то можно придумать валидаторы
     visibleColumns.forEach((item) => {
-      this.form.addControl(item.field, new FormControl(true))
-      this.contacts.push(item.field)
+      //USER не может менять в своём профиле роль, это может только ADMIN
+      if (role !== 'ADMIN' && item.field == 'roles') {
+        return null;
+      } else {
+        this.form.addControl(item.field, new FormControl(true))
+        this.contacts.push(item.field)
+      }
+
     })
 
     this.form.disable()

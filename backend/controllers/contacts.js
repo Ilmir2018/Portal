@@ -2,10 +2,25 @@ const errorHandler = require('../utils/errorHandler')
 const bcrypt = require('bcryptjs')
 const db = require('../posgres')
 
+const io = require('../index')
+
+var tableInfo = null;
+
 
 module.exports.get = async function (req, res) {
     try {
         const contacts = await db.query("SELECT * FROM contacts ORDER BY id")
+        io.soketServer().on('connection', (soket) => {
+            console.log('new connaction made')
+            soket.on("table", table => {
+                io.soketServer().emit("table", { type: "table", table: JSON.parse(table) })
+            })
+            // io.soketServer().emit("table", { type: "table", table: contacts.rows })
+            soket.on('disconnect', function () {
+                console.log('user disconnected');
+            });
+            return;
+        })
         res.status(200).json({ contacts: contacts.rows })
     } catch (e) {
         errorHandler(res, e)
@@ -132,7 +147,15 @@ module.exports.update = async function (req, res) {
         if (req.file) {
             const user = await db.query(`UPDATE contacts set imagesrc = $1 where id = ${req.params.id} RETURNING *`, [req.file ? req.file.path : ''])
         }
-        res.status(200).json({ message: 'Контакт обновлён' })
+        //Функция для отдачи данных обновления всей таблицы через вебсокет
+        async function getFunc() {
+            const contacts = await db.query("SELECT * FROM contacts ORDER BY id")
+            res.status(200).json({ contacts: contacts.rows })
+        }
+        //Запускаем функцию после обновления всей таблицы
+        setTimeout(() => {
+            getFunc()
+        }, 1000)
     } catch (e) {
         errorHandler(res, e)
     }

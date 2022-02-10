@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { Observable, of, Subject } from 'rxjs';
+import { switchMap, map } from 'rxjs/operators';
 import { MaterialService } from 'src/app/classes/material.service';
 import { CommonService } from 'src/app/services/common.service';
 import { ContactsService } from 'src/app/services/contacts.service';
+import { WebsocketService } from 'src/app/services/websocket.service';
 
 @Component({
   selector: 'app-contact-page',
@@ -22,7 +23,14 @@ export class ContactPageComponent implements OnInit {
   contacts = []
 
   constructor(private route: ActivatedRoute,
-    private service: ContactsService, public common: CommonService, private router: Router) { }
+    private service: ContactsService, public common: CommonService, private router: Router, private webSocket: WebsocketService) {
+    // webSocket.connect()
+    // webSocket.messages$ = <Subject<any>>webSocket.connect()
+    //   .pipe(map((responce: any): any => {
+    //     console.log('responce', responce)
+    //     return responce;
+    //   }))
+  }
 
   ngOnInit(): void {
 
@@ -71,22 +79,31 @@ export class ContactPageComponent implements OnInit {
     })
 
     this.common.imagePreview = ''
+
+    // this.webSocket.messages$.subscribe(msg => {
+
+    // })
   }
 
   onSubmit() {
-    let obs$
+    let obs$: Observable<any>
     this.form.disable()
     obs$ = this.service.update(this.paramsId, this.common.image, this.form.value)
-    obs$.subscribe(
-      contact => {
-        this.contact = contact
-        MaterialService.toast('Изменения сохранены')
-        this.form.enable()
-      }, error => {
-        MaterialService.toast(error.error.message)
-        this.form.enable()
-      }
-    )
+    setTimeout(() => {
+      obs$.subscribe(
+        contact => {
+          this.contact = contact
+          console.log('this.contact', this.contact)
+          this.socketChanges(this.contact)
+          MaterialService.toast('Изменения сохранены')
+          this.form.enable()
+        }, error => {
+          MaterialService.toast(error.error.message)
+          this.form.enable()
+        }
+      )
+    }, 1000)
+
   }
 
   deleteContact() {
@@ -104,6 +121,17 @@ export class ContactPageComponent implements OnInit {
       )
     }
 
+  }
+
+  private socketChanges(contact: any) {
+    this.webSocket.disconnect()
+    this.webSocket.connect()
+    this.webSocket.messages$ = <Subject<any>>this.webSocket.connect()
+      .pipe(map((responce: any): any => {
+        console.log('responce', responce)
+        return responce;
+      }))
+    this.webSocket.sendMsg(contact)
   }
 
 }
