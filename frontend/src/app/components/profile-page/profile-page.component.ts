@@ -44,6 +44,8 @@ export class ProfilePageComponent implements OnInit {
       data.contacts.forEach((item) => {
         if (item.user_id == localStorage.getItem('id-user')) {
           this.profile = item
+          //меняем хэшированный пароль на тот который мы ввели при логинизации
+          this.profile.password = localStorage.getItem('password')
           this.paramsId = item.id
           visibleColumns.forEach((item) => {
             for (let cont in this.profile) {

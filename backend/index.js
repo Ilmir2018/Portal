@@ -10,30 +10,17 @@ const io = require('socket.io')(server, {
     }
 })
 
-const texts = ['Beggin']
+io.on('connection', (soket) => {
+    console.log('new connaction made')
+    soket.on("table", table => {
+        io.emit("table", { type: "table", table: JSON.parse(table) })
+    })
+    // io.soketServer().emit("table", { type: "table", table: contacts.rows })
+    soket.on('disconnect', function () {
+        console.log('user disconnected');
+    });
+})
 
-// io.on('connection', (soket) => {
-//     console.log('new connaction made')
-
-//     // soket.on("message", message => {
-//     //     console.log("Message receved: " + message)
-//     //     texts.push(JSON.parse(message))
-//     //     io.emit("message", { type: "new-message", text: texts })
-//     //     return;
-//     // })
-
-//     // io.emit("message", { type: "new-message", text: texts })
-
-//     // io.emit("table", {type: "table", table: controller.get()})
-// })
-
-exports.soketServer = function () {
-    return io;
-};
-
-// module.exports = io
-
-// async function getTable(req, res) {
-//     const contacts = await db.query("SELECT * FROM contacts ORDER BY id")
-//     res.status(200).json({ contacts: contacts.rows })
-// }
+// exports.soketServer = function () {
+//     return io;
+// };

@@ -71,34 +71,19 @@ export class ContactsTableComponent implements OnInit {
       //Сохраняем при вхоже на страницу контактов колонки которые у нас отображаются в таблице
       localStorage.setItem('visibleColumns', JSON.stringify(this.columns))
     })
-
-
-
   }
 
   ngOnInit(): void {
     this.reloading = true
     this.oSub = this.service.getContacts().subscribe(contactResp => {
-      console.log('загрузка данных', contactResp.contacts)
       this.dataSource = new MatTableDataSource<Contact>(contactResp.contacts)
       this.reloading = false
       this.setDataSource(this.dataSource);
       this.dataSource.paginator = this.paginator
       this.dataSource.sort = this.sort
     })
-
-    this.socket.connect()
-
-    this.socket.messages$ = <Subject<any>>this.socket.connect()
-      .pipe(map((responce: any): any => {
-        console.log('responce', responce.table)
-        this.dataSource = new MatTableDataSource<Contact>(responce.table)
-        this.reloading = false
-        this.setDataSource(this.dataSource);
-      }))
-
-    this.socket.messages$.subscribe(msg => {
-    })
+    //Метод для включения функционала сокета
+    this.onSocket()
   }
 
   setDataSource(dataSource: MatTableDataSource<Contact>): void {
@@ -301,6 +286,24 @@ export class ContactsTableComponent implements OnInit {
 
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  /**
+   * метод для создания подключения канала сокета
+   */
+  private onSocket() {
+    this.socket.connect()
+
+    this.socket.messages$ = <Subject<any>>this.socket.connect()
+      .pipe(map((responce: any): any => {
+        console.log('responce', responce.table)
+        this.dataSource = new MatTableDataSource<Contact>(responce.table)
+        this.reloading = false
+        this.setDataSource(this.dataSource);
+      }))
+
+    this.socket.messages$.subscribe(msg => {
+    })
   }
 
 }

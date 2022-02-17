@@ -1,8 +1,12 @@
-const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const keys = require('../config/keys')
 const errorHandler = require('../utils/errorHandler')
 const db = require('../posgres')
+
+const pidCrypt = require("pidcrypt")
+require("pidcrypt/aes_cbc")
+
+const aes = new pidCrypt.AES.CBC()
 
 
 
@@ -30,9 +34,9 @@ module.exports.login = async function (req, res) {
                         errorHandler(result, err)
                     }
 
-                    const passwordResult = bcrypt.compareSync(password, result.rows[0].password)
+                    const pw = "password";
 
-                    if (passwordResult) {
+                    if (aes.decryptText(result.rows[0].password, pw) == password) {
 
                         const token = jwt.sign({
                             email: result.rows[0].email,
@@ -60,8 +64,8 @@ module.exports.login = async function (req, res) {
             db.query(
                 `UPDATE users set date = $1 where id = $2 RETURNING *`, [new Date(), result.rows[0].id]
             )
-             //Обновление даты в таблице contacts
-             db.query(
+            //Обновление даты в таблице contacts
+            db.query(
                 `UPDATE contacts set date = $1 where user_id = $2 RETURNING *`, [new Date(), result.rows[0].id]
             )
         }
@@ -72,8 +76,8 @@ module.exports.register = async function (req, res) {
 
     const { email, password } = req.body;
 
-    const salt = bcrypt.genSaltSync(10)
-    const hashPassword = bcrypt.hashSync(password, salt)
+    const pw = "password";
+    var encrypted = aes.encryptText(password, pw);
 
     const user = await db.query(
         `SELECT * FROM users WHERE email = $1`, [email], (err, result) => {
@@ -89,14 +93,14 @@ module.exports.register = async function (req, res) {
                 db.query(
                     `INSERT INTO users (email, password, date, roles)
                     VALUES ($1, $2, $3, $4)
-                    RETURNING *`, [email, hashPassword, new Date(), 'USER'], (err, result) => {
+                    RETURNING *`, [email, encrypted, new Date(), 'USER'], (err, result) => {
                     if (err) {
                         errorHandler(result, err)
                     } else {
                         db.query(
                             `INSERT INTO contacts (email, password, roles, date, user_id)
                             VALUES ($1, $2, $3, $4, $5)
-                            RETURNING *`, [email, hashPassword, 'USER', new Date(), result.rows[0].id], (err, result2) => {
+                            RETURNING *`, [email, encrypted, 'USER', new Date(), result.rows[0].id], (err, result2) => {
                             if (err) {
                                 errorHandler(result2, err)
                             } else {

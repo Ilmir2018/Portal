@@ -1,26 +1,26 @@
 const errorHandler = require('../utils/errorHandler')
-const bcrypt = require('bcryptjs')
 const db = require('../posgres')
 
 const io = require('../index')
 
-var tableInfo = null;
-
+const pidCrypt = require("pidcrypt")
+require("pidcrypt/aes_cbc")
+const aes = new pidCrypt.AES.CBC()
 
 module.exports.get = async function (req, res) {
     try {
         const contacts = await db.query("SELECT * FROM contacts ORDER BY id")
-        io.soketServer().on('connection', (soket) => {
-            console.log('new connaction made')
-            soket.on("table", table => {
-                io.soketServer().emit("table", { type: "table", table: JSON.parse(table) })
-            })
-            // io.soketServer().emit("table", { type: "table", table: contacts.rows })
-            soket.on('disconnect', function () {
-                console.log('user disconnected');
-            });
-            return;
-        })
+        // io.soketServer().on('connection', (soket) => {
+        //     console.log('new connaction made')
+        //     soket.on("table", table => {
+        //         io.soketServer().emit("table", { type: "table", table: JSON.parse(table) })
+        //     })
+        //     // io.soketServer().emit("table", { type: "table", table: contacts.rows })
+        //     soket.on('disconnect', function () {
+        //         console.log('user disconnected');
+        //     });
+        //     return;
+        // })
         res.status(200).json({ contacts: contacts.rows })
     } catch (e) {
         errorHandler(res, e)
@@ -39,6 +39,10 @@ module.exports.getFields = async function (req, res) {
 module.exports.getById = async function (req, res) {
     try {
         const contact = await db.query("SELECT * FROM contacts WHERE id = $1 ORDER BY id", [req.params.id])
+        //Выдаём транскрибированный пароль
+        const pw = "password";
+        const encrypted = aes.decryptText(contact.rows[0].password, pw);
+        contact.rows[0].password = encrypted
         res.status(200).json(contact)
     } catch (e) {
         errorHandler(res, e)
@@ -48,9 +52,9 @@ module.exports.getById = async function (req, res) {
 module.exports.create = async function (req, res) {
     try {
         const { email, password, name, firm, phone } = req.body
-
-        const salt = bcrypt.genSaltSync(10)
-        const hashPassword = bcrypt.hashSync(password, salt)
+        //Шифруем пароль
+        const pw = "password";
+        const hashPassword = aes.encryptText(password, pw);
 
         const user = await db.query(
             'INSERT INTO users (email, password, date, roles) VALUES ($1, $2, $3, $4) RETURNING *',
@@ -105,8 +109,9 @@ module.exports.update = async function (req, res) {
         for (let cont in data) {
             if (cont != 'imagesrc') {
                 if (cont == 'password') {
-                    const salt = bcrypt.genSaltSync(10)
-                    const hashPassword = bcrypt.hashSync(data[cont], salt)
+                    //Шифруем обновляемый пароль
+                    const pw = "password";
+                    const hashPassword = aes.encryptText(data[cont], pw);
                     const user = await db.query(`UPDATE contacts set ${cont} = $1 where id = ${req.params.id} RETURNING *`, [hashPassword],
                         (err, result) => {
                             if (err) {

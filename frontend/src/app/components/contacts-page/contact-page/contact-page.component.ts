@@ -23,15 +23,13 @@ export class ContactPageComponent implements OnInit {
   contacts = []
 
   constructor(private route: ActivatedRoute,
-    private service: ContactsService, public common: CommonService, private router: Router, private webSocket: WebsocketService) {
-    // webSocket.connect()
-    // webSocket.messages$ = <Subject<any>>webSocket.connect()
-    //   .pipe(map((responce: any): any => {
-    //     console.log('responce', responce)
-    //     return responce;
-    //   }))
+    private service: ContactsService, public common: CommonService, private router: Router,
+     private webSocket: WebsocketService) {
   }
 
+  /**
+   * Подгружаем данные контакта
+   */
   ngOnInit(): void {
 
     this.form = new FormGroup({})
@@ -79,11 +77,11 @@ export class ContactPageComponent implements OnInit {
     })
 
     this.common.imagePreview = ''
-
-    // this.webSocket.messages$.subscribe(msg => {
-
-    // })
   }
+
+  /**
+   * Метод обновления контакта
+   */
 
   onSubmit() {
     let obs$: Observable<any>
@@ -103,8 +101,11 @@ export class ContactPageComponent implements OnInit {
         }
       )
     }, 1000)
-
   }
+
+  /**
+   * Метод удаления контакта
+   */
 
   deleteContact() {
     const decision = window.confirm(`Вы уверены что вы хотите удалить контакт ${this.contact.email}`)
@@ -123,8 +124,13 @@ export class ContactPageComponent implements OnInit {
 
   }
 
+  /**
+   * Метод для коннекта и дисконнекта сокета.
+   * @param contact передаём данные в отправку сообщения на бек через сокет
+   * ВАЖНЫЙ МОМЕНТ - ЧТОБЫ ОСУЩЕСТВИТЬ ОБНОВЛЕНИЕ ВСЕХ КЛИЕНТОВ СОКЕТ ДОЛЖЕН БЫТЬ ВКЛЮЧЕН ИНАЧЕ - ОШИБКА ПОТОМУ 
+   * ЧТО ПЕРВЫМ ВЫПОЛНЯЕТСЯ disconnect
+   */
   private socketChanges(contact: any) {
-    this.webSocket.disconnect()
     this.webSocket.connect()
     this.webSocket.messages$ = <Subject<any>>this.webSocket.connect()
       .pipe(map((responce: any): any => {

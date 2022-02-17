@@ -15,12 +15,14 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   login(user: User):Observable<{token: string, role: string, id: string, permissions: any}> {
+    //Сохраняем в хранилище вводимый пароль для вывода его в профиле
+    localStorage.setItem('password', user.password)
     return this.http.post<{token: string, role: string, id: string, permissions: any}>('/api/auth/login', user)
     .pipe(
       tap(
         ({token, role, id, permissions}) => {
           let item = role
-          //Сохраняем в локальном хранилище токен, роль и id пользователя
+          //Сохраняем в локальном хранилище токен, роль и id пользователя, а также массив объектов с доступами на страницы
           localStorage.setItem('auth-token', token)
           localStorage.setItem('role', item)
           localStorage.setItem('id-user', id)
