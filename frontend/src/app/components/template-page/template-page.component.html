@@ -1,24 +1,9 @@
-<div class="container">
-    <h1>Web Socket</h1>
-    <div class="row">
-        <form [formGroup]="form" autocomplete="off" novalidate (submit)="sendMessage()">
-            <div class="form-group">
-                <div class="form-control">
-                    <textarea placeholder="Email"  (keyup)="setMessage($event.target)" formControlName="text"></textarea>
-                </div>
-            </div>
-            <div class="form-group">
-                <button type="submit" [disabled]="form.invalid">Send text</button>
-            </div>
-        </form>
-  
-        <div class="texts">
-            <ul>
-                <li *ngFor="let text of messages; let i = index;">
-                    {{text}}
-                    <span class="remove" (click)="removeText(i)">x</span>
-                </li>
-            </ul>
-        </div>
-    </div>
-  </div>
+<mat-card>
+    <mat-card-header> Nested Drag And Drop Cards</mat-card-header>
+    <mat-card-content cdkDropList dragAndDropRoot [cdkDropListData]="data"
+        (cdkDropListDropped)="onDragDrop$.next($event)">
+        <ng-container *ngFor="let item of data">
+            <app-menu-item [item]="item" [invert]="invert" [onDragDrop]="onDragDrop$"></app-menu-item>
+        </ng-container>
+    </mat-card-content>
+</mat-card>

@@ -11,5 +11,6 @@ router.patch('/:id', passport.authenticate('jwt', {session: false}), controller.
 router.delete('/:id', passport.authenticate('jwt', {session: false}), controller.delete)
 
 router.post('/modal', passport.authenticate('jwt', {session: false}), controller.modal)
+router.post('/changeStructure', passport.authenticate('jwt', {session: false}), controller.changeStructure)
 
 module.exports = router

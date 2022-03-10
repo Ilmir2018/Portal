@@ -1,4 +1,4 @@
-<div cdkDropListGroup>
+<!-- <div cdkDropListGroup>
     <ul cdkDropList
     [cdkDropListData]="menuItems"
     (cdkDropListDropped)="drop($event)"  class="menu-update">
@@ -8,4 +8,13 @@
             <app-menu-update class="spoiler-content" *ngIf="item.subtitle" [menuItems]="item.subtitle"></app-menu-update>
         </li>
     </ul>
-</div>
+</div> -->
+
+<mat-card>
+    <mat-card-content cdkDropList dragAndDropRoot [cdkDropListData]="service.menuItems"
+        (cdkDropListDropped)="onDragDrop$.next($event)">
+        <ng-container *ngFor="let item of service.menuItems">
+            <app-menu-update-item [item]="item" [invert]="invert" [onDragDrop]="onDragDrop$"></app-menu-update-item>
+        </ng-container>
+    </mat-card-content>
+</mat-card>

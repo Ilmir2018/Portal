@@ -7,7 +7,7 @@ export class SearchPipe implements PipeTransform {
 
   transform(users, value): unknown {
     return users.filter(user => {
-      return user.name.includes(value)
+      return user.email.includes(value)
     })
   }
 

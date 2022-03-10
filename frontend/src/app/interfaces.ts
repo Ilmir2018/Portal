@@ -10,7 +10,7 @@ export interface ContactResponse {
 }
 
 export interface UserRole {
-    name: string
+    name?: string
     email: string,
     user_id: string
     // title_id?: number,
@@ -66,6 +66,7 @@ export interface NavItemNew {
     url: string;
     subtitle?: NavItemNew[];
     parent_id: string;
+    level: string
 }
 
 export interface ContactField {

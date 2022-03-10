@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import {MatMenuModule} from '@angular/material/menu';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -29,6 +28,10 @@ import { TemplatePageComponent } from './components/template-page/template-page.
 import { ModalWindowComponent } from './components/menu/modal-window/modal-window.component';
 import { ContactsEditComponent } from './components/contacts-page/contacts-edit/contacts-edit.component';
 import { SearchPipe } from './classes/search.pipe';
+import { DragAndDropDirective, DragAndDropRootDirective } from './classes/drag-and-drop.directive';
+import { MenuItemComponent } from './components/template-page/menu-item/menu-item.component';
+import { DragAndDropService } from './services/drag-and-drop.service';
+import { MenuUpdateItemComponent } from './components/menu/menu-update/menu-update-item/menu-update-item.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +54,11 @@ import { SearchPipe } from './classes/search.pipe';
     TemplatePageComponent,
     ModalWindowComponent,
     ContactsEditComponent,
-    SearchPipe
+    SearchPipe,
+    MenuItemComponent,
+    DragAndDropDirective,
+    DragAndDropRootDirective,
+    MenuUpdateItemComponent
   ],
   imports: [
     BrowserModule,
@@ -60,7 +67,6 @@ import { SearchPipe } from './classes/search.pipe';
     ReactiveFormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    MatMenuModule,
     MaterialModule
   ],
   providers: [
@@ -68,11 +74,10 @@ import { SearchPipe } from './classes/search.pipe';
       provide: HTTP_INTERCEPTORS,
       multi: true,
       useClass: TokenInterceptor,
-    }
+    },
+    DragAndDropService
   ],
   bootstrap: [AppComponent],
-  exports: [
-    MatPaginatorModule,
-  ]
+  exports: []
 })
 export class AppModule { }

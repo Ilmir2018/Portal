@@ -42,7 +42,7 @@ module.exports.login = async function (req, res) {
                             email: result.rows[0].email,
                             userId: result.rows[0].id,
                             roles: result.rows[0].roles
-                        }, keys.jwt, { expiresIn: 3600 })
+                        }, keys.jwt, { expiresIn: "24h" })
 
                         res.status(200).json({
                             token: `Bearer ${token}`,

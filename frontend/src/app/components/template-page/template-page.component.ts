@@ -1,61 +1,57 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Observable, Subject, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { Contact } from 'src/app/interfaces';
-import { ContactsService } from 'src/app/services/contacts.service';
-import { WebsocketService } from 'src/app/services/websocket.service';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { Component, OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
+import { NavItemNew } from 'src/app/interfaces';
+import { MenuService } from 'src/app/services/menu.service';
 
 @Component({
   selector: 'app-template-page',
   templateUrl: './template-page.component.html',
-  styleUrls: ['./template-page.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Default
+  styleUrls: ['./template-page.component.scss']
 })
 
 export class TemplatePageComponent implements OnInit {
 
-  oSub: Subscription
-  contacts$: Observable<Contact[]>
-  messages: any = []
-  private message: string
+  public data: Array<NavItemNew> = [];
 
-  form: FormGroup
-  public text: FormControl
+  public invert: boolean = true;
+  public onDragDrop$ = new Subject<CdkDragDrop<Array<NavItemNew>>>();
 
-  constructor(private service: ContactsService, private socket: WebsocketService, private fb: FormBuilder) {
-    // socket.connect()
-    // this.socket.messages$ = <Subject<any>>socket.connect()
-    // .pipe(map((responce: any): any => {
-    //   console.log('responce', responce)
-    //   return responce;
-    // }))
+  constructor(private service: MenuService){
   }
 
   ngOnInit(): void {
-    // setInterval(() => {
-    // this.oSub = this.service.getContacts().subscribe(contactResp => {
-    //   this.contacts$ = contactResp.contacts
-    // })
-    // this.num++
-    // }, 1000)
-    this.form = this.fb.group({
-      text: [null, [
-        Validators.required
-      ]]
-    })
-    // this.socket.messages$.subscribe(msg => {
-    //   this.messages = []
-    //   this.messages = msg.text
-    // })
+      this.data = this.service.menuItems
+
+      this.onDragDrop$.subscribe(this.onDragDrop);
   }
 
-  sendMessage() {
-    this.socket.sendMsg(this.message)
-  }
-
-  setMessage(text: any) {
-    this.message = text.value
-  }
-
+  private onDragDrop = (event: CdkDragDrop<Array<NavItemNew>>) => {
+    if (event.container === event.previousContainer) {
+      //Если мы перемещаем элемент на одном уровне, не меняя его вложенность
+      //Здесь будет меняться только значение level, тоесть порядок на одном уровне вложенности
+      console.log('moveItemInArray')
+      // console.log('event.container', event.container)
+      // console.log('event.previousContainer', event.previousContainer)
+      moveItemInArray(
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+    } else {
+      //Если мы меняем вложенность элемента, либо выше либо ниже
+      //Здесь будет меняться и level и parent_id
+      console.log('transferArrayItem')
+      // //Контейнер куда перемещаем элемент
+      // console.log('event.container', event.container)
+      // //Контейнер откуда перемещаем элемент
+      // console.log('event.previousContainer', event.previousContainer)
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+    }
+  };
 }

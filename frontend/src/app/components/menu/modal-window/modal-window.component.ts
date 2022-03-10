@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { DragAndDropService } from 'src/app/services/drag-and-drop.service';
 import { MaterialService } from 'src/app/classes/material.service';
 import { NavItemNew, UserRole } from 'src/app/interfaces';
 import { ContactsService } from 'src/app/services/contacts.service';
@@ -14,6 +15,7 @@ import { TemplatePageComponent } from '../../template-page/template-page.compone
 })
 export class ModalWindowComponent implements OnInit {
 
+  //Флаг для модального окна
   public newItem = false
   public inputValue: string
   data: NavItemNew
@@ -37,10 +39,12 @@ export class ModalWindowComponent implements OnInit {
   private contact: UserRole
   searchStr = ''
 
+  private id = 543
+
   selectName = new FormControl(this.service.addPermissions[0].value);
 
   constructor(public service: MenuService, private router: Router,
-    private fb: FormBuilder, public contactService: ContactsService) {
+    private fb: FormBuilder, public contactService: ContactsService, public managerService: DragAndDropService) {
     this.form = fb.group({
       read: false,
       write: false,
@@ -76,7 +80,7 @@ export class ModalWindowComponent implements OnInit {
 
     //Исключаем из отправки контакты в которых нет доступа
     this.service.contacts.forEach((item) => {
-        changePermission.push(item)
+      changePermission.push(item)
     })
 
     //Перезаписываем изменённые права которые берём из формы
@@ -116,14 +120,47 @@ export class ModalWindowComponent implements OnInit {
    * @param item добавляемый пункт меню
    */
   add(item: NavItemNew) {
-    let object = { title: this.inputValue, url: this.service.translit(this.inputValue), parent_id: item.id }
+    let arr = []
+    //Берём имеющиеся пункты меню для определения уровня элементов
+    this.service.menuItemsOld.forEach((element) => {
+      if (element.parent_id == item.id) {
+        arr.push(item)
+      }
+    })
+    let object = { title: this.inputValue, url: this.service.translit(this.inputValue), parent_id: item.id, level: (arr.length + 1).toString() }
     let url = this.service.translit(this.inputValue);
+
+    //Изменяем мааасив permissions в localstorage
+    let permissions = JSON.parse(localStorage.getItem('permissions'))
+    permissions.push({ url: this.service.translit(this.inputValue), permissions: [false, true, false] })
+    localStorage.setItem('permissions', JSON.stringify(permissions))
+
     //Добавляем новый пункт меню
     this.service.add(object).subscribe(
       newItem => {
+        console.log(newItem)
         //Формируем на фронте с помощью функции addNewItem обновлённый массив меню
-        this.service.menuItemsOld.push(newItem)
-        this.updateMenuItems()
+        // this.service.menuItemsOld.push(newItem)
+        // this.updateMenuItems()
+
+        this.service.get().subscribe((data) => {
+          let menu: any, resultArr = []
+          menu = data
+          //Отбираем пункты меню по user_id
+          menu.forEach((items) => {
+            resultArr.push(items)
+          })
+          this.service.menuItemsOld = []
+          //Первые уровни меню
+          resultArr.forEach((item) => {
+            //заполняем массив для добавления и удаления элементов на фронте
+            this.service.menuItemsOld.push(item)
+          })
+          this.updateMenuItems()
+
+          console.log(this.service.menuItems)
+        })
+
         MaterialService.toast('Элемент добавлен')
         this.newItem = false;
         //Добавляем новый адрес в массив роутов
@@ -147,25 +184,58 @@ export class ModalWindowComponent implements OnInit {
   remove(item: NavItemNew) {
     const decision = window.confirm(`Вы уверены что хотите удалить этот пункт меню?`)
     if (decision) {
+      this.removingArr = []
       //Удаление элемена на фронте
       this.recursionFunc(item)
+      //Заполняем массив удаляемых элементов на фронте
       this.removingArr.push(item)
+      console.log(this.service.menuItemsOld)
       this.removingArr.forEach((removeItem) => {
-        const idx = this.service.menuItemsOld.findIndex(p => p.id === removeItem.id)
+        let idx = this.service.menuItemsOld.findIndex(p => p.id === removeItem.id)
         this.service.menuItemsOld.splice(idx, 1)
+
+        //Удаляем элемент из droppable списка (нужно улучшить, чтобы не только на верхнем уровне мог удалять)
+        if (item.parent_id == null) {
+          idx = this.service.dragDelete.findIndex(p => p.id === removeItem.id)
+          this.service.dragDelete.splice(idx, 1)
+        }
+        //Меняем массив разрешений
+        let permissions = JSON.parse(localStorage.getItem('permissions'))
+        idx = permissions.findIndex(p => p.url === removeItem.url)
+        permissions.splice(idx, 1)
+        localStorage.setItem('permissions', JSON.stringify(permissions))
       })
-      this.updateMenuItems()
+
       //Образуем массив id которые удаляем
       let idItems = []
       this.removingArr.forEach((itemSend) => {
         idItems.push(itemSend.id)
       })
+
       this.service.delete(item, idItems).subscribe(
         responce => {
           //Закрытие окна настройки пункта меню
           this.service.settingsMenu = false
           //Обнуляем массив для следующего удаления
           this.removingArr = []
+          //Обновляем массив menuItemsOld
+          this.service.get().subscribe((data) => {
+            let menu: any, resultArr = []
+            menu = data
+            //Отбираем пункты меню по user_id
+            menu.forEach((items) => {
+              resultArr.push(items)
+            })
+            this.service.menuItemsOld = []
+            //Первые уровни меню
+            resultArr.forEach((item) => {
+              //заполняем массив для добавления и удаления элементов на фронте
+              this.service.menuItemsOld.push(item)
+            })
+            this.updateMenuItems()
+          })
+
+          document.body.classList.remove('hidden')
           MaterialService.toast('Удалено успешно')
         },
         error => MaterialService.toast(error.error.message),
@@ -194,15 +264,18 @@ export class ModalWindowComponent implements OnInit {
     let map = new Map()
     //Сначала обнуляем массив, потому что создаём его заново уже с новым элементом
     this.service.menuItems = []
+    this.service.dragDelete = []
     //Первые уровни меню
+    // console.log(this.service.menuItemsOld)
     this.service.menuItemsOld.forEach((item) => {
       let navItem: NavItemNew = {
         id: item.id, title: item.title, url: item.url,
-        subtitle: [], parent_id: item.parent_id
+        subtitle: [], parent_id: item.parent_id, level: item.level
       }
       map.set(item.id, navItem)
       if (item.parent_id == null) {
         this.service.menuItems.push(navItem)
+        this.service.dragDelete.push(navItem)
       }
     })
     this.service.menuItemsOld.forEach((item) => {
@@ -242,6 +315,9 @@ export class ModalWindowComponent implements OnInit {
 
     //Обнуляем список пользователей
     // this.permissionControl.reset()
+
+    //Удалаем класс скрывающий прокрутку в body
+    document.body.classList.remove('hidden')
   }
 
   closeAddModal() {
@@ -271,7 +347,7 @@ export class ModalWindowComponent implements OnInit {
   checkContact(contact: UserRole) {
     this.contact = contact
     this.selectUser = true
-    this.userName = contact.name
+    this.userName = contact.email
   }
 
   //Функция добавления юзера с правами (читатель, редактор) в общий список

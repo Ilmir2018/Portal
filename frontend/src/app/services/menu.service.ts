@@ -4,6 +4,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { PermissionsGuard } from '../classes/permissions.guard';
+import { sendItems } from '../components/menu/menu-update/menu-update.component';
 import { TemplatePageComponent } from '../components/template-page/template-page.component';
 import { NavItemNew, UserRole } from '../interfaces';
 import { ContactsService } from './contacts.service';
@@ -24,6 +25,8 @@ export class MenuService {
   permissionForm: FormGroup;
   form: FormGroup;
 
+  dragDelete: any
+
   permissions: Array<any> = [
     { name: 'Нет прав', value: 'none' },
     { name: 'Читатель', value: 'read' },
@@ -43,6 +46,7 @@ export class MenuService {
       delete: false,
     });
     this.permissionForm = new FormGroup({})
+    console.log(this.router.config)
   }
 
   /**
@@ -55,11 +59,11 @@ export class MenuService {
       items.forEach((item: any) => {
         this.contacts.push({ name: item.name, email: item.email, user_id: item.user_id, permissions: [item.permissions[0], item.permissions[1], item.permissions[2]] })
         if (item.permissions[0] == true) {
-          this.permissionForm.addControl(item.name, new FormControl('none'))
+          this.permissionForm.addControl(item.email, new FormControl('none'))
         } if (item.permissions[1] == true) {
-          this.permissionForm.addControl(item.name, new FormControl('read'))
+          this.permissionForm.addControl(item.email, new FormControl('read'))
         } if (item.permissions[2] == true) {
-          this.permissionForm.addControl(item.name, new FormControl('write'))
+          this.permissionForm.addControl(item.email, new FormControl('write'))
         }
       })
       localStorage.setItem('permission', JSON.stringify(this.permissionForm.value))
@@ -83,7 +87,7 @@ export class MenuService {
         //создаём объект для заполнения всех массивов и подмассивов
         let navItem: NavItemNew = {
           id: item.id, title: item.title, url: item.url,
-          subtitle: [], parent_id: item.parent_id
+          subtitle: [], parent_id: item.parent_id, level: item.level
         }
         map.set(item.id, navItem)
         if (item.parent_id == null) {
@@ -99,8 +103,12 @@ export class MenuService {
           obj.subtitle.push(map.get(item.id))
         }
       })
+
+      // console.log(this.menuItemsOld)
       //Убираем из добавления первые 4 изначальных пункта меню
       let filteredArray = this.menuItemsOld.filter(myFilter);
+
+      // console.log(filteredArray)
       //Подгрузка всех роутов
       //если ставить resetConfig то при переходе по роутам, обновляется страница site-layout, что
       //приводит к закрыванию раскрытых пунктов меню
@@ -115,7 +123,9 @@ export class MenuService {
     })
 
     function myFilter(value, index) {
-      return index > 3;
+      if (value.url != 'settings' && value.url != 'profile' && value.url != 'contacts' && value.url != 'menu') {
+        return index;
+      }
     }
 
   }
@@ -202,7 +212,6 @@ export class MenuService {
 
 
   /**
-   * 
    * @param title_id id изменяемого пункта меню
    * @param contacts Массив контактов права которых меняются
    */
@@ -212,9 +221,20 @@ export class MenuService {
 
   /**
    * тестовый гет запрос
-   * @returns 
    */
   getPermissions(id: string) {
     return this.http.get<Array<any>>(`/api/menu/modal/?itemId=${id}`)
+  }
+
+  /**
+   * Функция для изменения расположения пунктов меню
+   * @param elements в зависимости от значения change получем массив меняемых 
+   * элементов с разной структурой - NavItemNew или sendItems
+   * @param parent_id - передаётся id родителя для меняющегося пункта меню
+   * @param change если true мможет измениться как уровень расположения
+   *  пункта - level так и родитель пункта - parent_id
+   */
+  changeMenuStructure(elements: NavItemNew[] | sendItems[], parent_id: string, change: boolean) {
+    return this.http.post('/api/menu/changeStructure', [elements, parent_id, change])
   }
 }

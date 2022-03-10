@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MaterialService } from 'src/app/classes/material.service';
 import { MenuService } from 'src/app/services/menu.service';
+import { TemplatePageComponent } from '../template-page/template-page.component';
 
 @Component({
   selector: 'app-menu',
@@ -14,18 +15,44 @@ export class MenuComponent implements OnInit {
 
   constructor(public service: MenuService, private router: Router) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   setValue(value: string) {
     this.inputValue = value
   }
 
   add() {
-    let object = { title: this.inputValue, url: this.service.translit(this.inputValue), parent_id: null }
+    let arr = []
+    //Берём имеющиеся пункты меню для определения уровня элементов
+    this.service.menuItemsOld.forEach((item) => {
+      if (item.parent_id == null) {
+        arr.push(item)
+      }
+    })
+    let object = { title: this.inputValue, url: this.service.translit(this.inputValue), parent_id: null, level: (arr.length + 1).toString() }
+
+    //Изменяем мааасив permissions в localstorage
+    let permissions = JSON.parse(localStorage.getItem('permissions'))
+    permissions.push({ url: this.service.translit(this.inputValue), permissions: [false, true, false] })
+    localStorage.setItem('permissions', JSON.stringify(permissions))
+
+    //Формируем url для добавления в массив роутов
+    let url = this.service.translit(this.inputValue);
+    //Добавляем новый адрес в массив роутов
+    this.router.config.forEach((item) => {
+      if (item.canActivate) {
+        item.children.push({ path: url, component: TemplatePageComponent })
+      }
+    })
+
+    // this.service.menuItems = []
+    // this.service.menuItemsOld = []
     this.service.add(object).subscribe(
       newItem => {
         newItem.subtitle = []
         this.service.menuItems.push(newItem)
+        // this.service.dragDelete.push(newItem)
+        console.log(this.service.menuItems)
         MaterialService.toast('Изменения сохранены')
       },
       error => {

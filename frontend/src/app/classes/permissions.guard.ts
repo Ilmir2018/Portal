@@ -26,7 +26,7 @@ export class PermissionsGuard implements CanActivate {
             }
         })
         // console.log(permissions)
-        //Проверяем право на чтение, нужно затра создать защитника, для чтения страниц
+        //Проверяем право на чтение
         if(permission.permissions[0] !== true) {
             return of (true)
         } else {

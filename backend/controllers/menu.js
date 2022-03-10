@@ -4,7 +4,7 @@ const db = require('../posgres')
 
 module.exports.get = async function (req, res) {
     try {
-        const menus = await db.query("SELECT * FROM menu ORDER BY id")
+        const menus = await db.query("SELECT * FROM menu ORDER BY level")
         res.status(200).json(menus.rows)
     } catch (e) {
         errorHandler(res, e)
@@ -31,9 +31,9 @@ module.exports.update = async function (req, res) {
 
 module.exports.create = async function (req, res) {
     try {
-        const { title, url, parent_id } = req.body
-        const newMenu = await db.query('INSERT INTO menu (title, url, parent_id) VALUES ($1, $2, $3) RETURNING *',
-            [title, url, parent_id], (err, result) => {
+        const { title, url, parent_id, level } = req.body
+        const newMenu = await db.query('INSERT INTO menu (title, url, parent_id, level) VALUES ($1, $2, $3, $4) RETURNING *',
+            [title, url, parent_id, level], (err, result) => {
                 if (err) {
                     errorHandler(result, err)
                 } else {
@@ -93,7 +93,7 @@ module.exports.delete = async function (req, res) {
                 }
             })
         })
-        res.status(200).json('Удаление успешно!')
+        res.status(200).json('Удалено успешно')
     } catch (e) {
         errorHandler(res, e)
     }
@@ -114,6 +114,41 @@ module.exports.modal = async function (req, res) {
             return res.status(200).json({ message: 'Права контактов изменены!' })
         }
         return res.status(200).json({ message: 'Котакты не выбраны' })
+    } catch (e) {
+        errorHandler(res, e)
+    }
+}
+
+
+/**
+ * Функция для изменения порядка расположения пунктов меню
+ */
+module.exports.changeStructure = async function (req, res) {
+    try {
+        const elements = req.body[0], parent_id = req.body[1], change = req.body[2]
+        if (req.body[2]) {
+            elements.forEach((item, idx) => {
+                const structureChange = db.query('UPDATE menu set parent_id = $1, level = $2 where id = $3 RETURNING *',
+                    [parent_id, idx, item.id], (err, result) => {
+                        if (err) {
+                            console.log(err)
+                            errorHandler(result, err)
+                        }
+                    })
+            })
+        } else {
+            elements.forEach((item, idx) => {
+                const structureChange = db.query('UPDATE menu set level = $1 where id = $2 RETURNING *',
+                    [item.level, item.id], (err, result) => {
+                        if (err) {
+                            console.log(err)
+                            errorHandler(result, err)
+                        }
+                    })
+            })
+        }
+
+        return res.status(200).json({ message: 'Порядок меню изменён' })
     } catch (e) {
         errorHandler(res, e)
     }

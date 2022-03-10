@@ -6,6 +6,7 @@ import { AuthService } from './services/auth.service';
   template: '<router-outlet></router-outlet>'
 })
 export class AppComponent implements OnInit {
+
   constructor(private auth: AuthService){}
 
   ngOnInit() {

@@ -1,47 +1,52 @@
-ul{
-	list-style: none;
-	width: 200px;
-	color: #fff;
-    border-radius: 5px;
-    margin: 0 auto;
-}
-ul li{
-	position: relative;
+// ul{
+// 	list-style: none;
+// 	width: 200px;
+// 	color: #fff;
+//     border-radius: 5px;
+//     margin: 0 auto;
+// }
+// ul li{
+// 	position: relative;
 
-    .par {
-        position: absolute;
-        left: 80%;
-        top: 10px;
-    }
-}
-ul li:hover{
-}
-ul li:hover ul{
-	display: block;
-}
-ul li:hover ul li ul{
-}
-ul li a{
-	color: #fff;
-	padding: 10px 20px;
-	display: block;
-	text-decoration: none;
-	font-weight: bold;
-    border: 1px solid #2a323f;
-    border-radius: 5px;
-    background-color: #122C44;
-    margin-bottom: 5px;
-}
-ul li a:hover{
-	background-color: #5d99cf;
-	color: #fff;
-    border: 1px solid #2a323f;
-    border-radius: 5px;
-}
-ul li ul li:hover ul{
-	display: block;
-}
-ul li ul{
-    margin-left: 20px;
-}
+//     .par {
+//         position: absolute;
+//         left: 80%;
+//         top: 10px;
+//     }
+// }
+// ul li:hover{
+// }
+// ul li:hover ul{
+// 	display: block;
+// }
+// ul li:hover ul li ul{
+// }
+// ul li a{
+// 	color: #fff;
+// 	padding: 10px 20px;
+// 	display: block;
+// 	text-decoration: none;
+// 	font-weight: bold;
+//     border: 1px solid #2a323f;
+//     border-radius: 5px;
+//     background-color: #122C44;
+//     margin-bottom: 5px;
+// }
+// ul li a:hover{
+// 	background-color: #5d99cf;
+// 	color: #fff;
+//     border: 1px solid #2a323f;
+//     border-radius: 5px;
+// }
+// ul li ul li:hover ul{
+// 	display: block;
+// }
+// ul li ul{
+//     margin-left: 20px;
+// }
 
+// :host {
+//     display: block;
+//     margin: auto;
+//     max-width: 32em;
+// }

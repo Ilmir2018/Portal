@@ -14,27 +14,27 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  login(user: User):Observable<{token: string, role: string, id: string, permissions: any}> {
+  login(user: User): Observable<{ token: string, role: string, id: string, permissions: any }> {
     //Сохраняем в хранилище вводимый пароль для вывода его в профиле
     localStorage.setItem('password', user.password)
-    return this.http.post<{token: string, role: string, id: string, permissions: any}>('/api/auth/login', user)
-    .pipe(
-      tap(
-        ({token, role, id, permissions}) => {
-          let item = role
-          //Сохраняем в локальном хранилище токен, роль и id пользователя, а также массив объектов с доступами на страницы
-          localStorage.setItem('auth-token', token)
-          localStorage.setItem('role', item)
-          localStorage.setItem('id-user', id)
-          localStorage.setItem('permissions', JSON.stringify(permissions))
-          this.setToken(token)
-        }
+    return this.http.post<{ token: string, role: string, id: string, permissions: any }>('/api/auth/login', user)
+      .pipe(
+        tap(
+          ({ token, role, id, permissions }) => {
+            let item = role
+            //Сохраняем в локальном хранилище токен, роль и id пользователя, а также массив объектов с доступами на страницы
+            localStorage.setItem('auth-token', token)
+            localStorage.setItem('role', item)
+            localStorage.setItem('id-user', id)
+            localStorage.setItem('permissions', JSON.stringify(permissions))
+            this.setToken(token)
+          }
+        )
       )
-    )
   }
 
   register(user: User): Observable<User> {
-    return this.http.post<User>('/api/auth/register' ,user)
+    return this.http.post<User>('/api/auth/register', user)
   }
 
   setToken(token: string) {
@@ -51,6 +51,14 @@ export class AuthService {
 
   logout() {
     this.setToken(null)
-    localStorage.clear()
+    let storageItems = ['visibleColumns','id-user','widthScreen','password',
+    'auth-token','permissions','role'];
+    storageItems.forEach((item) => {
+      this.removeStorage(item)
+    })
+  }
+
+  private removeStorage(item: string) {
+    localStorage.removeItem(item)
   }
 }

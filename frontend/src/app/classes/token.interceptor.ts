@@ -28,6 +28,8 @@ export class TokenInterceptor implements HttpInterceptor {
 
     private handleAuthError(error: HttpErrorResponse): Observable<any> {
         if(error.status === 401) {
+            //ВЫзываем логаут чтобы стереть все ненужное из хранилища
+            this.auth.logout()
             this.router.navigate(['/login'], {
                 queryParams: {
                     sessionFailed: true

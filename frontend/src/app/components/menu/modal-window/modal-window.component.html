@@ -35,7 +35,7 @@
                 <div *ngIf="selectBlock" class="select-block">
                     <div *ngFor="let contact of service.contacts | search:searchStr | slice:0:4" (click)="checkContact(contact)"
                         class="select-block_list">
-                        <p class="select-block_list name">{{contact.name}}</p>
+                        <p *ngIf="contact.name" class="select-block_list name">{{contact.name}}</p>
                         <span class="select-block_list email">{{contact.email}}</span>
                     </div>
                 </div>
@@ -67,13 +67,13 @@
                     <div *ngFor="let contact of service.contacts" class="list__point">
                         <div *ngIf="!contact.permissions[0]" class="list__point">
                             <div class="list__point-info">
-                                <p class="list__point-info name">{{contact.name}}</p>
+                                <p *ngIf="contact.name" class="list__point-info name">{{contact.name}}</p>
                                 <span class="list__point-info email">{{contact.email}}</span>
                             </div>
                             <div class="list__point-permissions">
                                 <mat-form-field appearance="fill">
                                     <mat-label>Change permission</mat-label>
-                                    <mat-select formControlName="{{contact.name}}">
+                                    <mat-select formControlName="{{contact.email}}">
                                         <mat-option class="mat-select" *ngFor="let permission of service.permissions"
                                             [value]="permission.value" (click)="changePermission()">
                                             {{permission.name}}

@@ -79,7 +79,7 @@ module.exports.create = async function (req, res) {
                                     result3.rows.forEach((item) => {
                                         db.query(
                                             `INSERT INTO roles (user_id, title_id, permissions)
-                                            VALUES ($1, $2, $3) RETURNING *`, [result.rows[0].id, item.id, [true, false, false]],
+                                            VALUES ($1, $2, $3) RETURNING *`, [result.rows[0].id, item.id, [false, true, false]],
                                             (err, result4) => {
                                                 if (err) {
                                                     errorHandler(result4, err)
