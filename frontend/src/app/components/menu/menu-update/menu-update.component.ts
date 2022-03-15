@@ -20,9 +20,6 @@ export interface sendItems {
 
 export class MenuUpdateComponent implements OnInit {
 
-  // @Input() public menuItems: NavItemNew;
-
-  public data: Array<NavItemNew> = [];
   //Массив для отправки на бек, для изменения значения level
   private sendArray: Array<sendItems> = [];
   public invert: boolean = true;
@@ -31,9 +28,7 @@ export class MenuUpdateComponent implements OnInit {
   constructor(public service: MenuService, public contactService: ContactsService) { }
 
   ngOnInit(): void {
-    this.data = this.service.menuItems
     this.onDragDrop$.subscribe(this.onDragDrop);
-    this.service.dragDelete = this.data
   }
 
   private onDragDrop = (event: CdkDragDrop<Array<NavItemNew>>) => {

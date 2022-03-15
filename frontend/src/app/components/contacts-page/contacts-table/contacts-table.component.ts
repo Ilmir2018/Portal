@@ -262,7 +262,6 @@ export class ContactsTableComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    console.log('ngOnDestroy')
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });

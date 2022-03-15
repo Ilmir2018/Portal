@@ -30,7 +30,6 @@ export class MenuUpdateItemComponent implements OnInit {
     this.service.settingsItem = item
     let permissions = JSON.parse(localStorage.getItem('permissions'))
     let permission;
-    console.log(permissions)
     //Получаем массив разрешений на (чтение, запись и удаление)
     permissions.forEach((item) => {
       if (item.url == this.service.settingsItem.url) {

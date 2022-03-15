@@ -29,13 +29,11 @@ export class MenuComponent implements OnInit {
         arr.push(item)
       }
     })
-    let object = { title: this.inputValue, url: this.service.translit(this.inputValue), parent_id: null, level: (arr.length + 1).toString() }
-
+    let forBack = { title: this.inputValue, url: this.service.translit(this.inputValue), parent_id: null, level: (arr.length).toString() }
     //Изменяем мааасив permissions в localstorage
     let permissions = JSON.parse(localStorage.getItem('permissions'))
     permissions.push({ url: this.service.translit(this.inputValue), permissions: [false, true, false] })
     localStorage.setItem('permissions', JSON.stringify(permissions))
-
     //Формируем url для добавления в массив роутов
     let url = this.service.translit(this.inputValue);
     //Добавляем новый адрес в массив роутов
@@ -44,15 +42,11 @@ export class MenuComponent implements OnInit {
         item.children.push({ path: url, component: TemplatePageComponent })
       }
     })
-
-    // this.service.menuItems = []
-    // this.service.menuItemsOld = []
-    this.service.add(object).subscribe(
+    this.service.add(forBack).subscribe(
       newItem => {
         newItem.subtitle = []
         this.service.menuItems.push(newItem)
-        // this.service.dragDelete.push(newItem)
-        console.log(this.service.menuItems)
+        this.service.menuItemsOld.push(newItem)
         MaterialService.toast('Изменения сохранены')
       },
       error => {

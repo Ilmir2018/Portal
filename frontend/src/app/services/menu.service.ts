@@ -25,8 +25,6 @@ export class MenuService {
   permissionForm: FormGroup;
   form: FormGroup;
 
-  dragDelete: any
-
   permissions: Array<any> = [
     { name: 'Нет прав', value: 'none' },
     { name: 'Читатель', value: 'read' },
@@ -46,7 +44,6 @@ export class MenuService {
       delete: false,
     });
     this.permissionForm = new FormGroup({})
-    console.log(this.router.config)
   }
 
   /**

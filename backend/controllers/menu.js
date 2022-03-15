@@ -60,6 +60,7 @@ module.exports.create = async function (req, res) {
                             });
                         }
                     })
+                    console.log(result.rows[0])
                     res.status(200).json(result.rows[0])
                 }
             })
@@ -74,17 +75,20 @@ module.exports.delete = async function (req, res) {
         let mystr = req.query.arrayItems
         //Превращаем её в масси в с разделителем в виде запятой
         let arr = mystr.split(',');
+        console.log(arr)
         arr.forEach((item) => {
             //Удаляем сначала записи из таблицы ролей для контакта
             const roleItems = db.query('DELETE FROM roles WHERE title_id = $1 RETURNING *', [item], (err, result) => {
                 if (err) {
                     errorHandler(result, err)
+                    console.log('err roles', err)
                 } else {
                     //Затем удаляем сами пункты меню
                     const menuItem = db.query(`DELETE FROM menu WHERE id = $1 RETURNING *
                 `, [item], (err, result2) => {
                         if (err) {
                             errorHandler(result2, err)
+                            console.log('err menu', err)
                         }
                         else {
                             console.log(result2.rows)

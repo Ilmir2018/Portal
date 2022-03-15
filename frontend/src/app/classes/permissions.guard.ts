@@ -27,7 +27,7 @@ export class PermissionsGuard implements CanActivate {
         })
         // console.log(permissions)
         //Проверяем право на чтение
-        if(permission.permissions[0] !== true) {
+        if(permission.permissions[1] == true || permission.permissions[2] == true) {
             return of (true)
         } else {
             this.router.navigate([], {
