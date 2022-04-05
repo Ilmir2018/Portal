@@ -6,6 +6,7 @@ const path = require("path")
 const authRoutes = require('./routes/auth')
 const contactsRoutes = require('./routes/contacts')
 const menuRoutes = require('./routes/menu')
+const dataRoutes = require('./routes/data')
 
 const app = express()
 
@@ -22,6 +23,7 @@ app.use(require('cors')())
 app.use('/api/auth', authRoutes)
 app.use('/api/contacts', contactsRoutes)
 app.use('/api/menu', menuRoutes)
+app.use('/api/dannye', dataRoutes)
 
 if(process.env.NODE_ENV === 'production') {
     app.use(express.static('client'))

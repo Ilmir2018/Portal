@@ -32,6 +32,9 @@ import { DragAndDropDirective, DragAndDropRootDirective } from './classes/drag-a
 import { MenuItemComponent } from './components/template-page/menu-item/menu-item.component';
 import { DragAndDropService } from './services/drag-and-drop.service';
 import { MenuUpdateItemComponent } from './components/menu/menu-update/menu-update-item/menu-update-item.component';
+import { DataChangesComponent } from './components/data-changes/data-changes.component';
+import { DataTypesComponent } from './components/data-changes/data-types/data-types.component';
+import { AppDataComponent } from './components/data-changes/app-data/app-data.component';
 
 @NgModule({
   declarations: [
@@ -58,7 +61,10 @@ import { MenuUpdateItemComponent } from './components/menu/menu-update/menu-upda
     MenuItemComponent,
     DragAndDropDirective,
     DragAndDropRootDirective,
-    MenuUpdateItemComponent
+    MenuUpdateItemComponent,
+    DataChangesComponent,
+    DataTypesComponent,
+    AppDataComponent
   ],
   imports: [
     BrowserModule,

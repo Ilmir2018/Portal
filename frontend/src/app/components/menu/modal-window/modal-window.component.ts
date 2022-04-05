@@ -59,7 +59,7 @@ export class ModalWindowComponent implements OnInit {
   /**
    * Функция для изменения прав пользователей
    */
-  changePermissions() {
+  changePermissions(): void {
     //Массив для заполнения
     let permissionsArr = []
     //Сохраняем в переменную объект с правами, полученный из формы
@@ -101,7 +101,7 @@ export class ModalWindowComponent implements OnInit {
    * Функция обновления объекта в базе
    * @param item Обновляемый объект
    */
-  save(item) {
+  save(item): void {
     item.title = this.inputValue
     item.url = this.service.translit(this.inputValue)
     this.service.update(item).subscribe(
@@ -117,7 +117,7 @@ export class ModalWindowComponent implements OnInit {
    * Функция добавления дочерних пунктов меню
    * @param item пункт меню, в который мы добавляем подпункт
    */
-  add(item: NavItemNew) {
+  add(item: NavItemNew): void {
     let arr = []
     //Берём имеющиеся пункты меню для определения уровня элементов
     this.service.menuItemsOld.forEach((element) => {
@@ -164,7 +164,7 @@ export class ModalWindowComponent implements OnInit {
    * @param element елемент в который добавляется подпункт
    * @param object добавляемый элемент
    */
-  addItem(items: NavItemNew[], element: NavItemNew, object: NavItemNew) {
+  addItem(items: NavItemNew[], element: NavItemNew, object: NavItemNew): void {
     items.forEach((item) => {
       if (item.id == element.id) {
         item.subtitle.push(object)
@@ -178,7 +178,7 @@ export class ModalWindowComponent implements OnInit {
    * Функция удаления дочерних пунктов меню
    * @param item удаляемый пункт
    */
-  remove(item: NavItemNew) {
+  remove(item: NavItemNew): void {
     const decision = window.confirm(`Вы уверены что хотите удалить этот пункт меню?`)
     if (decision) {
       this.removingArr = []
@@ -228,7 +228,7 @@ export class ModalWindowComponent implements OnInit {
    * @param items массив пунктов в которм ищем элемент
    * @param element искомый пункт меню, который удаляем 
    */
-  removeItem(items: NavItemNew[], element: NavItemNew) {
+  removeItem(items: NavItemNew[], element: NavItemNew): void {
     items.forEach((item) => {
       if (items.includes(element)) {
         let idx = items.findIndex(p => p.id === element.id)
@@ -244,7 +244,7 @@ export class ModalWindowComponent implements OnInit {
    * если таковые имеются
    * @param item пунтк или подпункт меню
    */
-  private recursionFunc(item: NavItemNew) {
+  private recursionFunc(item: NavItemNew): void {
     this.service.menuItemsOld.forEach((item2) => {
       if (item2.parent_id == item.id) {
         this.removingArr.push(item2)
@@ -253,7 +253,7 @@ export class ModalWindowComponent implements OnInit {
     })
   }
 
-  addNew(item: NavItemNew) {
+  addNew(item: NavItemNew): void {
     this.data = item
     this.newItem = true;
   }
@@ -262,7 +262,7 @@ export class ModalWindowComponent implements OnInit {
    * Функция закрытия модального окна, в котором
    * обнуляются многие используемые флаги
    */
-  closeModal() {
+  closeModal(): void {
     //Очищаем массив контактов
     this.service.contacts = []
     //Обновляю контролы формы
@@ -286,11 +286,11 @@ export class ModalWindowComponent implements OnInit {
     document.body.classList.remove('hidden')
   }
 
-  closeAddModal() {
+  closeAddModal(): void {
     this.newItem = false
   }
 
-  setValue(value: string) {
+  setValue(value: string): void {
     this.inputValue = value
   }
 
@@ -298,7 +298,7 @@ export class ModalWindowComponent implements OnInit {
    * Функция для открытия/закрытия списка контактов
    * @param event событие клика мыши
    */
-  loadList(event: MouseEvent) {
+  loadList(event: MouseEvent): void {
     if (event.target['className'] == 'select-input') {
       this.selectBlock = true
     } else {
@@ -310,14 +310,14 @@ export class ModalWindowComponent implements OnInit {
    * Функция выбора одного контакта для добавления в список
    * @param contact выбираемый контакт
    */
-  checkContact(contact: UserRole) {
+  checkContact(contact: UserRole): void {
     this.contact = contact
     this.selectUser = true
     this.userName = contact.email
   }
 
   //Функция добавления юзера с правами (читатель, редактор) в общий список
-  addUser() {
+  addUser(): void {
     if (this.selectName.value == 'read') {
       this.contact.permissions = [false, true, false]
     } else {
@@ -337,7 +337,7 @@ export class ModalWindowComponent implements OnInit {
   /**
    * Закрытие окно добавления нового контакта в список
    */
-  cancel() {
+  cancel(): void {
     this.selectUser = false
   }
 
@@ -346,7 +346,7 @@ export class ModalWindowComponent implements OnInit {
    * первый - это объект который есть при открытии окна редактирования изначально
    * и второй - тот который будет получаться в результате изменений
    */
-  changePermission() {
+  changePermission(): void {
     if (JSON.stringify(this.service.permissionForm.value) != localStorage.getItem('permission')) {
       this.permissionChange = true;
     } else {
@@ -359,7 +359,7 @@ export class ModalWindowComponent implements OnInit {
    * (мы применяем пайп фильтрации и пайп ограничения элементов в списке)
    * @param filterValue значение которое мы получаем из инпута
    */
-  applyFilter(filterValue: string) {
+  applyFilter(filterValue: string): void {
     this.searchStr = filterValue
   }
 

@@ -8,6 +8,9 @@ import { ContactsEditComponent } from './components/contacts-page/contacts-edit/
 
 import { ContactsPageComponent } from './components/contacts-page/contacts-page.component';
 import { NewContactComponent } from './components/contacts-page/new-contact/new-contact.component';
+import { AppDataComponent } from './components/data-changes/app-data/app-data.component';
+import { DataChangesComponent } from './components/data-changes/data-changes.component';
+import { DataTypesComponent } from './components/data-changes/data-types/data-types.component';
 import { LoginPageComponent } from './components/login-page/login-page.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { ProfilePageComponent } from './components/profile-page/profile-page.component';
@@ -30,6 +33,12 @@ const routes: Routes = [
       { path: 'menu', component: MenuComponent, canActivate: [PermissionsGuard] },
       { path: 'profile', component: ProfilePageComponent },
       { path: 'contacts', component: ContactsPageComponent },
+      {
+        path: 'dannye', component: DataChangesComponent, canActivate: [RoleGuard], children: [
+          { path: 'data', component: AppDataComponent },
+          { path: 'types', component: DataTypesComponent }
+        ]
+      },
       { path: 'contacts/new', component: NewContactComponent, canActivate: [RoleGuard] },
       { path: 'contacts/edit', component: ContactsEditComponent, canActivate: [RoleGuard] },
       { path: 'contacts/:id', component: ContactPageComponent, canActivate: [RoleGuard] },
@@ -43,5 +52,5 @@ const routes: Routes = [
 })
 
 
-export class AppRoutingModule {}
+export class AppRoutingModule { }
 

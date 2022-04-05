@@ -1,0 +1,70 @@
+<div class="page-container">
+    <h3 class="page-container_title">Custom data type</h3>
+    <div class="data_types" *ngFor="let item of dataTypes">
+        <button class="data_types-btn" (click)="changeType(item.title)">{{item.title}}</button>
+    </div>
+    <div class="fields_for-type">
+        <p> Fields for type</p>
+        <div class="input-field">
+            <span class="input-field_text">Type name</span>
+            <input type="text" id="type_name" value="{{typeName}}">
+        </div>
+        <div class="fields" *ngFor="let item of fields">
+            <p class="field_name">{{item.column_name}}</p>
+            <p class="field_type">{{item.data_type}}</p>
+        </div>
+        <button class="btn" (click)="toggleModal()" [disabled]="fields.length == 0">Create new field</button>
+    </div>
+</div>
+
+<div class="new-type">
+    <p class="new-type_title">New Type</p>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="input-field">
+            <input formControlName="type" id="type" type="text"
+                [ngClass]="{'invalid': form.get('type').invalid && form.get('type').touched}">
+            <label for="email">Add new type:</label>
+        </div>
+        <div class="new-type_submit">
+            <button type="submit" class="modal-action btn waves-effect" [disabled]="form.invalid || form.disabled">
+                Create
+            </button>
+        </div>
+    </form>
+</div>
+
+
+
+<ng-container *ngIf="modal">
+    <div class="modal">
+        <form [formGroup]="field" (ngSubmit)="addField()">
+            <p>New field</p>
+            <div class="input-field">
+                <input formControlName="name" id="name" type="text"
+                    [ngClass]="{'invalid': field.get('name').invalid && field.get('name').touched}">
+                <label for="email">Name</label>
+            </div>
+            <mat-form-field appearance="fill">
+                <mat-label>Choose type</mat-label>
+                <mat-select formControlName="type" name="type" >
+                    <mat-option *ngFor="let type of types" [value]="type" (click)="choose(type)">
+                        {{type}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <div *ngIf="charType" class="input-field">
+                <input formControlName="countChar" id="countChar" type="number" min="1" max="255" step="1"
+                    [ngClass]="{'invalid': field.get('countChar').invalid && field.get('countChar').touched}">
+                <label for="email">Count</label>
+            </div>
+            <div class="modal-btn">
+                <button type="submit" class="modal-action btn waves-effect" [disabled]="field.invalid || field.disabled">
+                    Create
+                </button>
+                <button type="button" class="btn close" (click) = "toggleModal()">Close</button>
+            </div>
+        </form>
+    </div>
+    <div class="shadow"></div>
+</ng-container>
+

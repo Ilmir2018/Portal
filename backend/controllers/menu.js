@@ -25,6 +25,7 @@ module.exports.update = async function (req, res) {
             [title, url, id])
         res.status(200).json(menu.rows[0])
     } catch (e) {
+        console.log(e)
         errorHandler(res, e)
     }
 }
