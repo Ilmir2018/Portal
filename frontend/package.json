@@ -26,6 +26,7 @@
     "ag-grid-angular": "^25.3.0",
     "ag-grid-community": "^25.3.0",
     "colresizable": "^1.6.0",
+    "faker": "^6.6.6",
     "jquery": "^3.6.0",
     "materialize-css": "^1.0.0-rc.2",
     "ngx-pagination": "^5.1.1",
@@ -34,6 +35,7 @@
     "socket.io-client": "^4.4.1",
     "tslib": "^2.0.0",
     "ws": "^8.5.0",
+    "xlsx": "^0.18.5",
     "zone.js": "~0.11.3"
   },
   "devDependencies": {

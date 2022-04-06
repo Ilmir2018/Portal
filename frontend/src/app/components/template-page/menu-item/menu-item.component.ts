@@ -9,10 +9,6 @@ import { NavItemNew } from 'src/app/interfaces';
   styleUrls: ['./menu-item.component.scss']
 })
 export class MenuItemComponent implements OnInit {
-
-  @Input('onDragDrop') public onDragDrop$!: Subject<CdkDragDrop<Array<NavItemNew>>>;
-  @Input() item!: NavItemNew;
-  @Input() invert!: boolean;
   
   constructor() { }
 

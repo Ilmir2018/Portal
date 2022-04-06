@@ -1,8 +1,14 @@
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { Component, OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
-import { NavItemNew } from 'src/app/interfaces';
+import { ExcelService } from 'src/app/services/excel.service';
 import { MenuService } from 'src/app/services/menu.service';
+
+
+export class Contact {
+  name: string = "";
+  email: string = "";
+  phone: string = "";
+  address: string = "";
+}
 
 @Component({
   selector: 'app-template-page',
@@ -12,46 +18,53 @@ import { MenuService } from 'src/app/services/menu.service';
 
 export class TemplatePageComponent implements OnInit {
 
-  public data: Array<NavItemNew> = [];
+  importContacts: any[] = [];
+  exportContacts: Contact[] = [];
+  Data = []
 
-  public invert: boolean = true;
-  public onDragDrop$ = new Subject<CdkDragDrop<Array<NavItemNew>>>();
-
-  constructor(private service: MenuService){
+  constructor(private service: MenuService, private excelSrv: ExcelService) {
   }
 
   ngOnInit(): void {
-      this.data = this.service.menuItems
-
-      this.onDragDrop$.subscribe(this.onDragDrop);
+    for (let index = 0; index < 10; index++) {
+      const contact = new Contact();
+      contact.name = 'faker.name.findName()';
+      contact.phone = 'faker.phone.phoneNumber()';
+      contact.email = 'faker.internet.email()';
+      contact.address = 'faker.address.streetAddress()';
+      this.exportContacts.push(contact);
+    }
   }
 
-  private onDragDrop = (event: CdkDragDrop<Array<NavItemNew>>) => {
-    if (event.container === event.previousContainer) {
-      //Если мы перемещаем элемент на одном уровне, не меняя его вложенность
-      //Здесь будет меняться только значение level, тоесть порядок на одном уровне вложенности
-      console.log('moveItemInArray')
-      // console.log('event.container', event.container)
-      // console.log('event.previousContainer', event.previousContainer)
-      moveItemInArray(
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
-    } else {
-      //Если мы меняем вложенность элемента, либо выше либо ниже
-      //Здесь будет меняться и level и parent_id
-      console.log('transferArrayItem')
-      // //Контейнер куда перемещаем элемент
-      // console.log('event.container', event.container)
-      // //Контейнер откуда перемещаем элемент
-      // console.log('event.previousContainer', event.previousContainer)
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
-    }
-  };
+  onFileChange(evt: any) {
+    const target: DataTransfer = <DataTransfer>(evt.target);
+    if (target.files.length !== 1) throw new Error('Cannot use multiple files');
+
+    const reader: FileReader = new FileReader();
+    reader.onload = (e: any) => {
+
+      const bstr: string = e.target.result;
+      const data = <any[]>this.excelSrv.importFromFile(bstr);
+
+      data[0].forEach((item) => {
+        this.Data.push(item) 
+      })
+
+      const importedData = data.slice(1, -1);
+      this.importContacts = importedData.map(arr => {
+        const obj = {};
+        for (let i = 0; i < this.Data.length; i++) {
+          const k = this.Data[i];
+          obj[k] = arr[i];
+        }
+        return <any>obj;
+      })
+    };
+    reader.readAsBinaryString(target.files[0]);
+
+  }
+
+  exportData(tableId: string) {
+    this.excelSrv.exportToFile("contacts", tableId);
+  }
 }
