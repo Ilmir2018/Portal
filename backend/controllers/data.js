@@ -1,5 +1,6 @@
 const errorHandler = require('../utils/errorHandler')
 const db = require('../posgres')
+const importData = require('../otherFunctions/importTable')
 
 
 module.exports.get = async function (req, res) {
@@ -64,7 +65,7 @@ module.exports.addUpdateField = async function (req, res) {
         const { changes, action } = req.body
         if (action) {
             //Создаём новую строку в таблице
-            const newRow = await db.query(`INSERT INTO ${changes[3].table} (${changes[2].column}) VALUES ($1) RETURNING *`,
+            const newRow = await db.query(`INSERT INTO ${changes[3].table} ("${changes[2].column}") VALUES ($1) RETURNING *`,
                 [changes[0].changes], (err, result) => {
                     if (err) {
                         console.log(err)
@@ -75,9 +76,10 @@ module.exports.addUpdateField = async function (req, res) {
                 })
         } else {
             //Редактируем имеющуюся строку в таблице
-            const currentRow = await db.query(`UPDATE ${changes[3].table} SET ${changes[2].column} = 
+            const currentRow = await db.query(`UPDATE ${changes[3].table} SET "${changes[2].column}" = 
             $1 where id = ${changes[1].id} RETURNING *`, [changes[0].changes], (err, result) => {
                 if (err) {
+                    console.log(err)
                     errorHandler(result, err)
                 } else {
                     return res.status(200).json(result.rows)
@@ -121,18 +123,18 @@ module.exports.createField = async function (req, res) {
     }
 }
 
-
-module.exports.update = async function (req, res) {
+module.exports.addImportingData = async function (req, res) {
     try {
-
-    } catch (e) {
-        errorHandler(res, e)
-    }
-}
-
-module.exports.delete = async function (req, res) {
-    try {
-
+        const { tableName, columns, data } = req.body
+        //Создание таблицы в бд
+        importData.importTable(tableName, columns, data)
+        const addData = db.query('INSERT INTO data (title) VALUES ($1) RETURNING *',
+            [tableName], (err, result) => {
+                if (err) {
+                    errorHandler(result, err)
+                } else { }
+            })
+        return res.status(200).json("Успех!")
     } catch (e) {
         errorHandler(res, e)
     }

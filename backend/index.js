@@ -1,4 +1,6 @@
 const app = require('./app')
+// const reader = require('xlsx')
+// const cron = require('node-cron');
 
 const port = process.env.PORT || 5000
 
@@ -24,3 +26,13 @@ io.on('connection', (soket) => {
 // exports.soketServer = function () {
 //     return io;
 // };
+
+// console.log(file)
+
+// const file = reader.readFile(`C:/Users/asu-KiyametdinovIH/Downloads/main.xlsx`)
+
+// const sheets = file.SheetNames
+
+// // cron.schedule('1 * * * * *', function () {
+// //     console.log(sheets)
+// // });

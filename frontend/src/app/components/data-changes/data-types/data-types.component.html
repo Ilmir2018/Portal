@@ -33,7 +33,18 @@
     </form>
 </div>
 
-
+<div class="new-type">
+    <p class="new-type_title">Import new type</p>
+    <div class="tools">
+        <button>
+            <label>
+                <span class="mdi mdi-file-export"> </span>
+                <small>Import</small>
+                <input hidden type="file" (change)="chooseTheList($event)" multiple="false">
+            </label>
+        </button>
+    </div>
+</div>
 
 <ng-container *ngIf="modal">
     <div class="modal">
@@ -46,7 +57,7 @@
             </div>
             <mat-form-field appearance="fill">
                 <mat-label>Choose type</mat-label>
-                <mat-select formControlName="type" name="type" >
+                <mat-select formControlName="type" name="type">
                     <mat-option *ngFor="let type of types" [value]="type" (click)="choose(type)">
                         {{type}}
                     </mat-option>
@@ -58,13 +69,42 @@
                 <label for="email">Count</label>
             </div>
             <div class="modal-btn">
-                <button type="submit" class="modal-action btn waves-effect" [disabled]="field.invalid || field.disabled">
+                <button type="submit" class="modal-action btn waves-effect"
+                    [disabled]="field.invalid || field.disabled">
                     Create
                 </button>
-                <button type="button" class="btn close" (click) = "toggleModal()">Close</button>
+                <button type="button" class="btn close" (click)="toggleModal()">Close</button>
             </div>
         </form>
     </div>
     <div class="shadow"></div>
 </ng-container>
 
+<ng-container *ngIf="listsModal">
+    <div class="modal">
+        <form [formGroup]="listForm" (ngSubmit)="onFileChange()">
+            <p>Choose the list</p>
+            <mat-form-field appearance="fill">
+                <mat-label>Choose list</mat-label>
+                <mat-select formControlName="list" name="type">
+                    <mat-option *ngFor="let list of listNames" [value]="list" (click)="choose(list)">
+                        {{list}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <div class="input-field">
+                <label for="countRows">Count</label>
+                <input formControlName="countRows" id="countRows" type="number" min="1" max="255" step="1"
+                    [ngClass]="{'invalid': listForm.get('countRows').invalid && listForm.get('countRows').touched}">
+            </div>
+            <div class="modal-btn">
+                <button type="submit" class="modal-action btn waves-effect"
+                    [disabled]="listForm.invalid || listForm.disabled">
+                    Import File
+                </button>
+                <button type="button" class="btn close" (click)="toggleListsModal()">Cancel</button>
+            </div>
+        </form>
+    </div>
+    <div class="shadow"></div>
+</ng-container>

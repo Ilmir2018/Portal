@@ -28,41 +28,41 @@ export class TemplatePageComponent implements OnInit {
   ngOnInit(): void {
     for (let index = 0; index < 10; index++) {
       const contact = new Contact();
-      contact.name = 'faker.name.findName()';
-      contact.phone = 'faker.phone.phoneNumber()';
-      contact.email = 'faker.internet.email()';
-      contact.address = 'faker.address.streetAddress()';
+      contact.name = 'name';
+      contact.phone = 'phone';
+      contact.email = 'email';
+      contact.address = 'address';
       this.exportContacts.push(contact);
     }
   }
 
-  onFileChange(evt: any) {
-    const target: DataTransfer = <DataTransfer>(evt.target);
-    if (target.files.length !== 1) throw new Error('Cannot use multiple files');
+  // onFileChange(evt: any) {
+  //   const target: DataTransfer = <DataTransfer>(evt.target);
+  //   if (target.files.length !== 1) throw new Error('Cannot use multiple files');
 
-    const reader: FileReader = new FileReader();
-    reader.onload = (e: any) => {
+  //   const reader: FileReader = new FileReader();
+  //   reader.onload = (e: any) => {
 
-      const bstr: string = e.target.result;
-      const data = <any[]>this.excelSrv.importFromFile(bstr);
+  //     const bstr: string = e.target.result;
+  //     const data = <any[]>this.excelSrv.importFromFile(bstr);
 
-      data[0].forEach((item) => {
-        this.Data.push(item) 
-      })
+  //     data[0].forEach((item) => {
+  //       this.Data.push(item) 
+  //     })
 
-      const importedData = data.slice(1, -1);
-      this.importContacts = importedData.map(arr => {
-        const obj = {};
-        for (let i = 0; i < this.Data.length; i++) {
-          const k = this.Data[i];
-          obj[k] = arr[i];
-        }
-        return <any>obj;
-      })
-    };
-    reader.readAsBinaryString(target.files[0]);
+  //     const importedData = data.slice(1, -1);
+  //     this.importContacts = importedData.map(arr => {
+  //       const obj = {};
+  //       for (let i = 0; i < this.Data.length; i++) {
+  //         const k = this.Data[i];
+  //         obj[k] = arr[i];
+  //       }
+  //       return <any>obj;
+  //     })
+  //   };
+  //   reader.readAsBinaryString(target.files[0]);
 
-  }
+  // }
 
   exportData(tableId: string) {
     this.excelSrv.exportToFile("contacts", tableId);

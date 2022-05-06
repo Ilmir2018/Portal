@@ -51,6 +51,7 @@ export class MenuUpdateComponent implements OnInit {
       //Если мы меняем вложенность элемента, либо выше либо ниже
       //Здесь будет меняться и level и parent_id
       setTimeout(() => {
+        console.log(event.container.id)
         if (event.container.id == "cdk-drop-list-0") {
           this.transferArray(event.container.data, null)
         } else {

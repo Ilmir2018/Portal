@@ -35,6 +35,7 @@ import { MenuUpdateItemComponent } from './components/menu/menu-update/menu-upda
 import { DataChangesComponent } from './components/data-changes/data-changes.component';
 import { DataTypesComponent } from './components/data-changes/data-types/data-types.component';
 import { AppDataComponent } from './components/data-changes/app-data/app-data.component';
+import { TriggersPageComponent } from './components/triggers-page/triggers-page.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,8 @@ import { AppDataComponent } from './components/data-changes/app-data/app-data.co
     MenuUpdateItemComponent,
     DataChangesComponent,
     DataTypesComponent,
-    AppDataComponent
+    AppDataComponent,
+    TriggersPageComponent
   ],
   imports: [
     BrowserModule,

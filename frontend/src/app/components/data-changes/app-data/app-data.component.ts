@@ -1,15 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from 'src/app/services/data.service';
-import { NewTable } from '../data-types/data-types.component';
+import { DataFields, NewTable } from 'src/app/interfaces';
 import { MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs';
 import { GridColumnDefinition } from 'src/app/interfaces';
 
 
-export interface DataFields {
-  fields: any
-  data: any
-}
 
 @Component({
   selector: 'app-app-data',
@@ -17,7 +13,7 @@ export interface DataFields {
   styleUrls: ['./app-data.component.scss']
 })
 
-export class AppDataComponent implements OnInit {
+export class AppDataComponent implements OnInit, OnDestroy {
 
   //Изеняемая таблица
   type: string
@@ -51,7 +47,13 @@ export class AppDataComponent implements OnInit {
       this.columns = []
       //Создаём колонки с помощью значения, приходящего с бэка
       data.fields.forEach((item, idx) => {
-        this.columns.push({ field: item.name, width: 100 / data.fields.length, name: item.name, show: true, order: idx })
+        let divider = 10
+        if (data.fields.length > 4 && data.fields.length < 8) {
+          divider = 15
+        } else if (data.fields.length > 8) {
+          divider = 30
+        }
+        this.columns.push({ field: item.name, width: 100 * data.fields.length / divider, name: item.name, show: true, order: idx })
       })
       this.setDisplayedColumns();
       //Добавляем пустую строку снизу
@@ -98,13 +100,18 @@ export class AppDataComponent implements OnInit {
     if (row.id == undefined) {
       this.service.addUpdateField(data, true).subscribe((data) => {
         //Добавляем новую строчку на фронте
-        console.log(data)
+        this.dataSource.data.push(data)
         this.dataSource._updateChangeSubscription()
       })
     } else {
       this.service.addUpdateField(data, false).subscribe((data) => {
-        console.log(data)
       })
+    }
+  }
+
+  ngOnDestroy(): void {
+    if(this.oSub) {
+      this.oSub.unsubscribe()
     }
   }
 

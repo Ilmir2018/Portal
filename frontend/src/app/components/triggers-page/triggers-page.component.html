@@ -1,0 +1,71 @@
+<div class="triggers_container">
+    <h2 class="triggers_title">Triggers</h2>
+    <div class="triggers_cont">
+        <div class="triggers">
+            <div *ngFor="let trigger of triggers" class="trigger_cont">
+                <p class="trigger_id">{{trigger?.id}}</p>
+                <p class="trigger_update">{{trigger.list_name}}</p>
+                <p class="trigger_update">{{trigger.decryption}}</p>
+            </div>
+        </div>
+        <div class="new_trigger">
+            <button class="btn" (click)="toggleListsModal()">Новый триггер</button>
+        </div>
+    </div>
+</div>
+
+
+<ng-container *ngIf="showModal">
+    <div class="modal">
+        <form [formGroup]="triggerForm" (ngSubmit)="addNewTrigger()">
+            <p>Choose the list</p>
+            <mat-form-field appearance="fill">
+                <mat-label>Choose table</mat-label>
+                <mat-select formControlName="table" name="table">
+                    <mat-option *ngFor="let table of tableNames" [value]="table.title">
+                        {{table.title}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Choose frequency</mat-label>
+                <mat-select formControlName="frequency" name="frequency">
+                    <mat-option *ngFor="let frequency of frequencyUpdate" [value]="frequency">
+                        {{frequency}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <div class="input__wrapper">
+                <input formControlName="importFile" name="file" id="file_name" type="file" name="file" id="input__file" class="input input__file" multiple
+                    (change)="chooseTheList($event)">
+                <label for="input__file" class="input__file-button">
+                    <span class="input__file-button-text">Файл</span>
+                </label>
+            </div>
+            <div *ngIf="showLists">
+                <mat-form-field appearance="fill">
+                    <mat-label>Choose list</mat-label>
+                    <mat-select formControlName="list" name="type">
+                        <mat-option *ngFor="let list of lists" [value]="list">
+                            {{list}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <div class="input-field">
+                    <label for="countRows">Count</label>
+                    <input formControlName="countRows" id="countRows" type="number" min="1" max="255" step="1"
+                        [ngClass]="{'invalid': triggerForm.get('countRows').invalid && triggerForm.get('countRows').touched}">
+                </div>
+            </div>
+            <div class="modal-btn">
+                <button type="submit" class="modal-action btn waves-effect"
+                    [disabled]="triggerForm.invalid || triggerForm.disabled">
+                    Import File
+                </button>
+                <button type="button" class="btn close" (click)="toggleListsModal()">Cancel</button>
+            </div>
+        </form>
+
+    </div>
+    <div class="shadow"></div>
+</ng-container>

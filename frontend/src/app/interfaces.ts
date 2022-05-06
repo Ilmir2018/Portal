@@ -74,3 +74,24 @@ export interface ContactField {
     field: string
     filter: boolean
 }
+
+export interface NewTable {
+    title: string
+  }
+  
+  export interface Field {
+    column_name: string
+    data_type: string
+  }
+  
+  export interface NewField {
+    title: string
+    column_name: string
+    data_type: string
+  }
+
+  
+export interface DataFields {
+    fields: any
+    data: any
+  }

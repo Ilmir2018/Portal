@@ -16,6 +16,7 @@ import { MenuComponent } from './components/menu/menu.component';
 import { ProfilePageComponent } from './components/profile-page/profile-page.component';
 import { RegisterPageComponent } from './components/register-page/register-page.component';
 import { SettingsPageComponent } from './components/settings-page/settings-page.component';
+import { TriggersPageComponent } from './components/triggers-page/triggers-page.component';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 import { SiteLayoutComponent } from './layouts/site-layout/site-layout.component';
 
@@ -39,6 +40,7 @@ const routes: Routes = [
           { path: 'types', component: DataTypesComponent }
         ]
       },
+      { path: 'triggers', component: TriggersPageComponent, canActivate: [RoleGuard] },
       { path: 'contacts/new', component: NewContactComponent, canActivate: [RoleGuard] },
       { path: 'contacts/edit', component: ContactsEditComponent, canActivate: [RoleGuard] },
       { path: 'contacts/:id', component: ContactPageComponent, canActivate: [RoleGuard] },
