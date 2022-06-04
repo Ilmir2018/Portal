@@ -1,21 +1,16 @@
-<mat-card
-  cdkDrag
-  cdkDropList
-  [cdkDropListData]="item.subtitle"
-  dragAndDrop
-  [id]="(item.id).toString()"
-  (cdkDropListDropped)="onDragDrop$.next($event)"
-  [ngClass]="{
+<mat-card class="menu_item" cdkDrag cdkDropList [cdkDropListData]="item.subtitle" dragAndDrop
+  [id]="(item.id).toString()" (cdkDropListDropped)="onDragDrop$.next($event)" [ngClass]="{
     invert: invert
-  }"
->
-  <mat-card-header>{{ item.title }}</mat-card-header>
-  <button class="par" (click)="settings(item)">*</button>
+  }" (mouseenter)="getMenu(true)" (mouseleave)="getMenu(false)">
+  <div class="item_info">
+    <mat-card-header>{{ item.title }}</mat-card-header>
+    <div *ngIf="showSettings" class="edit_btns">
+      <button (click)="change(item)">Изменить</button>
+      <button (click)="view(item)">Просмотреть</button>
+      <button (click)="edit(item)">Редактировать</button>
+    </div>
+  </div>
   <mat-card-content *ngFor="let item of item.subtitle">
-      <app-menu-update-item
-        [item]="item"
-        [invert]="!invert"
-        [onDragDrop]="onDragDrop$"
-      ></app-menu-update-item>
+    <app-menu-update-item [item]="item" [invert]="!invert" [onDragDrop]="onDragDrop$"></app-menu-update-item>
   </mat-card-content>
 </mat-card>

@@ -28,6 +28,7 @@
     "colresizable": "^1.6.0",
     "faker": "^6.6.6",
     "jquery": "^3.6.0",
+    "mat-table-exporter": "^10.2.4",
     "materialize-css": "^1.0.0-rc.2",
     "ngx-pagination": "^5.1.1",
     "ngx-socket-io": "^4.1.0",

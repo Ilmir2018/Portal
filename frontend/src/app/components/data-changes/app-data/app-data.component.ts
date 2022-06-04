@@ -4,6 +4,7 @@ import { DataFields, NewTable } from 'src/app/interfaces';
 import { MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs';
 import { GridColumnDefinition } from 'src/app/interfaces';
+import { ExcelService } from 'src/app/services/excel.service';
 
 
 
@@ -27,7 +28,7 @@ export class AppDataComponent implements OnInit, OnDestroy {
   //Колонки выбранной таблицы
   displayedColumns: string[] = [];
 
-  constructor(private service: DataService) { }
+  constructor(private service: DataService, private excelSrv: ExcelService) { }
 
 
   ngOnInit(): void {
@@ -107,6 +108,10 @@ export class AppDataComponent implements OnInit, OnDestroy {
       this.service.addUpdateField(data, false).subscribe((data) => {
       })
     }
+  }
+
+  exportData() {
+    this.excelSrv.exportToFile(this.type, this.dataSource);
   }
 
   ngOnDestroy(): void {

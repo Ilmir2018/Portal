@@ -29,13 +29,14 @@ import { ModalWindowComponent } from './components/menu/modal-window/modal-windo
 import { ContactsEditComponent } from './components/contacts-page/contacts-edit/contacts-edit.component';
 import { SearchPipe } from './classes/search.pipe';
 import { DragAndDropDirective, DragAndDropRootDirective } from './classes/drag-and-drop.directive';
-import { MenuItemComponent } from './components/template-page/menu-item/menu-item.component';
 import { DragAndDropService } from './services/drag-and-drop.service';
 import { MenuUpdateItemComponent } from './components/menu/menu-update/menu-update-item/menu-update-item.component';
 import { DataChangesComponent } from './components/data-changes/data-changes.component';
 import { DataTypesComponent } from './components/data-changes/data-types/data-types.component';
 import { AppDataComponent } from './components/data-changes/app-data/app-data.component';
 import { TriggersPageComponent } from './components/triggers-page/triggers-page.component';
+import { EditPageComponent } from './components/template-page/edit-page/edit-page.component';
+import { ReadPageComponent } from './components/template-page/read-page/read-page.component';
 
 @NgModule({
   declarations: [
@@ -59,14 +60,15 @@ import { TriggersPageComponent } from './components/triggers-page/triggers-page.
     ModalWindowComponent,
     ContactsEditComponent,
     SearchPipe,
-    MenuItemComponent,
     DragAndDropDirective,
     DragAndDropRootDirective,
     MenuUpdateItemComponent,
     DataChangesComponent,
     DataTypesComponent,
     AppDataComponent,
-    TriggersPageComponent
+    TriggersPageComponent,
+    EditPageComponent,
+    ReadPageComponent
   ],
   imports: [
     BrowserModule,

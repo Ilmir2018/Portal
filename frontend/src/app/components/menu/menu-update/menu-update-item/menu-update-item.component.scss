@@ -1,3 +1,40 @@
 .invert {
-    background-color: var(--gray);
+  background-color: var(--gray);
+}
+
+.menu_item {
+  position: relative;
+  min-height: 12vh;
+}
+
+.menu_item:hover {
+  background-color: #f0f0f1;
+  cursor: pointer;
+}
+
+.item_info {
+  margin-bottom: 5vh;
+
+  .mat-card-header {
+    display: block;
+    position: relative;
+    margin-bottom: 1vh;
   }
+  
+  .edit_btns {
+    margin-bottom: 1vh;
+    position: absolute;
+  
+    button {
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+  
+    button:hover {
+      color: blue;
+      border-radius: 0.4vh;
+    }
+  }
+}
+

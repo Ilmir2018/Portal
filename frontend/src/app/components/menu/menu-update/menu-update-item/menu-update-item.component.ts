@@ -1,5 +1,6 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { NavItemNew } from 'src/app/interfaces';
 import { MenuService } from 'src/app/services/menu.service';
@@ -15,8 +16,11 @@ export class MenuUpdateItemComponent implements OnInit {
   @Input('onDragDrop') public onDragDrop$!: Subject<CdkDragDrop<Array<NavItemNew>>>;
   @Input() item!: NavItemNew;
   @Input() invert!: boolean;
+  showSettings: boolean
 
-  constructor(private service: MenuService) { }
+  constructor(private service: MenuService, private router: Router) {
+    this.showSettings = false
+  }
 
   ngOnInit(): void {
   }
@@ -25,9 +29,10 @@ export class MenuUpdateItemComponent implements OnInit {
    * Функция открытия окна редактирования пункта меню
    * @param item пункт меню
    */
-  settings(item) {
+  change(item) {
     this.service.settingsMenu = true
     this.service.settingsItem = item
+    this.showSettings = false
     let permissions = JSON.parse(localStorage.getItem('permissions'))
     let permission;
     //Получаем массив разрешений на (чтение, запись и удаление)
@@ -45,6 +50,32 @@ export class MenuUpdateItemComponent implements OnInit {
     this.service.getContacts(item)
     //Добавляем класс в body чтобы убрать прокрутку при открытии модального окна
     document.body.classList.add('hidden')
+  }
+
+  view(item) {
+    this.router.navigate(
+      ['/' + item.url],
+      {
+        queryParams: {
+          'item': 1
+        }
+      }
+    );
+  }
+
+  edit(item) {
+    this.router.navigate(
+      ['/' + item.url],
+      {
+        queryParams: {
+          'item': 0
+        }
+      }
+    );
+  }
+
+  getMenu(item: boolean) {
+    this.showSettings = item
   }
 
 

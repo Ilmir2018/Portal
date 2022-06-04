@@ -58,13 +58,11 @@ export class ExcelService {
   }
 
 
-  public exportToFile(fileName: string, element_id: string) {
-    if (!element_id) throw new Error('Element Id does not exists');
-
-    let tbl = document.getElementById(element_id);
-    let wb = XLSX.utils.table_to_book(tbl);
-    XLSX.writeFile(wb, fileName + '.xlsx');
+  public exportToFile(fileName: string, dataSource: any) {
+    const workSheet = XLSX.utils.json_to_sheet(dataSource.data);
+    const workBook: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workBook, workSheet, 'Лист1');
+    XLSX.writeFile(workBook, fileName + '.xlsx');
   }
-
 
 }

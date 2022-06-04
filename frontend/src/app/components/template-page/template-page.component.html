@@ -1,49 +1,7 @@
-<div class="container">
-    <div class="title">Excel</div>
-    <div class="sub-title">Import and Export data from Excel</div>
-    <hr>
-    <div class="tools">
-        <button (click)="exportData('contactJs')">
-            <span class="mdi mdi-file-export"> </span>
-            <small>Export</small>
-        </button>
-    </div>
+<ng-container *ngIf="action">
+    <app-read-page></app-read-page>
+</ng-container>
 
-    <table id="contactJs" class="table-contact">
-        <tr class="thead">
-            <th>Name</th>
-            <th>E-mail</th>
-            <th>Phone</th>
-            <th>Address</th>
-        </tr>
-
-        <tr class="tbody" *ngFor="let contact of exportContacts; let odd = odd" [ngClass]="{'odd': odd}">
-            <td>{{contact?.name}}</td>
-            <td>{{contact?.email}}</td>
-            <td>{{contact?.phone}}</td>
-            <td>{{contact?.address}}</td>
-        </tr>
-    </table>
-
-    <hr>
-<!-- 
-    <div class="tools">
-        <button>
-            <label>
-                <span class="mdi mdi-file-export"> </span>
-                <small>Import</small>
-                <input hidden type="file" (change)="onFileChange($event)" multiple="false">
-            </label>
-        </button>
-    </div> -->
-
-    <table id="contactJs" class="table-contact">
-        <tr class="thead">
-            <th *ngFor="let item of Data">{{item}}</th>
-        </tr>
-        <tr class="tbody" *ngFor="let contact of importContacts; let odd = odd" [ngClass]="{'odd': odd}">
-            <td *ngFor="let item of Data">{{contact[item]}}</td>
-        </tr>
-    </table>
-
-</div>
+<ng-container *ngIf="!action">
+    <app-edit-page></app-edit-page>
+</ng-container>
