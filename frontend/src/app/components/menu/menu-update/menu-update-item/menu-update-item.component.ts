@@ -68,7 +68,8 @@ export class MenuUpdateItemComponent implements OnInit {
       ['/' + item.url],
       {
         queryParams: {
-          'item': 0
+          'item': 0,
+          'pageName': item.url
         }
       }
     );

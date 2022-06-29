@@ -1,0 +1,114 @@
+.cont {
+    background-color: #f0f0f1;
+    div,
+    h1,h2,h3,h4,h5,
+    p {
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        width: 100%;
+        height: 2vh;
+    }
+
+    main {
+        margin: 0 auto;
+        background-color: white;
+        width: 80%;
+        border: 1px solid #c3c4c7;
+        .container {
+            width: 100%;
+            .portal-builder {
+                .portal-header {
+                    display: flex;
+                    margin-top: 2vh;
+                    margin-left: 2vh;
+                    padding-bottom: 2vh;
+                    .portal-header_logo {
+                        font-size: 6vh;
+                        padding-right: 2vh;
+                    }
+                    .portal-header_title {
+                        font-size: 5vh;
+                    }
+                }
+
+                .portal-header_show {
+                    display: flex;
+                    width: 100%;
+                    height: 3vh;
+                    background-color: #32373c;
+                    height: 6vh;
+                    .header-show_btn {
+                        background-color: #222222;
+                        color: white;
+                        border: none;
+                        width: 21vh;
+                        cursor: pointer;
+                    }
+                }
+
+                .builder-main{
+                    width: 100%;
+                    height: 70vh;
+                    background-color: white;
+                    border: 1px solid #c3c4c7;
+
+                    .main-container {
+
+                    }
+                }
+            }
+        }
+
+        .no-content_container{
+            border: 2px dashed black;
+            padding: 19vh;
+            margin: 0 auto;
+            margin-top: 5vh;
+            margin-bottom: 6vh;
+            width: 86%;
+            height: 64vh;
+
+            button {
+                width: 17vh;
+                height: 6vh;
+                font-size: 2vh;
+                background-color: #008FC5;
+                border: none;
+                padding-bottom: 0.5vh;
+                color: white;
+            }
+
+            .no-content_btn:hover {
+                background-color: #0E529B;
+                cursor: pointer;
+            }
+
+            .no-content_text {
+                padding-bottom: 2vh;
+            }
+        }
+    }
+
+    footer {
+        height: 12vh;
+    }
+}
+
+.choise_modal {
+    position: absolute;
+    width: 100%;
+    height: 150vh;
+    background-color: #323232;
+    top: 0;
+    z-index: 1;
+    overflow: hidden;
+    opacity: 0.7;
+}
+
+app-choise-type-container-modal {
+    display: flex;
+    justify-content: center;
+}

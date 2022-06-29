@@ -34,7 +34,9 @@
               "xlsx",
               "rxjs",
               "pikaday",
-              "ng2-flatpickr"
+              "ng2-flatpickr",
+              "lodash",
+              "angular2-text-mask"
             ],
             "outputPath": "dist/frontend",
             "index": "src/index.html",
@@ -44,9 +46,21 @@
             "aot": true,
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "node_modules/@taiga-ui/icons/src",
+                "output": "assets/taiga-ui/icons"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@taiga-ui/icons/src",
+                "output": "assets/taiga-ui/icons"
+              }
             ],
             "styles": [
+              "node_modules/@taiga-ui/core/styles/taiga-ui-global.less",
+              "node_modules/@taiga-ui/core/styles/taiga-ui-theme.less",
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.scss"
             ],

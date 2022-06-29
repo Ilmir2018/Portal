@@ -1,3 +1,5 @@
+import { NgDompurifySanitizer } from "@tinkoff/ng-dompurify";
+import { TuiRootModule, TuiDialogModule, TuiAlertModule,TuiGroupModule, TUI_SANITIZER } from "@taiga-ui/core";
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -16,8 +18,7 @@ import { ProfilePageComponent } from './components/profile-page/profile-page.com
 import { LoaderComponent } from './components/loader/loader.component';
 import { NewContactComponent } from './components/contacts-page/new-contact/new-contact.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialModule } from './material/material.module';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MaterialModule } from './modules/material/material.module';
 import { SplitSchedulePipe } from './classes/split-schedule.pipe';
 import { ContactsTableComponent } from './components/contacts-page/contacts-table/contacts-table.component';
 import { ContactPageComponent } from './components/contacts-page/contact-page/contact-page.component';
@@ -35,8 +36,13 @@ import { DataChangesComponent } from './components/data-changes/data-changes.com
 import { DataTypesComponent } from './components/data-changes/data-types/data-types.component';
 import { AppDataComponent } from './components/data-changes/app-data/app-data.component';
 import { TriggersPageComponent } from './components/triggers-page/triggers-page.component';
-import { EditPageComponent } from './components/template-page/edit-page/edit-page.component';
 import { ReadPageComponent } from './components/template-page/read-page/read-page.component';
+import { TaigaModule } from "./modules/taiga-ui-module/taiga-module/taiga.module";
+import { CommonModule } from '@angular/common';
+import { EditPageComponent } from "./components/template-page/edit-page/edit-page.component";
+import { ChoiseTypeContainerModalComponent } from './components/template-page/edit-page/choise-type-container-modal/choise-type-container-modal.component';
+import { TuiLetModule } from '@taiga-ui/cdk';
+import { ChoiseContainerTypeComponent } from './components/template-page/edit-page/choise-container-type/choise-container-type.component';
 
 @NgModule({
   declarations: [
@@ -67,8 +73,10 @@ import { ReadPageComponent } from './components/template-page/read-page/read-pag
     DataTypesComponent,
     AppDataComponent,
     TriggersPageComponent,
+    ReadPageComponent,
     EditPageComponent,
-    ReadPageComponent
+    ChoiseTypeContainerModalComponent,
+    ChoiseContainerTypeComponent
   ],
   imports: [
     BrowserModule,
@@ -77,7 +85,14 @@ import { ReadPageComponent } from './components/template-page/read-page/read-pag
     ReactiveFormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    MaterialModule
+    MaterialModule,
+    TaigaModule,
+    TuiRootModule,
+    TuiDialogModule,
+    TuiAlertModule,
+    CommonModule,
+    TuiGroupModule,
+    TuiLetModule
   ],
   providers: [
     {
@@ -85,7 +100,7 @@ import { ReadPageComponent } from './components/template-page/read-page/read-pag
       multi: true,
       useClass: TokenInterceptor,
     },
-    DragAndDropService
+    DragAndDropService,
   ],
   bootstrap: [AppComponent],
   exports: []

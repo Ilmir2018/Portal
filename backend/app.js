@@ -8,6 +8,7 @@ const contactsRoutes = require('./routes/contacts')
 const menuRoutes = require('./routes/menu')
 const dataRoutes = require('./routes/data')
 const triggerRoutes = require('./routes/triggers')
+const widgetRoutes = require('./routes/widjets')
 
 const triggers = require('./triggers')
 
@@ -28,6 +29,7 @@ app.use('/api/contacts', contactsRoutes)
 app.use('/api/menu', menuRoutes)
 app.use('/api/dannye', dataRoutes)
 app.use('/api/triggers', triggerRoutes)
+app.use('/api/widgets', widgetRoutes)
 
 if(process.env.NODE_ENV === 'production') {
     app.use(express.static('client'))

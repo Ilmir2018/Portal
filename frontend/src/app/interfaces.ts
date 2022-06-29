@@ -21,7 +21,7 @@ export interface Contact {
     name: string
     firm: string
     email: string
-    password:string
+    password: string
     phone?: string
     user?: string,
     id?: string,
@@ -77,21 +77,53 @@ export interface ContactField {
 
 export interface NewTable {
     title: string
-  }
-  
-  export interface Field {
+}
+
+export interface Field {
     column_name: string
     data_type: string
-  }
-  
-  export interface NewField {
+}
+
+export interface NewField {
     title: string
     column_name: string
     data_type: string
-  }
+}
 
-  
+
 export interface DataFields {
     fields: any
     data: any
-  }
+}
+
+export interface Builder {
+    page_id: number
+}
+
+export interface Page {
+    id: number
+    title: string
+    containers?: Container[]
+}
+
+export interface Container {
+    id: number
+    page_id: number
+    type: string
+    elements: Element[]
+}
+
+export interface Element {
+    id: number
+    container_id: number
+    widgets: Widget[]
+}
+
+export interface Widget {
+    id: number
+    element_id: number
+    type: string
+}
+
+
+

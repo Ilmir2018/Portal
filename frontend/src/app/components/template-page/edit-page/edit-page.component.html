@@ -1,1 +1,37 @@
-<p>edit-page works!</p>
+<div class="cont">
+    <header></header>
+    <main>
+        <div class="container">
+            <div class="portal-builder">
+                <div class="portal-header">
+                    <p class="portal-header_logo">P</p>
+                    <h1 class="portal-header_title">Portal Builder</h1>
+                </div>
+                <div class="portal-header_show">
+                    <button class="header-show_btn">Builder</button>
+                </div>
+                <ng-container *tuiLet="$builder | async as builder">
+                    <div class="builder-main" *ngIf="builder && builder.length !== 0 else noContent">
+                        <div class="main-container" *ngFor="let container of builder[0].data">
+                            <app-choise-container-type [container]="container"></app-choise-container-type>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+        <ng-template #noContent>
+            <div class="no-content_container">
+                <h2 class="no-content_title">To get started, add a Container, or add a prebuilt page.</h2>
+                <p class="no-content_text">The building process always starts with a container, then columns, then
+                    elements.</p>
+                <button class="no-content_btn" (click)="choiseTypeContainer()"> + Container</button>
+            </div>
+        </ng-template>
+    </main>
+    <footer></footer>
+</div>
+
+<div *ngIf="choiseModal">
+    <div class="choise_modal"></div>
+    <app-choise-type-container-modal></app-choise-type-container-modal>
+</div>
