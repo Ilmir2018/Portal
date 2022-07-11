@@ -15,7 +15,6 @@ module.exports.getPermissions = async function (req, res) {
     const permissions = await db.query(`SELECT contacts.user_id, contacts.email, contacts.name, contacts.firm,
      roles.permissions from contacts JOIN roles ON contacts.user_id = roles.user_id AND roles.title_id = ${req.query.itemId};`)
     res.status(200).json(permissions.rows)
-
 }
 
 module.exports.update = async function (req, res) {

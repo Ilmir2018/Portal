@@ -120,9 +120,9 @@ export interface Element {
 }
 
 export interface Widget {
-    id: number
-    element_id: number
-    type: string
+    id: number | null
+    element_id: number | null
+    type: string | null
 }
 
 

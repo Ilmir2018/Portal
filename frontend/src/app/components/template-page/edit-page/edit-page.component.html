@@ -1,4 +1,4 @@
-<div class="cont">
+<div class="cont" [ngClass]="{max_height:maxHeight}">
     <header></header>
     <main>
         <div class="container">
@@ -10,9 +10,9 @@
                 <div class="portal-header_show">
                     <button class="header-show_btn">Builder</button>
                 </div>
-                <ng-container *tuiLet="$builder | async as builder">
-                    <div class="builder-main" *ngIf="builder && builder.length !== 0 else noContent">
-                        <div class="main-container" *ngFor="let container of builder[0].data">
+                <ng-container *tuiLet="service.$builder | async as builder">
+                    <div class="builder-main" *ngIf="builder && builder[0].length !== 0 else noContent">
+                        <div class="main-container" *ngFor="let container of builder">
                             <app-choise-container-type [container]="container"></app-choise-container-type>
                         </div>
                     </div>
@@ -31,7 +31,12 @@
     <footer></footer>
 </div>
 
-<div *ngIf="choiseModal">
+<div *ngIf="service.choiseContainerModal">
     <div class="choise_modal"></div>
     <app-choise-type-container-modal></app-choise-type-container-modal>
+</div>
+
+<div *ngIf="service.choiseWidgetModal">
+    <div class="choise_modal"></div>
+    <app-choise-widget-type></app-choise-widget-type>
 </div>

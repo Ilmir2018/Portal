@@ -1,10 +1,130 @@
-<div class="container-element">
-    <div class="container-type__one">
-        <div *ngIf="container.type == 'one'" class="container-type__one">
-            <h1 class="container-type__two-title">Container1</h1>
+<div class="containers">
+    <div *ngIf="container.type == 'one'" class="container_type">
+        <div class="container">
+            <div class="title_container">
+                <h4 class="title">Container</h4>
+                <div class="panel_container">
+                    <button class="delete_btn" (click)="deleteContainer(container.id)">
+                        <mat-icon>delete_forever</mat-icon>
+                    </button>
+                </div>
+            </div>
+            <div class="container_element" (mousemove)="visibleBtn(true)" (mouseleave)="visibleBtn(false)">
+                <div class="elements">
+                    <div *ngFor="let element of container.elements" class="element">
+                        <div class="control_panel">
+                            <div class="panel_element">
+                                <button class="delete_btn" (click)="deleteElement(element, container.type)">
+                                    <mat-icon>delete_forever</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                        <app-open-widget-type-element [widgets]="element.widgets" [element]="element"></app-open-widget-type-element>
+                    </div>
+                </div>
+                <div class="add_container">
+                    <button class="add_container_btn" [ngClass]="{is_visible:isVisible}" (click)="choiseContainerType(container)">
+                        <mat-icon>add</mat-icon>
+                        <p>Container</p>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
-    <div *ngIf="container.type == 'two'" class="container-type__two">
-        <h1 class="container-type__two-title">Container2</h1>
+    <div *ngIf="container.type == 'two'" class="container_type">
+        <div class="container">
+            <div class="title_container">
+                <h4 class="title">Container</h4>
+                <div class="panel_container">
+                    <button class="delete_btn" (click)="deleteContainer(container.id)">
+                        <mat-icon>delete_forever</mat-icon>
+                    </button>
+                </div>
+            </div>
+            <div class="container_element" (mousemove)="visibleBtn(true)" (mouseleave)="visibleBtn(false)">
+                <div class="elements">
+                    <div *ngFor="let element of container.elements" class="element">
+                        <div class="control_panel">
+                            <div class="panel_element">
+                                <button class="delete_btn" (click)="deleteElement(element, container.type)">
+                                    <mat-icon>delete_forever</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                        <app-open-widget-type-element [widgets]="element.widgets" [element]="element"></app-open-widget-type-element>
+                    </div>
+                </div>
+                <div class="add_container">
+                    <button class="add_container_btn" [ngClass]="{is_visible:isVisible}" (click)="choiseContainerType(container)">
+                        <mat-icon>add</mat-icon>
+                        <p>Container</p>
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
+    <div *ngIf="container.type == 'three'" class="container_type">
+        <div class="container">
+            <div class="title_container">
+                <h4 class="title">Container</h4>
+                <div class="panel_container">
+                    <button class="delete_btn" (click)="deleteContainer(container.id)">
+                        <mat-icon>delete_forever</mat-icon>
+                    </button>
+                </div>
+            </div>
+            <div class="container_element" (mousemove)="visibleBtn(true)" (mouseleave)="visibleBtn(false)">
+                <div class="elements">
+                    <div *ngFor="let element of container.elements" class="element">
+                        <div class="control_panel">
+                            <div class="panel_element">
+                                <button class="delete_btn" (click)="deleteElement(element, container.type)">
+                                    <mat-icon>delete_forever</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                        <app-open-widget-type-element [widgets]="element.widgets" [element]="element"></app-open-widget-type-element>
+                    </div>
+                </div>
+                <div class="add_container">
+                    <button class="add_container_btn" [ngClass]="{is_visible:isVisible}" (click)="choiseContainerType(container)">
+                        <mat-icon>add</mat-icon>
+                        <p>Container</p>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="container.type === null || container.type === 'null'" class="container_type">
+        <div class="container">
+            <div class="title_container">
+                <h4 class="title">Container</h4>
+                <div class="panel_container">
+                    <button class="delete_btn" (click)="deleteContainer(container.id)">
+                        <mat-icon>delete_forever</mat-icon>
+                    </button>
+                </div>
+            </div>
+            <div class="container_element" (mousemove)="visibleBtn(true)" (mouseleave)="visibleBtn(false)">
+                <div class="elements">
+                    <p>Please, Add Columns from Container</p>
+                </div>
+                <div class="add_container">
+                    <button class="add_element_btn" [ngClass]="{is_visible:isVisible}" (click)="addElementFromContainer(container)">
+                        <mat-icon>add</mat-icon>
+                        <p>Columns</p>
+                    </button>
+                    <button class="add_container_btn" [ngClass]="{is_visible:isVisible}" (click)="choiseContainerType(container)">
+                        <mat-icon>add</mat-icon>
+                        <p>Container</p>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="service.choiseContainerModal">
+    <div class="choise_modal"></div>
+    <app-choise-type-container-modal></app-choise-type-container-modal>
 </div>

@@ -1,0 +1,39 @@
+.widget_types {
+    padding: 3vh;
+
+    .widget_elements {
+        .widget_pull {
+            padding: 2vh;
+            border: 1px solid #e5e5e5;
+            margin-bottom: 3vh;
+            display: flex;
+            justify-content: center;
+
+            .widget_element {
+                display: flex;
+                border: none;
+                background: no-repeat;
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+.empty_element {
+    padding: 2vh;
+    display: flex;
+    justify-content: center;
+    border: 1px dashed black;
+
+    .empty_element_btn {
+        border: none;
+        background: no-repeat;
+        display: flex;
+        color: #e5e5e5;
+        cursor: pointer;
+    }
+
+    .empty_element_btn:hover {
+        color: #3c434a;
+    }
+}

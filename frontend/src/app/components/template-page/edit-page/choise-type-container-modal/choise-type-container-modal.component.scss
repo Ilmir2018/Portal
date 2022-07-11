@@ -1,9 +1,164 @@
-.choise-container {
+.choise_container {
     width: 70%;
     height: 70%;
     background-color: white;
     opacity: 1;
-    position: absolute;
+    position: fixed;
     top: 18vh;
     z-index: 2;
+
+    .choise_container__title {
+        margin: 0;
+        padding: 2vh;
+        font-size: 3vh;
+        font-weight: bold;
+    }
+
+    .btn_close {
+        background: none;
+        height: 30px;
+        width: 30px;
+        position: absolute;
+        top: 2%;
+        left: 94%;
+        border: none;
+        box-shadow: none;
+        background-image: url("../../../../../assets/close.png");
+        background-position: center;
+        -webkit-background-size: cover;
+        background-size: cover;
+        cursor: pointer;
+    }
+
+    .containers_types {
+        .containers_types_builder {
+            .containers_types__header {
+                height: 6vh;
+                background-color: #008fc5;
+                .containers_types__header_btn {
+                    height: 100%;
+                    border: none;
+                    width: 27vh;
+                    background-color: #0073aa;
+                    color: #fff6e9;
+                    font-size: 2vh;
+                    padding: 2vh;
+                }
+            }
+
+            .container_types {
+                height: 100%;
+                padding: 4vh;
+                display: flex;
+                justify-content: space-around;
+
+                .container {
+                    margin: 0;
+                    width: 21vh;
+                    height: 12vh;
+                    border: 1px dashed #d1d1d1;
+                    padding: 0.5vh;
+                    display: flex;
+
+                    .container_content {
+                    }
+                }
+
+                .one {
+                    .container_content {
+                        height: 100%;
+                        background-color: #aaaaaa;
+                    }
+                    .type_one {
+                        width: 100%;
+                        display: block;
+                    }
+
+                    .type_two {
+                        display: none;
+                    }
+
+                    .type_three {
+                        display: none;
+                    }
+
+                    .type_one::after {
+                        content: "1/1";
+                        padding-left: 8.5vh;
+                        padding-top: 4vh;
+                        display: flex;
+                        color: #daddd4;
+                        font-size: 1.5vh;
+                    }
+                }
+
+                .two {
+                    .container_content {
+                        height: 100%;
+                        background-color: #aaaaaa;
+                    }
+
+                    .type_one {
+                        width: 50%;
+                        display: block;
+                        margin-right: 0.5vh;
+                    }
+
+                    .type_two {
+                        width: 50%;
+                        display: block;
+                    }
+
+                    .type_three {
+                        display: none;
+                    }
+
+                    .type_one::after,
+                    .type_two::after {
+                        content: "1/2";
+                        padding-left: 4vh;
+                        padding-top: 4vh;
+                        display: flex;
+                        color: #daddd4;
+                        font-size: 1.5vh;
+                    }
+                }
+
+                .three {
+                    .container_content {
+                        background-color: #aaaaaa;
+                        height: 100%;
+                    }
+
+                    .type_one {
+                        width: 33%;
+                        display: block;
+                        margin-right: 0.5vh;
+                    }
+
+                    .type_two {
+                        width: 33%;
+                        display: block;
+                        margin-right: 0.5vh;
+                    }
+
+                    .type_three {
+                        width: 33%;
+                        display: block;
+                    }
+
+                    .type_one::after,
+                    .type_two::after,
+                    .type_three::after {
+                        content: "1/3";
+                        padding-left: 2vh;
+                        padding-top: 4vh;
+                        display: flex;
+                        color: #daddd4;
+                        font-size: 1.5vh;
+                    }
+                }
+            }
+        }
+    }
 }

@@ -1,0 +1,23 @@
+<div *ngIf="widgets.length !== 0; else noContent" class="widget_types">
+    <div class="widget_elements" *ngFor="let widget of widgets">
+        <div class="widget_pull" *ngIf="widget.id !== null; else emptyWidget">
+            <button class="widget_element" (click)="openCurrentWidget(widget)">
+                <mat-icon>grid_on</mat-icon>
+                <p>{{widget.type | titlecase}}</p>
+            </button>
+        </div>
+    </div>
+</div>
+
+<ng-template #emptyWidget>
+    <div class="empty_element">
+        <button class="empty_element_btn" (click)="addNewWidget(element)">
+            <mat-icon>library_add</mat-icon>
+            <p>element</p>
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #noContent>
+    <p>Нет виджета</p>
+</ng-template>

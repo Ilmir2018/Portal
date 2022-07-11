@@ -1,7 +1,7 @@
 <ul>
     <li *ngFor="let item of menuItems">
         <button *ngIf="item.subtitle.length != 0" (click)="toggle($event)"></button>
-        <a [routerLink]=[item.url]>{{ item.title }}</a>
+        <a (click)="changeRouteNameType(item.url)">{{ item.title }}</a>
         <app-menu-template class="spoiler-content" *ngIf="item.subtitle" [menuItems]="item.subtitle">
         </app-menu-template>
     </li>

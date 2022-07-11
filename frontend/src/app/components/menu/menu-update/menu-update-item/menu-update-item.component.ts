@@ -63,7 +63,7 @@ export class MenuUpdateItemComponent implements OnInit {
     );
   }
 
-  edit(item) {
+  edit(item: any | undefined) {
     this.router.navigate(
       ['/' + item.url],
       {

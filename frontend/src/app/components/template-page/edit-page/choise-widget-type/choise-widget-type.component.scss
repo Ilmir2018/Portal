@@ -1,0 +1,93 @@
+.choise_widget {
+    width: 70%;
+    height: 70%;
+    background-color: white;
+    opacity: 1;
+    position: fixed;
+    top: 18vh;
+    z-index: 2;
+
+    .choise_widget__title {
+        margin: 0;
+        padding: 2vh;
+        font-size: 3vh;
+        font-weight: bold;
+    }
+
+    .btn_close {
+        background: none;
+        height: 30px;
+        width: 30px;
+        position: absolute;
+        top: 2%;
+        left: 94%;
+        border: none;
+        box-shadow: none;
+        background-image: url("../../../../../assets/close.png");
+        background-position: center;
+        -webkit-background-size: cover;
+        background-size: cover;
+        cursor: pointer;
+    }
+
+    .widgets_types {
+        .widgets_types_builder {
+            .widgets_types__header {
+                height: 6vh;
+                background-color: #008fc5;
+                .widgets_types__header_btn {
+                    height: 100%;
+                    border: none;
+                    width: 27vh;
+                    background-color: #0073aa;
+                    color: #fff6e9;
+                    font-size: 2vh;
+                    padding: 2vh;
+                }
+            }
+
+            .widget_types {
+                height: 100%;
+                padding: 4vh;
+                display: flex;
+                flex-wrap: wrap;
+                padding-left: 5%;
+
+                .widget {
+                    margin: 0;
+                    width: 21vh;
+                    height: 12vh;
+                    border: 1px solid #d1d1d1;
+                    padding: 4vh;
+                    display: flex;
+                    margin-right: 2.5vh;
+                    margin-bottom: 2vh;
+
+                    .widget_element {
+                        display: flex;
+                        border: none;
+                        background: no-repeat;
+
+                        mat-icon {
+                            margin-right: 1vh;
+                        }
+
+                        .widget_name {
+                            margin: 0;
+                            padding-top: 0.3vh;
+                        }
+                    }
+                }
+
+                .widget:hover {
+                    background-color: #F7F7F7;
+                    border: 1px solid #D8D8D8;
+                    cursor: pointer;
+                }
+
+                .table {
+                }
+            }
+        }
+    }
+}

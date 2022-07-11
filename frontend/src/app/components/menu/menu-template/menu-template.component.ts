@@ -1,4 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { NavItem } from 'src/app/interfaces';
 import { MenuService } from 'src/app/services/menu.service';
 
@@ -12,7 +13,7 @@ export class MenuTemplateComponent implements OnInit, OnDestroy {
 
   @Input() public menuItems: NavItem;
 
-  constructor(public service: MenuService) { }
+  constructor(public service: MenuService, private router: Router) { }
 
   ngOnInit(): void {
   }
@@ -26,6 +27,18 @@ export class MenuTemplateComponent implements OnInit, OnDestroy {
     let element = el.parentNode.childNodes[3].firstChild
     element.classList.toggle('active')
     el.classList.toggle('change-btn')
+  }
+
+  changeRouteNameType(url) {
+    this.router.navigate(
+      ['/' + url],
+      {
+        queryParams: {
+          'item': 1,
+          'pageName': url
+        }
+      }
+    );
   }
 
 
