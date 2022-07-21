@@ -1,0 +1,15 @@
+.containers {
+    display: flex;
+    flex-direction: column;
+    padding: 3vh;
+    .container {
+        width: 100%;
+        margin-bottom: 5vh;
+    }
+
+    .type {
+        display: flex;
+        justify-content: center;
+    }
+
+}

@@ -91,3 +91,13 @@
         }
     }
 }
+
+app-widget-types {
+    width: 70%;
+    height: 79%;
+    background-color: white;
+    opacity: 1;
+    position: fixed;
+    top: 11vh;
+    z-index: 2;
+}

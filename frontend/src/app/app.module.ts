@@ -45,6 +45,9 @@ import { TuiLetModule } from '@taiga-ui/cdk';
 import { ChoiseContainerTypeComponent } from './components/template-page/edit-page/choise-container-type/choise-container-type.component';
 import { OpenWidgetTypeElementComponent } from './components/template-page/edit-page/open-widget-type-element/open-widget-type-element.component';
 import { ChoiseWidgetTypeComponent } from './components/template-page/edit-page/choise-widget-type/choise-widget-type.component';
+import { WidgetTypesComponent } from './components/template-page/edit-page/widget-types/widget-types.component';
+import { ChoiseContainerTypeReadPageComponent } from './components/template-page/read-page/choise-container-type-read-page/choise-container-type-read-page.component';
+import { ChoiseWidgetTypeReadPageComponent } from './components/template-page/read-page/choise-widget-type-read-page/choise-widget-type-read-page.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +83,10 @@ import { ChoiseWidgetTypeComponent } from './components/template-page/edit-page/
     ChoiseTypeContainerModalComponent,
     ChoiseContainerTypeComponent,
     OpenWidgetTypeElementComponent,
-    ChoiseWidgetTypeComponent
+    ChoiseWidgetTypeComponent,
+    WidgetTypesComponent,
+    ChoiseContainerTypeReadPageComponent,
+    ChoiseWidgetTypeReadPageComponent
   ],
   imports: [
     BrowserModule,

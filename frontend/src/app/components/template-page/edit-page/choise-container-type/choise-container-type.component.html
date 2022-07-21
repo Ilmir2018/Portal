@@ -1,10 +1,10 @@
 <div class="containers">
-    <div *ngIf="container.type == 'one'" class="container_type">
+    <div class="container_type">
         <div class="container">
             <div class="title_container">
                 <h4 class="title">Container</h4>
                 <div class="panel_container">
-                    <button class="delete_btn" (click)="deleteContainer(container.id)">
+                    <button class="delete_btn" (click)="deleteContainer(container)">
                         <mat-icon>delete_forever</mat-icon>
                     </button>
                 </div>
@@ -31,7 +31,7 @@
             </div>
         </div>
     </div>
-    <div *ngIf="container.type == 'two'" class="container_type">
+    <!-- <div *ngIf="container.type == 'two'" class="container_type">
         <div class="container">
             <div class="title_container">
                 <h4 class="title">Container</h4>
@@ -94,7 +94,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
     <div *ngIf="container.type === null || container.type === 'null'" class="container_type">
         <div class="container">
             <div class="title_container">

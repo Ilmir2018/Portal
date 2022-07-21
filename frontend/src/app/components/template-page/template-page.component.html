@@ -1,7 +1,7 @@
-<ng-container *ngIf="action">
+<ng-container *ngIf="readEditParametr == readValue">
     <app-read-page></app-read-page>
 </ng-container>
 
-<ng-container *ngIf="!action">
+<ng-container *ngIf="readEditParametr == editValue">
     <app-edit-page></app-edit-page>
 </ng-container>

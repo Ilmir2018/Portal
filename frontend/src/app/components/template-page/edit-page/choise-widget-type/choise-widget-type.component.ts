@@ -11,18 +11,22 @@ import { WidgetsService } from 'src/app/services/widgets.service';
 export class ChoiseWidgetTypeComponent implements OnInit , OnDestroy {
 
   widgetTypes: string[] = ['table'];
+  openCreatingWidget: boolean = false;
 
-  constructor(private service: WidgetsService) { }
+  constructor(public service: WidgetsService) { }
 
   ngOnInit(): void {
   }
 
-  choiseWidget() {
-    console.log('choiseWidget')
+  choiseWidget(type: string) {
+    this.openCreatingWidget = true;
+    this.service.choiseWidgetTypeModal = false;
+    this.service.widgetType = type
   }
 
   closeModal() {
     this.service.choiseWidgetModal = false;
+    this.openCreatingWidget = false;
     document.body.classList.remove('hidden')
   }
 

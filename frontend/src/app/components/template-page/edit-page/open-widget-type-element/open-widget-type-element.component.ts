@@ -22,7 +22,9 @@ export class OpenWidgetTypeElementComponent implements OnInit {
   }
 
   addNewWidget(element: Element) {
+    this.service.element_id = element.id
     this.service.choiseWidgetModal = true
+    this.service.choiseWidgetTypeModal = true
   }
 
   openCurrentWidget(widget: Widget) {

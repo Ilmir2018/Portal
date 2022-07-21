@@ -1,21 +1,13 @@
-<div class="choise_widget">
+<div class="choise_widget" *ngIf="service.choiseWidgetTypeModal">
     <h1 class="choise_widget__title">Select Widget</h1>
     <button class="btn_close" (click)="closeModal()"></button>
-    <div class="widgets_types">
+    <div *ngIf="!openCreatingWidget" class="widgets_types">
         <div class="widgets_types_builder">
             <div class="widgets_types__header">
                 <button class="widgets_types__header_btn">Design Widgets</button>
             </div>
             <div class="widget_types">
-                <div class="widget" *ngFor="let type of widgetTypes" [ngClass]="type" (click)="choiseWidget()">
-                    <button class="widget_element">
-                        <mat-icon>grid_on</mat-icon>
-                        <p class="widget_name">{{type | titlecase}}</p>
-                    </button>
-                </div>
-            </div>
-            <div class="widget_types">
-                <div class="widget" *ngFor="let type of widgetTypes" [ngClass]="type" (click)="choiseWidget()">
+                <div class="widget" *ngFor="let type of widgetTypes" [ngClass]="type" (click)="choiseWidget(type)">
                     <button class="widget_element">
                         <mat-icon>grid_on</mat-icon>
                         <p class="widget_name">{{type | titlecase}}</p>
@@ -25,3 +17,4 @@
         </div>
     </div>
 </div>
+<app-widget-types *ngIf="openCreatingWidget"></app-widget-types>

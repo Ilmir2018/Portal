@@ -20,10 +20,18 @@ export class ChoiseTypeContainerModalComponent implements OnInit {
   addContainerAndElements(type: string) {
     this.service.choiseContainerModal = false;
     document.body.classList.remove('hidden')
+    let pageId;
+    if(this.service.selectedContainer !== null) {
+      pageId = this.service.selectedContainer.page_id
+    } else {
+      pageId = this.service.page_id
+    }
     this.service.$builder = this.service
-      .addContainerAndElements(this.service.selectedContainer.page_id, type)
+      .addContainerAndElements(pageId, type)
       .pipe(map((container: [Container]) => {
-        console.log(container[0])
+        if(this.service.containers[0].id === undefined) {
+          this.service.containers.splice(0, 1);
+        }
         this.service.containers.push(container[0])
         return [...this.service.containers]
       }))

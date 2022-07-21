@@ -1,1 +1,12 @@
-<p>read-page works!</p>
+<ng-container *tuiLet="service.$builder | async as builder">
+    <div *ngIf="readerOutput.length !== 0 else noContent" class="containers">
+        <div *ngFor="let container of readerOutput" class="container" [ngClass]="definitionContainerType(container)">
+            <app-choise-container-type-read-page [container]="container"></app-choise-container-type-read-page>
+        </div>
+    </div>
+</ng-container>
+
+
+<ng-template #noContent>
+    <app-loader></app-loader>
+</ng-template>

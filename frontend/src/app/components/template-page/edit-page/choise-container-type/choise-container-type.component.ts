@@ -28,14 +28,18 @@ export class ChoiseContainerTypeComponent implements OnInit {
   }
 
   deleteElement(element: Element) {
+    //Фильтрация виджетов перед отправеой на сервер
+    element.widgets = element.widgets.filter((widget) => {
+      return widget.id !== null
+    })
     this.service.$builder = this.service
       .deleteElementAndWidgets(element)
       .pipe(map((type: string) => {
-        //Удаляем лишний элемент и перезаписываем билдер
+        //Удаляем элемент и перезаписываем билдер
         this.service.containers.filter(container => {
           return container.elements.forEach((item, idx) => {
             if(item.id === element.id) {
-              container.type = type
+              container.type = 'three'
               container.elements.splice(idx, 1)
             }
           })
@@ -44,13 +48,13 @@ export class ChoiseContainerTypeComponent implements OnInit {
       }))
   }
 
-  deleteContainer(container_id: number) {
+  deleteContainer(container: Container) {
     this.service.$builder = this.service
-      .deleteContainer(container_id)
+      .deleteContainer(container)
       .pipe(map((type: string) => {
-        //Удаляем лишний элемент и перезаписываем билдер
-        this.service.containers.filter((container, idx) => {
-          if(container.id === container_id) {
+        //Удаляем контейнер и перезаписываем билдер
+        this.service.containers.filter((item, idx) => {
+          if(container.id === item.id) {
             this.service.containers.splice(idx, 1)
           }
         })

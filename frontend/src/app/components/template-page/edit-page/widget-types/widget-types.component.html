@@ -1,0 +1,102 @@
+<div class="choise_widget">
+    <h1 class="choise_widget__title">Table</h1>
+    <button class="btn_close" (click)="closeModal()"></button>
+    <div class="widgets_types">
+        <div class="widgets_types_builder">
+            <div class="widgets_types__header">
+                <button class="widgets_types__header_btn">General</button>
+            </div>
+            <div class="widget_types">
+                <div class="table_type">
+                    <div class="type_block">
+                        <div class="left_size">
+                            <h2 class="left_size_title">Type</h2>
+                            <p class="left_size_text">Select the type of choise</p>
+                        </div>
+                        <div class="right_size">
+                            <mat-form-field appearance="fill">
+                                <mat-label>Choose the type</mat-label>
+                                <mat-select [disabled]="disableSelect.value">
+                                    <mat-option value="option1">new table</mat-option>
+                                    <mat-option value="option2">Join tables</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="rows_block">
+                        <div class="left_size">
+                            <h2 class="left_size_title">Number of Rows</h2>
+                            <p class="left_size_text">Select how many rows to display.</p>
+                        </div>
+                        <div class="right_size">
+                            <button class="increase_rows_count" (click)="increaseRowsCount()">+</button>
+                            <p class="rows_count">{{rows}}</p>
+                            <button class="decrease_rows_count" (click)="decreaseRowsCount()">-</button>
+                        </div>
+                    </div>
+                    <div class="columns_block">
+                        <div class="left_size">
+                            <h2 class="left_size_title">Number of Columns</h2>
+                            <p class="left_size_text">Select how many columns to display.</p>
+                        </div>
+                        <div class="right_size">
+                            <button class="increase_column_count" (click)="increaseColumnCount()">+</button>
+                            <p class="column_count">{{col}}</p>
+                            <button class="decrease_column_count" (click)="decreaseColumnCount()">-</button>
+                        </div>
+                    </div>
+                    <div class="table_block">
+                        <div class="left_size">
+                            <h2 class="left_size_title">Table</h2>
+                            <p class="left_size_text">Table content will appear here.</p>
+                        </div>
+                        <div class="right_size">
+                            <div class="grid-wrapper">
+                                <mat-table matSort [dataSource]="dataSource" cdkDropListGroup="" [trackBy]="trackByFn">
+                                    <ng-container *ngFor="let column of columns; trackBy: trackByFn; let i = index"
+                                        [matColumnDef]="column.field">
+                                        <ng-container *ngIf="!!column.show">
+                                            <mat-header-cell class="thead" *matHeaderCellDef=""
+                                                [class.resizable]="resizable" [style.width]="column.actualWidth + '%'">
+                                                <div class="cell-header" *ngIf="column.field === 'plusAction'">
+                                                    <mat-icon [matMenuTriggerFor]="addHideColumns">add</mat-icon>
+                                                </div>
+                                                <div class="input-name">
+                                                    <div class="cell-header" *ngIf="column.field !== 'plusAction'"
+                                                        mat-sort-header> <input class="table_input" matInput type="text"
+                                                            value="{{column.name}}"
+                                                            (change)="changeColumnValue($event.target.value, column.name, i, columns)">
+                                                    </div>
+                                                </div>
+                                                <div class="handler" (mousedown)="onResizeColumn($event, i)"></div>
+                                            </mat-header-cell>
+                                        </ng-container>
+                                        <ng-container>
+                                            <mat-cell class="tbody" *matCellDef="let row"
+                                                [style.width]="column.actualWidth + '%'">
+                                                <ng-template
+                                                    *ngTemplateOutlet="cellTemplateRef; context:{row: row, column: column}"
+                                                    [ngIf]="cellTemplateRef"></ng-template>
+                                                <ng-container *ngIf="!cellTemplateRef">
+                                                    <input class="table_input" type="text"
+                                                        value="{{ row[column.field] }}"
+                                                        (change)="changeRowValue($event.target.value, row, column.field)">
+                                                </ng-container>
+                                            </mat-cell>
+                                        </ng-container>
+                                    </ng-container>
+                                    <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+                                    <mat-row *matRowDef="let row; columns: displayedColumns;" #MatTableRowRef></mat-row>
+                                </mat-table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="btn_panel">
+        <button class="save_btn" (click)="saveWidget()">Save</button>
+        <button class="cancel_btn" (click)="closeModal()">Cancel</button>
+    </div>
+</div>

@@ -22,7 +22,6 @@ export class EditPageComponent implements OnInit {
         map((arr: Container[]) => {
           this.service.containers = []
           this.service.containers.push(...arr)
-          console.log(this.service.containers)
           this.maxHeight = false
           if(this.service.containers.length <= 1) {
             this.maxHeight = true
@@ -36,6 +35,7 @@ export class EditPageComponent implements OnInit {
   choiseTypeContainer() {
     this.service.choiseContainerModal = true;
     document.body.classList.add('hidden')
+    this.service.selectedContainer = null
   }
 
 }

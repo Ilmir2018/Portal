@@ -1,0 +1,7 @@
+<div *ngIf="container.elements?.length !== 0" class="elements"  [ngClass]="type">
+    <div class="element" *ngFor="let element of container.elements">
+        <div *ngIf="element.widgets.length !== 0" class="widgets">
+            <app-choise-widget-type-read-page [widgets]="element.widgets"></app-choise-widget-type-read-page>
+        </div>
+    </div>
+</div>

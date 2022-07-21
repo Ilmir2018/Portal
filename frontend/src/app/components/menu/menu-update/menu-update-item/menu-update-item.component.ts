@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { NavItemNew } from 'src/app/interfaces';
 import { MenuService } from 'src/app/services/menu.service';
+import { WidgetsService } from 'src/app/services/widgets.service';
 
 @Component({
   selector: 'app-menu-update-item',
@@ -18,7 +19,7 @@ export class MenuUpdateItemComponent implements OnInit {
   @Input() invert!: boolean;
   showSettings: boolean
 
-  constructor(private service: MenuService, private router: Router) {
+  constructor(private service: MenuService, private router: Router, private widgetService: WidgetsService) {
     this.showSettings = false
   }
 
@@ -52,18 +53,20 @@ export class MenuUpdateItemComponent implements OnInit {
     document.body.classList.add('hidden')
   }
 
-  view(item) {
+  view(item: NavItemNew) {
     this.router.navigate(
       ['/' + item.url],
       {
         queryParams: {
-          'item': 1
+          'item': 1,
+          'pageName': item.url
         }
       }
     );
   }
 
-  edit(item: any | undefined) {
+  edit(item: NavItemNew) {
+    this.widgetService.page_id = item.id
     this.router.navigate(
       ['/' + item.url],
       {

@@ -46,7 +46,7 @@ export interface Filter {
 
 export interface GridColumnDefinition {
     field: string;
-    width: any;
+    width?: any;
     actualWidth?: number;
     name?: string;
     index?: number;
@@ -92,6 +92,7 @@ export interface NewField {
 
 
 export interface DataFields {
+    tableName?: string
     fields: any
     data: any
 }
@@ -123,6 +124,19 @@ export interface Widget {
     id: number | null
     element_id: number | null
     type: string | null
+}
+
+export interface WidgetData {
+    columns: string[],
+    rows: any[],
+    elementId: number,
+    widgetType: string
+}
+
+export interface ReadPageOutput {
+    containerId: number,
+    containerType: string,
+    elements?: Element[]
 }
 
 
